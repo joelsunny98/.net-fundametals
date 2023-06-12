@@ -1,11 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using RetailStore.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+ConfigureServices(builder.Services);
+var dbContext = ConfigureDbContext(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
@@ -22,4 +22,23 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+dbContext.Database.Migrate();
+
 app.Run();
+
+void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllers();
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
+}
+
+RetailStoreDbContext ConfigureDbContext(IServiceCollection services, ConfigurationManager configuration)
+{
+    var dbContextOptions = new DbContextOptionsBuilder<RetailStoreDbContext>().UseNpgsql(configuration.GetConnectionString("DbConnection")).Options;
+    var dbContext = new RetailStoreDbContext(dbContextOptions);
+
+    services.AddSingleton(dbContext);
+
+    return dbContext;
+}

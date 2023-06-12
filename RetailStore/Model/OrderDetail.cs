@@ -1,6 +1,6 @@
 ﻿namespace RetailStore.Model;
 
-public class OrderDetails: DomainAudit
+public class OrderDetail: DomainAudit
 {
     public int Id { get; set; }
     public int OrderId { get; set; }
