@@ -1,0 +1,9 @@
+﻿namespace RetailStore.Model;
+
+public class Order: DomainAudit
+{
+    public int  Id { get; set; }
+    public int CustomerId { get; set; }
+    public int TotalAmount { get; set; }
+    public virtual Customer Customer { get; set; }
+}
