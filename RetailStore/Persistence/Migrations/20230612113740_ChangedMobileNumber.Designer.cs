@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RetailStore.Persistence;
@@ -11,9 +12,11 @@ using RetailStore.Persistence;
 namespace RetailStore.Persistence.Migrations
 {
     [DbContext(typeof(RetailStoreDbContext))]
-    partial class RetailStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230612113740_ChangedMobileNumber")]
+    partial class ChangedMobileNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,12 +36,12 @@ namespace RetailStore.Persistence.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<long>("MobileNumber")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<long>("PhoneNumber")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
