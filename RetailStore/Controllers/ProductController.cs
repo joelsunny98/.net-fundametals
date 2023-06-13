@@ -80,7 +80,7 @@ namespace RetailStore.Controllers
         /// Endpoint to update product record
         /// </summary>
         /// <param name="product">
-        /// product contains the updated products's data
+        /// Product contains the updated products's data
         /// </param>
         /// <returns> 
         /// Product id of updated record 

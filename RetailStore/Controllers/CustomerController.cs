@@ -73,7 +73,7 @@ public class CustomerController : ControllerBase
     /// Endpoint to update customer record
     /// </summary>
     /// <param name="customer">
-    /// customer contains the updated customers's data
+    /// Customer contains the updated customers's data
     /// </param>
     /// <returns> 
     /// Customer id of updated record 
