@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Persistence;
+using RetailStore.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,7 @@ void ConfigureServices(IServiceCollection services)
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
+    services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 }
 
 RetailStoreDbContext ConfigureDbContext(IServiceCollection services, ConfigurationManager configuration)
