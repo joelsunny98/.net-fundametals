@@ -17,5 +17,10 @@ public class OrderDetailEntityConfiguration: IEntityTypeConfiguration<OrderDetai
         builder.HasOne(e => e.Product)
             .WithMany()
             .HasForeignKey(e => e.ProductId);
+
+        builder.HasOne(e => e.Order)
+            .WithMany(e => e.Details)
+            .HasForeignKey(e => e.OrderId)
+            .HasPrincipalKey(e => e.Id);
     }
 }
