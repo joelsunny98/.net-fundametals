@@ -16,7 +16,7 @@ public class CustomerController : ControllerBase
     /// <summary>
     /// Endpoint to fetch details of an customer.
     /// </summary>
-    /// <returns>It returns employee details</returns>
+    /// <returns>It returns customer details</returns>
     [HttpGet]
     public async Task<IActionResult> GetCustomers()
     {
@@ -40,7 +40,7 @@ public class CustomerController : ControllerBase
     /// <summary>
     /// Endpoint to delete a customer by ID.
     /// </summary>
-    /// <param name="id">Employee's Id to fetch Employee's data</param>
+    /// <param name="id">Customer's Id to fetch Customer's data</param>
     [HttpDelete("customer/{id}")]
     public async Task<IActionResult> DeleteCustomer(int id)
     {
@@ -73,13 +73,13 @@ public class CustomerController : ControllerBase
     /// Endpoint to update customer record
     /// </summary>
     /// <param name="customer">
-    /// customer contains the updated customers's data
+    /// Customer contains the updated customers's data
     /// </param>
     /// <returns> 
     /// Customer id of updated record 
     /// </returns>
     [HttpPut]
-    public async Task<IActionResult> UpadteCustomer(Customer customer)
+    public async Task<IActionResult> UpdateCustomer(Customer customer)
     {
         var updatedCustomer = await customerRepository.Update(customer);
         return Ok(updatedCustomer.Id);
