@@ -10,11 +10,11 @@ namespace RetailStore.Controllers;
 
 [ApiController]
 [Route("api")]
-public class OrdeController: ControllerBase
+public class OrderController: ControllerBase
 {
-    private readonly IRepository<Customer> customerRepository;
+    private readonly IRepository<Order> customerRepository;
     private readonly RetailStoreDbContext _dbContext;
-    public OrdeController(IRepository<Customer> _customerRepository, RetailStoreDbContext dbContext)
+    public OrderController(IRepository<Order> _customerRepository, RetailStoreDbContext dbContext)
     {
         customerRepository = _customerRepository;
         _dbContext = dbContext;
@@ -38,5 +38,31 @@ public class OrdeController: ControllerBase
                 }).ToList()
             }).ToListAsync();
         return Ok(orderDetails);
+    }
+
+    [HttpPost("orders")]
+    public async Task<IActionResult> AddOrders(Order order) 
+    {
+        var createdOrder = await customerRepository.Create(order);
+        return Ok(createdOrder);
+    }
+
+    [HttpDelete("orders")]
+    public async Task<IActionResult> DeleteOrders(int id) 
+    {
+        var deletedOrder = await customerRepository.Delete(id);
+
+        if (deletedOrder == null) 
+        {
+            return NotFound();
+        }
+        return Ok(deletedOrder);
+    }
+
+    [HttpPut("orders")]
+    public async Task<IActionResult> UpdateOrder(Order order) 
+    {
+        var updatedOrder = await customerRepository.Update(order);
+        return Ok(updatedOrder);
     }
 }
