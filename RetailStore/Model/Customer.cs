@@ -1,8 +1,13 @@
-﻿namespace RetailStore.Model;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RetailStore.Model;
 
 public class Customer: DomainAudit
 {
     public int Id { get; set; }
+
     public string Name { get; set; }
-    public long PhoneNumber { get; set; }
+
+    [Required]
+    public long? PhoneNumber { get; set; }
 }

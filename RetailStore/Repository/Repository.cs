@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RetailStore.Persistence;
 using RetailStore.Repository;
 
@@ -21,9 +22,6 @@ public class Repository<T> : IRepository<T> where T : class
     public async Task<T> GetById(int id)
     {
         var customer = await dbSet.FindAsync(id);
-        if(customer == null)
-            return null;
-        else
         return customer;
     }
 
@@ -37,8 +35,6 @@ public class Repository<T> : IRepository<T> where T : class
     public async Task<T> Delete(int id)
     {
         var entity = await dbSet.FindAsync(id);
-        if (entity == null)
-            return null;
         dbSet.Remove(entity);
         await dbContext.SaveChangesAsync();
         return entity;
