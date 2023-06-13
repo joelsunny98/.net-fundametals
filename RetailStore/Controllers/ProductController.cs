@@ -19,7 +19,6 @@ namespace RetailStore.Controllers
             productRepository = _productRepository;
         }
 
-
         /// <summary>
         /// Endpoint to fetch details of an product.
         /// </summary>

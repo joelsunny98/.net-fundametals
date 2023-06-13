@@ -18,9 +18,15 @@ public class CustomerController : ControllerBase
     /// </summary>
     /// <returns>It returns customer details</returns>
     [HttpGet]
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+
     public async Task<IActionResult> GetCustomers()
     {
         var customers = await customerRepository.GetAll();
+        if (customers == null)
+        {
+            return NotFound();
+        }
         return Ok(customers);
     }
 
@@ -31,6 +37,8 @@ public class CustomerController : ControllerBase
     /// Id of inserted record
     /// </returns>    
     [HttpPost]
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+
     public async Task<IActionResult> AddCustomer(Customer customer)
     {
         var createdCustomer = await customerRepository.Create(customer);
@@ -40,8 +48,10 @@ public class CustomerController : ControllerBase
     /// <summary>
     /// Endpoint to delete a customer by ID.
     /// </summary>
-    /// <param name="id">Customer's Id to fetch Customer's data</param>
+    /// <param name="id">customers's Id to fetch customers's data</param>
     [HttpDelete("customer/{id}")]
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteCustomer(int id)
     {
         var deletedCustomer = await customerRepository.Delete(id);
@@ -58,6 +68,8 @@ public class CustomerController : ControllerBase
     /// </summary>
     /// <param name="id">Customers's Id to fetch customer's data</param>
     [HttpGet("customer/{id}")]
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+
     public async Task<IActionResult> GetCustomerById(int id)
     {
         var customer = await customerRepository.GetById(id);
@@ -73,13 +85,15 @@ public class CustomerController : ControllerBase
     /// Endpoint to update customer record
     /// </summary>
     /// <param name="customer">
-    /// Customer contains the updated customers's data
+    /// customer contains the updated customers's data
     /// </param>
     /// <returns> 
     /// Customer id of updated record 
     /// </returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateCustomer(Customer customer)
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+
+    public async Task<IActionResult> UpadteCustomer(Customer customer)
     {
         var updatedCustomer = await customerRepository.Update(customer);
         return Ok(updatedCustomer.Id);
