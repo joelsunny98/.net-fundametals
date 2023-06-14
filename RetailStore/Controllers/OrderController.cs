@@ -103,4 +103,25 @@ public class OrderController: ControllerBase
         var updatedOrder = await customerRepository.Update(order);
         return Ok(updatedOrder);
     }
+
+    [HttpGet("orders/customer")]
+    public async Task<IActionResult> GetOrderByCustomer() 
+    {
+        var result = await _dbContext.Orders.Include(t => t.Customer).GroupBy(c => c.CustomerId).Select(g => new
+        {
+            CustomerName = g.FirstOrDefault().Customer.Name,
+            TotalOrders = g.Count()
+        }).ToListAsync();
+
+        return Ok(result);
+    }
+
+    [HttpGet("orders/today")]
+    public async Task<IActionResult> GetOrderByDay() 
+    {
+        var result = await _dbContext.Orders.Where(e => e.CreatedOn == DateTime.Today).ToListAsync();
+
+        return Ok(result);
+    }
+
 }
