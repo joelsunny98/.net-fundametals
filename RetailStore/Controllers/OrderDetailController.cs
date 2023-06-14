@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Dtos;
+using RetailStore.Extentions;
 using RetailStore.Persistence;
 using System.Reflection.Metadata.Ecma335;
 
@@ -19,11 +21,13 @@ public class OrderDetailController: ControllerBase
     [HttpGet("order-details/best-seller")]
     public async Task<IActionResult> GetBestSeller()
     {
-        var bestSeller = await _dbContext.OrderDetails.Include(t => t.Product).GroupBy(c => c.ProductId).OrderByDescending(g => g.Sum(q => q.Quantity)).Select(g => new
+        var bestSeller = await _dbContext.OrderDetails.Include(t => t.Product).GroupBy(c => c.ProductId).OrderByDescending(g => g.Sum(q => q.Quantity)).Select(g => new BestSellerDto
         {
             ProductId = g.Key,
-            TotalQuantity = g.Sum(od => od.Quantity),
-            ProductName = g.First().Product.Name
+            Quantity = g.Sum(od => od.Quantity),
+            ProductName = g.First().Product.Name,
+            Price = g.First().Product.Price,
+            TotalRevenue = g.First().Product.Price.TotalRevenue(g.Sum(od => od.Quantity))
         }).FirstOrDefaultAsync();
 
         return Ok(bestSeller);
