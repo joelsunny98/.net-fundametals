@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
+using RetailStore.Extensions;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
@@ -38,7 +39,7 @@ public class OrderController: ControllerBase
                 TotalAmount = e.TotalAmount,
                 Details = e.Details.Select(d => new OrderDetailDto() 
                 {
-                    ProductId = d.Product.Id,
+                    ProductName = d.Product.Name,
                     Quantity = d.Quantity
                 }).ToList()
             }).ToListAsync();
@@ -61,13 +62,22 @@ public class OrderController: ControllerBase
         };
         _dbContext.Orders.Add(createdOrder);
 
-        var details = order.Details.Select(d => new OrderDetail
+         var details = order.Details.Select(d =>
         {
-            ProductId = d.ProductId,
-            Quantity = d.Quantity,
-            Order = createdOrder 
-        }).ToList();
+            var product = _dbContext.Products.FirstOrDefault(p => p.Id == d.ProductId);
+            var orderDetail = new OrderDetail
+            {
+                ProductId = d.ProductId,
+                Quantity = d.Quantity,
+                Order = createdOrder
+            };
 
+            if (product != null)
+            {
+                createdOrder.TotalAmount = createdOrder.TotalAmount.TotalValue(product.Price,d.Quantity); 
+            }
+            return orderDetail;
+        }).ToList();
         _dbContext.OrderDetails.AddRange(details);
 
         await _dbContext.SaveChangesAsync();

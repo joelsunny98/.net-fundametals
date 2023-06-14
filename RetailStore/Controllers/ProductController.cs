@@ -42,8 +42,16 @@ public class ProductController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddProduct(Product product)
     {
-        var createdProduct = await productRepository.Create(product);
-        return Ok(createdProduct.Id);
+        var duplicateProduct = await productRepository.Find(x => x.Name == product.Name);
+        if (duplicateProduct.Any())
+        {
+            return BadRequest("Product with same name already exists");
+        }
+        else
+        {
+            var createdProduct = await productRepository.Create(product);
+            return Ok(createdProduct.Id);
+        }
     }
 
     /// <summary>
