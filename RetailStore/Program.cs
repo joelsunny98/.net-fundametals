@@ -33,6 +33,10 @@ void ConfigureServices(IServiceCollection services)
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
     services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+    services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 }
 
 RetailStoreDbContext ConfigureDbContext(IServiceCollection services, ConfigurationManager configuration)

@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RetailStore.Model;
+using RetailStore.Persistence;
 using RetailStore.Repository;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api")]
 public class CustomerController : ControllerBase
 {
     private readonly IRepository<Customer> customerRepository;
-
     public CustomerController(IRepository<Customer> _customerRepository)
     {
         customerRepository = _customerRepository;
@@ -17,7 +18,7 @@ public class CustomerController : ControllerBase
     /// Endpoint to fetch details of an customer.
     /// </summary>
     /// <returns>It returns customer details</returns>
-    [HttpGet]
+    [HttpGet("customer")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
 
     public async Task<IActionResult> GetCustomers()
@@ -36,7 +37,7 @@ public class CustomerController : ControllerBase
     /// <returns>
     /// Id of inserted record
     /// </returns>    
-    [HttpPost]
+    [HttpPost("customer")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
 
     public async Task<IActionResult> AddCustomer(Customer customer)
@@ -90,7 +91,7 @@ public class CustomerController : ControllerBase
     /// <returns> 
     /// Customer id of updated record 
     /// </returns>
-    [HttpPut]
+    [HttpPut("customer")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
 
     public async Task<IActionResult> UpadteCustomer(Customer customer)

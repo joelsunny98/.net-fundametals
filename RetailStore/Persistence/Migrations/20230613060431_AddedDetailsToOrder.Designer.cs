@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RetailStore.Persistence;
@@ -11,9 +12,11 @@ using RetailStore.Persistence;
 namespace RetailStore.Persistence.Migrations
 {
     [DbContext(typeof(RetailStoreDbContext))]
-    partial class RetailStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230613060431_AddedDetailsToOrder")]
+    partial class AddedDetailsToOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,8 +40,7 @@ namespace RetailStore.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("PhoneNumber")
-                        .IsRequired()
+                    b.Property<long>("PhoneNumber")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("UpdatedOn")
@@ -63,8 +65,8 @@ namespace RetailStore.Persistence.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
-                    b.Property<double>("TotalAmount")
-                        .HasColumnType("double precision");
+                    b.Property<int>("TotalAmount")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
@@ -121,11 +123,10 @@ namespace RetailStore.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("double precision");
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
