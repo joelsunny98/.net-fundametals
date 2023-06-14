@@ -8,6 +8,9 @@ public class OrderEntityConfiguration: IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
+        builder.Property(e => e.Id)
+            .ValueGeneratedOnAdd();
+
         builder.Property(e => e.CustomerId).IsRequired();
         builder.HasOne(e => e.Customer)
             .WithMany()
