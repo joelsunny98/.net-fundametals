@@ -22,7 +22,7 @@ namespace RetailStore.Controllers
         /// <summary>
         /// Endpoint to fetch details of an product.
         /// </summary>
-        /// <returns>It returns employee details</returns>
+        /// <returns>It returns customer details</returns>
         [HttpGet]
         public async Task<IActionResult> GetProducts()
         {
