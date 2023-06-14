@@ -31,9 +31,7 @@ public class OrderController: ControllerBase
                 TotalAmount = e.TotalAmount,
                 Details = e.Details.Select(d => new OrderDetailDto() 
                 {
-                    Id = d.Id,
-                    OrderId = d.OrderId,
-                    ProductName = d.Product.Name,
+                    ProductId = d.Product.Id,
                     Quantity = d.Quantity
                 }).ToList()
             }).ToListAsync();
@@ -41,10 +39,29 @@ public class OrderController: ControllerBase
     }
 
     [HttpPost("orders")]
-    public async Task<IActionResult> AddOrders(Order order) 
+    public async Task<IActionResult> AddOrders(OrderRequestDto order) 
     {
-        var createdOrder = await customerRepository.Create(order);
-        return Ok(createdOrder);
+        var createdOrder = new Order
+        {
+            CustomerId = order.CustomerId,
+            TotalAmount = order.TotalAmount,
+        };
+        _dbContext.Orders.Add(createdOrder);
+
+        var details = order.Details.Select(d => new OrderDetail
+        {
+            ProductId = d.ProductId,
+            Quantity = d.Quantity,
+            Order = createdOrder 
+        }).ToList();
+
+        _dbContext.OrderDetails.AddRange(details);
+
+        await _dbContext.SaveChangesAsync();
+
+        return Ok(createdOrder.Id);
+
+
     }
 
     [HttpDelete("orders")]
