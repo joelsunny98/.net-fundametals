@@ -4,6 +4,11 @@ using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
 
+namespace RetailStore.Controllers;
+
+/// <summary>
+/// Controller for managing Customer's of Retailstore
+/// </summary>
 [ApiController]
 [Route("api")]
 public class CustomerController : ControllerBase
@@ -100,3 +105,4 @@ public class CustomerController : ControllerBase
         return Ok(updatedCustomer.Id);
     }
 }
+
