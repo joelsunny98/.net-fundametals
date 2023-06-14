@@ -8,6 +8,9 @@ using System.Net;
 
 namespace RetailStore.Controllers;
 
+/// <summary>
+/// Controller for managing Order of Retailstore
+/// </summary>
 [ApiController]
 [Route("api")]
 public class OrderController: ControllerBase
@@ -20,6 +23,10 @@ public class OrderController: ControllerBase
         _dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Endpoint to fetch details of orders of retail store.
+    /// </summary>
+    /// <returns>It returns order details</returns>
     [HttpGet("orders")]
     [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetOrders() 
@@ -38,6 +45,12 @@ public class OrderController: ControllerBase
         return Ok(orderDetails);
     }
 
+    /// <summary>
+    /// Adding data of order to the database
+    /// </summary>
+    /// <returns>
+    /// Id of order inserted to the record
+    /// </returns> 
     [HttpPost("orders")]
     public async Task<IActionResult> AddOrders(OrderRequestDto order) 
     {
@@ -64,6 +77,10 @@ public class OrderController: ControllerBase
 
     }
 
+    /// <summary>
+    /// Endpoint to delete a order by ID.
+    /// </summary>
+    /// <param name="id">order's Id to fetch order's data</param>
     [HttpDelete("orders")]
     public async Task<IActionResult> DeleteOrders(int id) 
     {
@@ -76,6 +93,10 @@ public class OrderController: ControllerBase
         return Ok(deletedOrder);
     }
 
+    /// <summary>
+    /// Endpoint to fetch details of an order with given id.
+    /// </summary>
+    /// <param name="id">Order's Id to fetch order's data</param>
     [HttpPut("orders")]
     public async Task<IActionResult> UpdateOrder(Order order) 
     {
