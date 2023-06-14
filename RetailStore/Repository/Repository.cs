@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Persistence;
 using RetailStore.Repository;
@@ -48,6 +49,11 @@ public class Repository<T> : IRepository<T> where T : class
         dbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
         await dbContext.SaveChangesAsync();
         return entity;
+    }
+
+    public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
+    {
+        return await dbContext.Set<T>().Where(predicate).ToListAsync();
     }
 }
 
