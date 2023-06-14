@@ -104,6 +104,12 @@ public class OrderController: ControllerBase
         return Ok(updatedOrder);
     }
 
+    /// <summary>
+    /// Endpoint to fetch a sum of orders made by each customer
+    /// </summary>
+    /// <returns>
+    /// Object
+    /// </returns>
     [HttpGet("orders/customer")]
     public async Task<IActionResult> GetOrderByCustomer() 
     {
@@ -116,6 +122,10 @@ public class OrderController: ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Endpoint to fetch a list of orders made today
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("orders/today")]
     public async Task<IActionResult> GetOrderByDay() 
     {
