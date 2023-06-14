@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RetailStore.Persistence;
@@ -11,9 +12,11 @@ using RetailStore.Persistence;
 namespace RetailStore.Persistence.Migrations
 {
     [DbContext(typeof(RetailStoreDbContext))]
-    partial class RetailStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230613130644_Update the type of price into double")]
+    partial class Updatethetypeofpriceintodouble
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,7 +152,7 @@ namespace RetailStore.Persistence.Migrations
             modelBuilder.Entity("RetailStore.Model.OrderDetail", b =>
                 {
                     b.HasOne("RetailStore.Model.Order", "Order")
-                        .WithMany("Details")
+                        .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -163,11 +166,6 @@ namespace RetailStore.Persistence.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("RetailStore.Model.Order", b =>
-                {
-                    b.Navigation("Details");
                 });
 #pragma warning restore 612, 618
         }
