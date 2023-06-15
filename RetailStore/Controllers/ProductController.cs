@@ -12,7 +12,7 @@ namespace RetailStore.Controllers;
 /// Controller for managing products of Retailstore
 /// </summary>
 [ApiController]
-[Route("api/products")]
+[Route("api")]
 public class ProductController : ControllerBase
 {
     private readonly IRepository<Product> productRepository;
@@ -26,7 +26,7 @@ public class ProductController : ControllerBase
     /// Endpoint to fetch details of an product.
     /// </summary>
     /// <returns>It returns customer details</returns>
-    [HttpGet]
+    [HttpGet("products")]
     public async Task<IActionResult> GetProducts()
     {
         var products = await productRepository.GetAll();
@@ -39,7 +39,7 @@ public class ProductController : ControllerBase
     /// <returns>
     /// Id of inserted record
     /// </returns>    
-    [HttpPost]
+    [HttpPost("products")]
     public async Task<IActionResult> AddProduct(Product product)
     {
         var duplicateProduct = await productRepository.Find(x => x.Name == product.Name);
@@ -58,7 +58,7 @@ public class ProductController : ControllerBase
         /// Endpoint to delete a product by ID.
         /// </summary>
         /// <param name="id">product's Id to fetch product's data</param>
-        [HttpDelete("{id}")]
+        [HttpDelete("products/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var deletedProduct = await productRepository.Delete(id);
@@ -74,7 +74,7 @@ public class ProductController : ControllerBase
         /// Endpoint to fetch details of an product with given id.
         /// </summary>
         /// <param name="id">Product's Id to fetch product's data</param>
-        [HttpGet("{id}")]
+        [HttpGet("products/{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
             var product = await productRepository.GetById(id);
@@ -95,7 +95,7 @@ public class ProductController : ControllerBase
     /// <returns> 
     /// Product id of updated record 
     /// </returns>
-    [HttpPut]
+    [HttpPut("products/{id}")]
     public async Task<IActionResult> UpdateProduct(Product product)
     {
         var updatedProduct = await productRepository.Update(product);
