@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RetailStore.Persistence;
@@ -11,9 +12,11 @@ using RetailStore.Persistence;
 namespace RetailStore.Persistence.Migrations
 {
     [DbContext(typeof(RetailStoreDbContext))]
-    partial class RetailStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230615064102_Update the type of price into decimal")]
+    partial class Updatethetypeofpriceintodecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,9 +65,6 @@ namespace RetailStore.Persistence.Migrations
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
-
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("numeric");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("numeric");

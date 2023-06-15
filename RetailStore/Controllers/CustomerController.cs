@@ -23,7 +23,7 @@ public class CustomerController : ControllerBase
     /// Endpoint to fetch details of an customer.
     /// </summary>
     /// <returns>It returns customer details</returns>
-    [HttpGet("customer")]
+    [HttpGet("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
 
     public async Task<IActionResult> GetCustomers()

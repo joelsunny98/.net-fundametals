@@ -24,5 +24,5 @@ public class Product: DomainAudit
     /// </summary>
     /// <example> 10.50 </example>
     [Required]
-    public double Price { get; set; }
+    public decimal Price { get; set; }
 }
