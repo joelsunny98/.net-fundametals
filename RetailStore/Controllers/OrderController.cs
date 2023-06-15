@@ -36,7 +36,9 @@ public class OrderController: ControllerBase
             .Select(e => new OrderDto() { 
                 Id = e.Id,
                 CustomerName = e.Customer.Name,
-                TotalAmount = e.TotalAmount,
+                Amount = (e.TotalAmount + e.Discount).AddDecimalPoints(),
+                Discount = e.Discount.AddDecimalPoints(),
+                TotalAmount = e.TotalAmount.AddDecimalPoints(),
                 Details = e.Details.Select(d => new OrderDetailDto() 
                 {
                     ProductName = d.Product.Name,
@@ -58,7 +60,8 @@ public class OrderController: ControllerBase
         var createdOrder = new Order
         {
             CustomerId = order.CustomerId,
-            TotalAmount = order.TotalAmount,
+            TotalAmount = 0,
+            Discount = 0
         };
         _dbContext.Orders.Add(createdOrder);
 
@@ -74,17 +77,15 @@ public class OrderController: ControllerBase
 
             if (product != null)
             {
-                createdOrder.TotalAmount = createdOrder.TotalAmount.TotalValue(product.Price,d.Quantity); 
+                var Amount = createdOrder.TotalAmount.TotalValue(product.Price, d.Quantity);
+                createdOrder.TotalAmount = Amount.DiscountedAmount; 
+                createdOrder.Discount = Amount.DiscountValue;
             }
             return orderDetail;
         }).ToList();
         _dbContext.OrderDetails.AddRange(details);
-
         await _dbContext.SaveChangesAsync();
-
         return Ok(createdOrder.Id);
-
-
     }
 
     /// <summary>

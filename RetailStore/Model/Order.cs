@@ -19,8 +19,13 @@ public class Order: DomainAudit
     /// Gets and sets total amount of the order
     /// </summary>
     /// <example> 110.5 </example> 
-    public double TotalAmount { get; set; }
+    public decimal TotalAmount { get; set; }
 
+    /// <summary>
+    /// Gets and sets discount amount of the order
+    /// </summary>
+    /// <example> 110.5 </example> 
+    public decimal Discount { get; set; }
 
     public virtual Customer Customer { get; set; }
 

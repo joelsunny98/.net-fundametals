@@ -21,7 +21,19 @@
         /// Gets and sets total amount of the order
         /// </summary>
         /// <example> 110.5 </example> 
-        public double TotalAmount { get; set; }
+        public string Amount { get; set; }
+
+        /// <summary>
+        /// Gets and sets total amount of the order
+        /// </summary>
+        /// <example> 110.5 </example> 
+        public string Discount { get; set; }
+
+        /// <summary>
+        /// Gets and sets amount of the order
+        /// </summary>
+        /// <example> 70.5 </example> 
+        public string TotalAmount { get; set; }
 
         /// <summary>
         /// Gets or sets the details of order.
