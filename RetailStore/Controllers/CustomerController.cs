@@ -80,7 +80,7 @@ public class CustomerController : ControllerBase
     /// Endpoint to delete a customer by ID.
     /// </summary>
     /// <param name="id">customers's Id to fetch customers's data</param>
-    [HttpDelete("customer/{id}")]
+    [HttpDelete("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteCustomer(int id)
@@ -98,7 +98,7 @@ public class CustomerController : ControllerBase
     /// Endpoint to fetch details of an customer with given id.
     /// </summary>
     /// <param name="id">Customers's Id to fetch customer's data</param>
-    [HttpGet("customer/{id}")]
+    [HttpGet("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
 
     public async Task<IActionResult> GetCustomerById(int id)
