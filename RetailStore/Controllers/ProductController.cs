@@ -47,7 +47,7 @@ namespace RetailStore.Controllers
         /// Endpoint to delete a product by ID.
         /// </summary>
         /// <param name="id">product's Id to fetch product's data</param>
-        [HttpDelete("product/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var deletedProduct = await productRepository.Delete(id);
@@ -63,7 +63,7 @@ namespace RetailStore.Controllers
         /// Endpoint to fetch details of an product with given id.
         /// </summary>
         /// <param name="id">Product's Id to fetch product's data</param>
-        [HttpGet("product/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
             var product = await productRepository.GetById(id);

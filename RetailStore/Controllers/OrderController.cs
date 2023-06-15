@@ -31,7 +31,7 @@ public class OrderController: ControllerBase
                 TotalAmount = e.TotalAmount,
                 Details = e.Details.Select(d => new OrderDetailDto() 
                 {
-                    ProductId = d.Product.Id,
+                    ProductName = d.Product.Name,
                     Quantity = d.Quantity
                 }).ToList()
             }).ToListAsync();
