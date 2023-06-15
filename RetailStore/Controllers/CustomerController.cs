@@ -26,7 +26,7 @@ public class CustomerController : ControllerBase
     /// </summary>
     /// <returns>It returns customer details</returns>
     [HttpGet("customers")]
-    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomers()
     {
         var customers = await customerRepository.GetAll();
@@ -34,7 +34,7 @@ public class CustomerController : ControllerBase
         {
             CustomerName = e.Name,
             PhoneNumber = (long)e.PhoneNumber
-        }).ToList();
+        });
 
         return Ok(responseCustomers);
     }
@@ -100,7 +100,6 @@ public class CustomerController : ControllerBase
     /// <param name="id">Customers's Id to fetch customer's data</param>
     [HttpGet("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-
     public async Task<IActionResult> GetCustomerById(int id)
     {
         var customer = await customerRepository.GetById(id);
