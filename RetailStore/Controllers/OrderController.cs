@@ -6,6 +6,7 @@ using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
 using System.Net;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RetailStore.Controllers;
 
@@ -61,7 +62,9 @@ public class OrderController: ControllerBase
         {
             CustomerId = order.CustomerId,
             TotalAmount = 0,
-            Discount = 0
+            Discount = 0,
+            CreatedOn = DateTime.UtcNow,
+            UpdatedOn = DateTime.UtcNow,
         };
         _dbContext.Orders.Add(createdOrder);
 
@@ -140,7 +143,19 @@ public class OrderController: ControllerBase
     [HttpGet("orders/today")]
     public async Task<IActionResult> GetOrderByDay() 
     {
-        var result = await _dbContext.Orders.Where(e => e.CreatedOn == DateTime.Today).ToListAsync();
+        var result = await _dbContext.Orders.Include(e => e.Details).Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).Select(e => new OrderDto 
+        {
+            Id = e.Id,
+            CustomerName = e.Customer.Name,
+            Amount = (e.TotalAmount + e.Discount).AddDecimalPoints(),
+            Discount = e.Discount.AddDecimalPoints(),
+            TotalAmount = e.TotalAmount.AddDecimalPoints(),
+            Details = e.Details.Select(d => new OrderDetailDto()
+            {
+                ProductName = d.Product.Name,
+                Quantity = d.Quantity
+            }).ToList()
+        }).ToListAsync();
 
         return Ok(result);
     }
