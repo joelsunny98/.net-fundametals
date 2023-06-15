@@ -27,7 +27,7 @@ public class CustomerController : ControllerBase
     /// <returns>It returns customer details</returns>
     [HttpGet("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCustomers() 
+    public async Task<IActionResult> GetCustomers()
     {
         var customers = await customerRepository.GetAll();
         var responseCustomers = customers.Select(e => new CustomerDto
@@ -47,7 +47,7 @@ public class CustomerController : ControllerBase
     /// </returns>    
     [HttpPost("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddCustomer(CustomerDto customerRequestBody) 
+    public async Task<IActionResult> AddCustomer(CustomerDto customerRequestBody)
     {
         var phoneNumber = customerRequestBody.PhoneNumber.ToString();
         var duplicateCustomer = await customerRepository.Find(x => x.PhoneNumber == customerRequestBody.PhoneNumber);
@@ -63,7 +63,7 @@ public class CustomerController : ControllerBase
         }
         else
         {
-            var customer = new Customer 
+            var customer = new Customer
             {
                 Name = customerRequestBody.CustomerName,
                 PhoneNumber = customerRequestBody.PhoneNumber,
@@ -109,7 +109,13 @@ public class CustomerController : ControllerBase
             return NotFound();
         }
 
-        return Ok(customer);
+        var customerResponse = new CustomerDto
+        {
+            CustomerName = customer.Name,
+            PhoneNumber = (long)customer.PhoneNumber
+        };
+
+        return Ok(customerResponse);
     }
 
     /// <summary>
