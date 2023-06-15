@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
+using System.Formats.Asn1;
 
 namespace RetailStore.Controllers;
 
@@ -23,17 +25,18 @@ public class CustomerController : ControllerBase
     /// Endpoint to fetch details of an customer.
     /// </summary>
     /// <returns>It returns customer details</returns>
-    [HttpGet("customer")]
+    [HttpGet("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-
     public async Task<IActionResult> GetCustomers()
     {
         var customers = await customerRepository.GetAll();
-        if (customers == null)
+        var responseCustomers = customers.Select(e => new CustomerDto
         {
-            return NotFound();
-        }
-        return Ok(customers);
+            CustomerName = e.Name,
+            PhoneNumber = (long)e.PhoneNumber
+        }).ToList();
+
+        return Ok(responseCustomers);
     }
 
     /// <summary>
@@ -42,17 +45,16 @@ public class CustomerController : ControllerBase
     /// <returns>
     /// Id of inserted record
     /// </returns>    
-    [HttpPost("customer")]
+    [HttpPost("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-
-    public async Task<IActionResult> AddCustomer(Customer customer)
+    public async Task<IActionResult> AddCustomer(CustomerDto customerRequestBody)
     {
+        var phoneNumber = customerRequestBody.PhoneNumber.ToString();
+        var duplicateCustomer = await customerRepository.Find(x => x.PhoneNumber == customerRequestBody.PhoneNumber);
 
-        var phoneNumber = customer.PhoneNumber.ToString();
-        var duplicateCustomer = await customerRepository.Find(x => x.PhoneNumber == customer.PhoneNumber);
-
-        if (phoneNumber.Length == 10)
+        if (phoneNumber.Length != 10)
         {
+
             return BadRequest("Phonenumber Must be 10 digits");
         }
         else if (duplicateCustomer.Any())
@@ -61,6 +63,14 @@ public class CustomerController : ControllerBase
         }
         else
         {
+            var customer = new Customer
+            {
+                Name = customerRequestBody.CustomerName,
+                PhoneNumber = customerRequestBody.PhoneNumber,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
+            };
+
             var createdCustomer = await customerRepository.Create(customer);
             return Ok(createdCustomer.Id);
         }
@@ -70,7 +80,7 @@ public class CustomerController : ControllerBase
     /// Endpoint to delete a customer by ID.
     /// </summary>
     /// <param name="id">customers's Id to fetch customers's data</param>
-    [HttpDelete("customer/{id}")]
+    [HttpDelete("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteCustomer(int id)
@@ -88,7 +98,7 @@ public class CustomerController : ControllerBase
     /// Endpoint to fetch details of an customer with given id.
     /// </summary>
     /// <param name="id">Customers's Id to fetch customer's data</param>
-    [HttpGet("customer/{id}")]
+    [HttpGet("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
 
     public async Task<IActionResult> GetCustomerById(int id)
@@ -99,7 +109,13 @@ public class CustomerController : ControllerBase
             return NotFound();
         }
 
-        return Ok(customer);
+        var customerResponse = new CustomerDto
+        {
+            CustomerName = customer.Name,
+            PhoneNumber = (long)customer.PhoneNumber
+        };
+
+        return Ok(customerResponse);
     }
 
     /// <summary>
@@ -111,13 +127,20 @@ public class CustomerController : ControllerBase
     /// <returns> 
     /// Customer id of updated record 
     /// </returns>
-    [HttpPut("customer")]
+    [HttpPut("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-
-    public async Task<IActionResult> UpadteCustomer(Customer customer)
+    public async Task<IActionResult> UpdateCustomer(int id, CustomerDto customerRequestBody)
     {
+        var customer = new Customer
+        {
+            Id = id,
+            Name = customerRequestBody.CustomerName,
+            PhoneNumber = customerRequestBody.PhoneNumber,
+            UpdatedOn = DateTime.UtcNow
+        };
         var updatedCustomer = await customerRepository.Update(customer);
         return Ok(updatedCustomer.Id);
+
     }
 }
 
