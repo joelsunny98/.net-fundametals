@@ -52,9 +52,8 @@ public class CustomerController : ControllerBase
         var phoneNumber = customerRequestBody.PhoneNumber.ToString();
         var duplicateCustomer = await customerRepository.Find(x => x.PhoneNumber == customerRequestBody.PhoneNumber);
 
-        if (phoneNumber.Length != 10)
+        if (phoneNumber.Length !=10)
         {
-
             return BadRequest("Phonenumber Must be 10 digits");
         }
         else if (duplicateCustomer.Any())
