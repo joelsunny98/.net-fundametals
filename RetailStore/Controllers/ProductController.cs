@@ -101,7 +101,7 @@ public class ProductController : ControllerBase
     /// <returns> 
     /// Product id of updated record 
     /// </returns>
-    [HttpPut("products")]
+    [HttpPut("products/{id}")]
     public async Task<IActionResult> UpdateProduct(Product product)
     {
         var updatedProduct = await productRepository.Update(product);
