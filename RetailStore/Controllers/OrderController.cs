@@ -67,10 +67,9 @@ public class OrderController: ControllerBase
         };
         _dbContext.Orders.Add(createdOrder);
 
-         var details = order.Details.Select( d =>
+         var details = order.Details.Select(d =>
          {
             var product =  _productRepository.GetById(d.ProductId).Result;
-            
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,
