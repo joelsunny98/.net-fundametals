@@ -28,11 +28,11 @@ public class BestSellerDto
     /// Gets and sets the price of product ordered .
     /// </summary>
     /// <example> 10.50 </example>
-    public double Price { get; set; }
+    public decimal Price { get; set; }
 
     /// <summary>
     /// Gets and sets the total price of products that ordered .
     /// </summary>
     /// <example> 100.50 </example>
-    public double TotalRevenue { get; set; }
+    public decimal TotalRevenue { get; set; }
 }

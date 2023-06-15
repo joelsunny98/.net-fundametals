@@ -12,12 +12,6 @@ public class OrderRequestDto
     public int CustomerId { get; set; }
 
     /// <summary>
-    /// Gets and sets total amount of the order
-    /// </summary>
-    /// <example> 110.5 </example> 
-    public int TotalAmount { get; set; }
-
-    /// <summary>
     /// Gets and sets the details of order.
     /// </summary>
     public List<OrderDetailRequestDto> Details { get; set; }
