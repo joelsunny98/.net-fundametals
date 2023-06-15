@@ -28,13 +28,14 @@ public class ProductController : ControllerBase
     /// </summary>
     /// <returns>It returns customer details</returns>
     [HttpGet("products")]
+    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProducts()
     {
         var products = await productRepository.GetAll();
         var productsResponse = products.Select(e => new ProductDto
         {
             ProductName = e.Name,
-            ProductPrice = (decimal)e.Price
+            ProductPrice = e.Price
         });
         return Ok(productsResponse);
     }
@@ -46,50 +47,68 @@ public class ProductController : ControllerBase
     /// Id of inserted record
     /// </returns>    
     [HttpPost("products")]
-    public async Task<IActionResult> AddProduct(Product product)
+    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    public async Task<IActionResult> AddProduct(ProductDto productRequestBody)
     {
-        var duplicateProduct = await productRepository.Find(x => x.Name == product.Name);
+        var duplicateProduct = await productRepository.Find(x => x.Name == productRequestBody.ProductName);
         if (duplicateProduct.Any())
         {
             return BadRequest("Product with same name already exists");
         }
         else
         {
+            var product = new Product
+            {
+                Name = productRequestBody.ProductName,
+                Price = productRequestBody.ProductPrice,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow
+            };
+
             var createdProduct = await productRepository.Create(product);
             return Ok(createdProduct.Id);
         }
     }
 
-        /// <summary>
-        /// Endpoint to delete a product by ID.
-        /// </summary>
-        /// <param name="id">product's Id to fetch product's data</param>
-        [HttpDelete("products/{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+    /// <summary>
+    /// Endpoint to delete a product by ID.
+    /// </summary>
+    /// <param name="id">product's Id to fetch product's data</param>
+    [HttpDelete("products/{id}")]
+    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+        var deletedProduct = await productRepository.Delete(id);
+        if (deletedProduct == null)
         {
-            var deletedProduct = await productRepository.Delete(id);
-            if (deletedProduct == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
 
         return Ok(deletedProduct.Id);
     }
 
-        /// <summary>
-        /// Endpoint to fetch details of an product with given id.
-        /// </summary>
-        /// <param name="id">Product's Id to fetch product's data</param>
-        [HttpGet("products/{id}")]
-        public async Task<IActionResult> GetProductById(int id)
+    /// <summary>
+    /// Endpoint to fetch details of an product with given id.
+    /// </summary>
+    /// <param name="id">Product's Id to fetch product's data</param>
+    [HttpGet("products/{id}")]
+    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductById(int id)
+    {
+        var product = await productRepository.GetById(id);
+        if (product == null)
         {
-            var product = await productRepository.GetById(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
 
-        return Ok(product);
+        var productResponse = new ProductDto
+        {
+            ProductName = product.Name,
+            ProductPrice = product.Price
+        };
+
+        return Ok(productResponse);
     }
 
     /// <summary>
@@ -102,8 +121,17 @@ public class ProductController : ControllerBase
     /// Product id of updated record 
     /// </returns>
     [HttpPut("products/{id}")]
-    public async Task<IActionResult> UpdateProduct(Product product)
+    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateProduct(int id, ProductDto productRequestBody)
     {
+        var product = new Product
+        {
+            Id = id,
+            Name = productRequestBody.ProductName,
+            Price = productRequestBody.ProductPrice,
+            UpdatedOn = DateTime.UtcNow
+        };
+
         var updatedProduct = await productRepository.Update(product);
         return Ok(updatedProduct.Id);
     }
