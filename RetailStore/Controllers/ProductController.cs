@@ -54,34 +54,34 @@ public class ProductController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Endpoint to delete a product by ID.
-    /// </summary>
-    /// <param name="id">product's Id to fetch product's data</param>
-    [HttpDelete("product/{id}")]
-    public async Task<IActionResult> DeleteProduct(int id)
-    {
-        var deletedProduct = await productRepository.Delete(id);
-        if (deletedProduct == null)
+        /// <summary>
+        /// Endpoint to delete a product by ID.
+        /// </summary>
+        /// <param name="id">product's Id to fetch product's data</param>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            return NotFound();
-        }
+            var deletedProduct = await productRepository.Delete(id);
+            if (deletedProduct == null)
+            {
+                return NotFound();
+            }
 
         return Ok(deletedProduct.Id);
     }
 
-    /// <summary>
-    /// Endpoint to fetch details of an product with given id.
-    /// </summary>
-    /// <param name="id">Product's Id to fetch product's data</param>
-    [HttpGet("product/{id}")]
-    public async Task<IActionResult> GetProductById(int id)
-    {
-        var product = await productRepository.GetById(id);
-        if (product == null)
+        /// <summary>
+        /// Endpoint to fetch details of an product with given id.
+        /// </summary>
+        /// <param name="id">Product's Id to fetch product's data</param>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductById(int id)
         {
-            return NotFound();
-        }
+            var product = await productRepository.GetById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
 
         return Ok(product);
     }
