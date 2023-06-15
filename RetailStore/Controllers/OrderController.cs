@@ -16,11 +16,13 @@ namespace RetailStore.Controllers;
 [Route("api")]
 public class OrderController: ControllerBase
 {
-    private readonly IRepository<Order> customerRepository;
+    private readonly IRepository<Order> _orderRepository;
+    private readonly IRepository<Product> _productRepository;
     private readonly RetailStoreDbContext _dbContext;
-    public OrderController(IRepository<Order> _customerRepository, RetailStoreDbContext dbContext)
+    public OrderController(IRepository<Order> orderRepository, RetailStoreDbContext dbContext,IRepository<Product> productRepository)
     {
-        customerRepository = _customerRepository;
+        _orderRepository = orderRepository;
+        _productRepository = productRepository;
         _dbContext = dbContext;
     }
 
@@ -66,8 +68,8 @@ public class OrderController: ControllerBase
         _dbContext.Orders.Add(createdOrder);
 
          var details = order.Details.Select(d =>
-        {
-            var product = _dbContext.Products.FirstOrDefault(p => p.Id == d.ProductId);
+         {
+            var product =  _productRepository.GetById(d.ProductId).Result;
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,
@@ -78,7 +80,7 @@ public class OrderController: ControllerBase
             if (product != null)
             {
                 var Amount = createdOrder.TotalAmount.TotalValue(product.Price, d.Quantity);
-                createdOrder.TotalAmount = Amount.DiscountedAmount; 
+                createdOrder.TotalAmount = Amount.DiscountedAmount;
                 createdOrder.Discount = Amount.DiscountValue;
             }
             return orderDetail;
@@ -95,7 +97,7 @@ public class OrderController: ControllerBase
     [HttpDelete("orders")]
     public async Task<IActionResult> DeleteOrders(int id) 
     {
-        var deletedOrder = await customerRepository.Delete(id);
+        var deletedOrder = await _orderRepository.Delete(id);
 
         if (deletedOrder == null) 
         {
@@ -111,7 +113,7 @@ public class OrderController: ControllerBase
     [HttpPut("orders")]
     public async Task<IActionResult> UpdateOrder(Order order) 
     {
-        var updatedOrder = await customerRepository.Update(order);
+        var updatedOrder = await _orderRepository.Update(order);
         return Ok(updatedOrder);
     }
 
