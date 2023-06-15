@@ -127,13 +127,20 @@ public class CustomerController : ControllerBase
     /// <returns> 
     /// Customer id of updated record 
     /// </returns>
-    [HttpPut("customer")]
+    [HttpPut("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-
-    public async Task<IActionResult> UpadteCustomer(Customer customer)
+    public async Task<IActionResult> UpdateCustomer(int id, CustomerDto customerRequestBody)
     {
+        var customer = new Customer
+        {
+            Id = id,
+            Name = customerRequestBody.CustomerName,
+            PhoneNumber = customerRequestBody.PhoneNumber,
+            UpdatedOn = DateTime.UtcNow
+        };
         var updatedCustomer = await customerRepository.Update(customer);
         return Ok(updatedCustomer.Id);
+
     }
 }
 
