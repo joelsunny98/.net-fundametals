@@ -34,7 +34,7 @@ public class CustomerController : ControllerBase
         {
             CustomerName = e.Name,
             PhoneNumber = (long)e.PhoneNumber
-        }).ToList();
+        });
 
         return Ok(responseCustomers);
     }
