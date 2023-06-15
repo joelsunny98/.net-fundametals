@@ -7,6 +7,9 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace RetailStore.Controllers;
 
+/// <summary>
+/// Controller for Best seller of Retailstore
+/// </summary>
 [ApiController]
 [Route("api")]
 public class OrderDetailController: ControllerBase
@@ -18,6 +21,10 @@ public class OrderDetailController: ControllerBase
         _dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Endpoint to fetch details of a best selling product.
+    /// </summary>
+    /// <returns>It returns best selling product details</returns>
     [HttpGet("order-details/best-seller")]
     public async Task<IActionResult> GetBestSeller()
     {

@@ -6,42 +6,53 @@ using RetailStore.Repository;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RetailStore.Controllers
+namespace RetailStore.Controllers;
+
+/// <summary>
+/// Controller for managing products of Retailstore
+/// </summary>
+[ApiController]
+[Route("api/products")]
+public class ProductController : ControllerBase
 {
-    [ApiController]
-    [Route("api/products")]
-    public class ProductController : ControllerBase
+    private readonly IRepository<Product> productRepository;
+
+    public ProductController(IRepository<Product> _productRepository)
     {
-        private readonly IRepository<Product> productRepository;
+        productRepository = _productRepository;
+    }
 
-        public ProductController(IRepository<Product> _productRepository)
+    /// <summary>
+    /// Endpoint to fetch details of an product.
+    /// </summary>
+    /// <returns>It returns customer details</returns>
+    [HttpGet]
+    public async Task<IActionResult> GetProducts()
+    {
+        var products = await productRepository.GetAll();
+        return Ok(products);
+    }
+
+    /// <summary>
+    /// Adding product data to the database
+    /// </summary>
+    /// <returns>
+    /// Id of inserted record
+    /// </returns>    
+    [HttpPost]
+    public async Task<IActionResult> AddProduct(Product product)
+    {
+        var duplicateProduct = await productRepository.Find(x => x.Name == product.Name);
+        if (duplicateProduct.Any())
         {
-            productRepository = _productRepository;
+            return BadRequest("Product with same name already exists");
         }
-
-        /// <summary>
-        /// Endpoint to fetch details of an product.
-        /// </summary>
-        /// <returns>It returns employee details</returns>
-        [HttpGet]
-        public async Task<IActionResult> GetProducts()
-        {
-            var products = await productRepository.GetAll();
-            return Ok(products);
-        }
-
-        /// <summary>
-        /// Adding product data to the database
-        /// </summary>
-        /// <returns>
-        /// Id of inserted record
-        /// </returns>    
-        [HttpPost]
-        public async Task<IActionResult> AddProduct(Product product)
+        else
         {
             var createdProduct = await productRepository.Create(product);
             return Ok(createdProduct.Id);
         }
+    }
 
         /// <summary>
         /// Endpoint to delete a product by ID.
@@ -56,8 +67,8 @@ namespace RetailStore.Controllers
                 return NotFound();
             }
 
-            return Ok(deletedProduct.Id);
-        }
+        return Ok(deletedProduct.Id);
+    }
 
         /// <summary>
         /// Endpoint to fetch details of an product with given id.
@@ -72,23 +83,22 @@ namespace RetailStore.Controllers
                 return NotFound();
             }
 
-            return Ok(product);
-        }
+        return Ok(product);
+    }
 
-        /// <summary>
-        /// Endpoint to update product record
-        /// </summary>
-        /// <param name="product">
-        /// Product contains the updated products's data
-        /// </param>
-        /// <returns> 
-        /// Product id of updated record 
-        /// </returns>
-        [HttpPut]
-        public async Task<IActionResult> UpdateProduct(Product product)
-        {
-            var updatedProduct = await productRepository.Update(product);
-            return Ok(updatedProduct.Id);
-        }
+    /// <summary>
+    /// Endpoint to update product record
+    /// </summary>
+    /// <param name="product">
+    /// Product contains the updated products's data
+    /// </param>
+    /// <returns> 
+    /// Product id of updated record 
+    /// </returns>
+    [HttpPut]
+    public async Task<IActionResult> UpdateProduct(Product product)
+    {
+        var updatedProduct = await productRepository.Update(product);
+        return Ok(updatedProduct.Id);
     }
 }

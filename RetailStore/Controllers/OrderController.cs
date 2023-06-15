@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
+using RetailStore.Extensions;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
@@ -8,6 +9,9 @@ using System.Net;
 
 namespace RetailStore.Controllers;
 
+/// <summary>
+/// Controller for managing Order of Retailstore
+/// </summary>
 [ApiController]
 [Route("api")]
 public class OrderController: ControllerBase
@@ -20,6 +24,10 @@ public class OrderController: ControllerBase
         _dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Endpoint to fetch details of orders of retail store.
+    /// </summary>
+    /// <returns>It returns order details</returns>
     [HttpGet("orders")]
     [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetOrders() 
@@ -38,6 +46,12 @@ public class OrderController: ControllerBase
         return Ok(orderDetails);
     }
 
+    /// <summary>
+    /// Adding data of order to the database
+    /// </summary>
+    /// <returns>
+    /// Id of order inserted to the record
+    /// </returns> 
     [HttpPost("orders")]
     public async Task<IActionResult> AddOrders(OrderRequestDto order) 
     {
@@ -48,13 +62,22 @@ public class OrderController: ControllerBase
         };
         _dbContext.Orders.Add(createdOrder);
 
-        var details = order.Details.Select(d => new OrderDetail
+         var details = order.Details.Select(d =>
         {
-            ProductId = d.ProductId,
-            Quantity = d.Quantity,
-            Order = createdOrder 
-        }).ToList();
+            var product = _dbContext.Products.FirstOrDefault(p => p.Id == d.ProductId);
+            var orderDetail = new OrderDetail
+            {
+                ProductId = d.ProductId,
+                Quantity = d.Quantity,
+                Order = createdOrder
+            };
 
+            if (product != null)
+            {
+                createdOrder.TotalAmount = createdOrder.TotalAmount.TotalValue(product.Price,d.Quantity); 
+            }
+            return orderDetail;
+        }).ToList();
         _dbContext.OrderDetails.AddRange(details);
 
         await _dbContext.SaveChangesAsync();
@@ -64,6 +87,10 @@ public class OrderController: ControllerBase
 
     }
 
+    /// <summary>
+    /// Endpoint to delete a order by ID.
+    /// </summary>
+    /// <param name="id">order's Id to fetch order's data</param>
     [HttpDelete("orders")]
     public async Task<IActionResult> DeleteOrders(int id) 
     {
@@ -76,6 +103,10 @@ public class OrderController: ControllerBase
         return Ok(deletedOrder);
     }
 
+    /// <summary>
+    /// Endpoint to fetch details of an order with given id.
+    /// </summary>
+    /// <param name="id">Order's Id to fetch order's data</param>
     [HttpPut("orders")]
     public async Task<IActionResult> UpdateOrder(Order order) 
     {
@@ -83,6 +114,12 @@ public class OrderController: ControllerBase
         return Ok(updatedOrder);
     }
 
+    /// <summary>
+    /// Endpoint to fetch a sum of orders made by each customer
+    /// </summary>
+    /// <returns>
+    /// Object
+    /// </returns>
     [HttpGet("orders/customer")]
     public async Task<IActionResult> GetOrderByCustomer() 
     {
@@ -95,6 +132,10 @@ public class OrderController: ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Endpoint to fetch a list of orders made today
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("orders/today")]
     public async Task<IActionResult> GetOrderByDay() 
     {

@@ -4,6 +4,11 @@ using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
 
+namespace RetailStore.Controllers;
+
+/// <summary>
+/// Controller for managing Customer's of Retailstore
+/// </summary>
 [ApiController]
 [Route("api")]
 public class CustomerController : ControllerBase
@@ -42,8 +47,23 @@ public class CustomerController : ControllerBase
 
     public async Task<IActionResult> AddCustomer(Customer customer)
     {
-        var createdCustomer = await customerRepository.Create(customer);
-        return Ok(createdCustomer.Id);
+
+        var phoneNumber = customer.PhoneNumber.ToString();
+        var duplicateCustomer = await customerRepository.Find(x => x.PhoneNumber == customer.PhoneNumber);
+
+        if (phoneNumber.Length == 10)
+        {
+            return BadRequest("Phonenumber Must be 10 digits");
+        }
+        else if (duplicateCustomer.Any())
+        {
+            return BadRequest("Phonenumber Must be unique");
+        }
+        else
+        {
+            var createdCustomer = await customerRepository.Create(customer);
+            return Ok(createdCustomer.Id);
+        }
     }
 
     /// <summary>
@@ -100,3 +120,4 @@ public class CustomerController : ControllerBase
         return Ok(updatedCustomer.Id);
     }
 }
+
