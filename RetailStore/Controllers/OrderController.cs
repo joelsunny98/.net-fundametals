@@ -15,13 +15,15 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 [Route("api")]
-public class OrderController: ControllerBase
+public class OrderController : ControllerBase
 {
-    private readonly IRepository<Order> customerRepository;
+    private readonly IRepository<Order> _orderRepository;
+    private readonly IRepository<Product> _productRepository;
     private readonly RetailStoreDbContext _dbContext;
-    public OrderController(IRepository<Order> _customerRepository, RetailStoreDbContext dbContext)
+    public OrderController(IRepository<Order> orderRepository, RetailStoreDbContext dbContext, IRepository<Product> productRepository)
     {
-        customerRepository = _customerRepository;
+        _orderRepository = orderRepository;
+        _productRepository = productRepository;
         _dbContext = dbContext;
     }
 
@@ -31,7 +33,7 @@ public class OrderController: ControllerBase
     /// <returns>It returns order details</returns>
     [HttpGet("orders")]
     [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetOrders() 
+    public async Task<IActionResult> GetOrders()
     {
         var orderDetails = await _dbContext.Orders.Include(e => e.Details).ThenInclude(e => e.Product).Include(e => e.Customer)
             .Select(e => new OrderDto() { 
@@ -39,7 +41,7 @@ public class OrderController: ControllerBase
                 Amount = (e.TotalAmount + e.Discount).AddDecimalPoints(),
                 Discount = e.Discount.AddDecimalPoints(),
                 TotalAmount = e.TotalAmount.AddDecimalPoints(),
-                Details = e.Details.Select(d => new OrderDetailDto() 
+                Details = e.Details.Select(d => new OrderDetailDto()
                 {
                     ProductName = d.Product.Name,
                     Quantity = d.Quantity
@@ -55,7 +57,7 @@ public class OrderController: ControllerBase
     /// Id of order inserted to the record
     /// </returns> 
     [HttpPost("orders")]
-    public async Task<IActionResult> AddOrders(OrderRequestDto order) 
+    public async Task<IActionResult> AddOrders(OrderRequestDto order)
     {
         var createdOrder = new Order
         {
@@ -67,9 +69,9 @@ public class OrderController: ControllerBase
         };
         _dbContext.Orders.Add(createdOrder);
 
-         var details = order.Details.Select(d =>
+        var details = order.Details.Select(d =>
         {
-            var product = _dbContext.Products.FirstOrDefault(p => p.Id == d.ProductId);
+            var product = _productRepository.GetById(d.ProductId).Result;
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,
@@ -80,7 +82,7 @@ public class OrderController: ControllerBase
             if (product != null)
             {
                 var Amount = createdOrder.TotalAmount.TotalValue(product.Price, d.Quantity);
-                createdOrder.TotalAmount = Amount.DiscountedAmount; 
+                createdOrder.TotalAmount = Amount.DiscountedAmount;
                 createdOrder.Discount = Amount.DiscountValue;
             }
             return orderDetail;
@@ -95,11 +97,11 @@ public class OrderController: ControllerBase
     /// </summary>
     /// <param name="id">order's Id to fetch order's data</param>
     [HttpDelete("orders")]
-    public async Task<IActionResult> DeleteOrders(int id) 
+    public async Task<IActionResult> DeleteOrders(int id)
     {
-        var deletedOrder = await customerRepository.Delete(id);
+        var deletedOrder = await _orderRepository.Delete(id);
 
-        if (deletedOrder == null) 
+        if (deletedOrder == null)
         {
             return NotFound();
         }
@@ -156,7 +158,7 @@ public class OrderController: ControllerBase
     /// Object
     /// </returns>
     [HttpGet("orders/customer")]
-    public async Task<IActionResult> GetOrderByCustomer() 
+    public async Task<IActionResult> GetOrderByCustomer()
     {
         var result = await _dbContext.Orders.Include(t => t.Customer).GroupBy(c => c.CustomerId).Select(g => new
         {
@@ -172,9 +174,9 @@ public class OrderController: ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("orders/today")]
-    public async Task<IActionResult> GetOrderByDay() 
+    public async Task<IActionResult> GetOrderByDay()
     {
-        var result = await _dbContext.Orders.Include(e => e.Details).Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).Select(e => new OrderDto 
+        var result = await _dbContext.Orders.Include(e => e.Details).Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).Select(e => new OrderDto
         {
             CustomerName = e.Customer.Name,
             Amount = (e.TotalAmount + e.Discount).AddDecimalPoints(),
@@ -190,4 +192,18 @@ public class OrderController: ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Endpoint to fetch a list of orders made today
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("orders/collection")]
+    public async Task<IActionResult> GetCollectionByDay()
+    {
+        var totalCollection = await _dbContext.Orders
+        .Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date)
+        .SumAsync(e => e.TotalAmount);
+
+        return Ok(totalCollection);
+    }
 }
+

@@ -21,9 +21,8 @@ public class Repository<T> : IRepository<T> where T : class
     }
 
     public async Task<T> GetById(int id)
-    {
-        var customer = await dbSet.FindAsync(id);
-        return customer;
+    {    
+        return await dbSet.FindAsync(id); ;
     }
 
     public async Task<T> Create(T entity)

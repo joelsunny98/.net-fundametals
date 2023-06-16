@@ -17,7 +17,6 @@ public class Customer: DomainAudit
     /// <example> "Aleena" </example> 
     public string Name { get; set; }
 
-
     /// <summary>
     /// Gets and sets Unique Identification number as  phone number of of the customer entity
     /// </summary>
