@@ -174,7 +174,6 @@ public class OrderController : ControllerBase
         .Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date)
         .SumAsync(e => e.TotalAmount);
 
-        return Ok(totalCollection);
+        return Ok(totalCollection.AddDecimalPoints());
     }
 }
-
