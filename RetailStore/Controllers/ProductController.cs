@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Model;
-using RetailStore.Persistence;
 using RetailStore.Repository;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RetailStore.Controllers;
 
@@ -16,11 +12,11 @@ namespace RetailStore.Controllers;
 [Route("api")]
 public class ProductController : ControllerBase
 {
-    private readonly IRepository<Product> productRepository;
+    private readonly IRepository<Product> _productRepository;
 
-    public ProductController(IRepository<Product> _productRepository)
+    public ProductController(IRepository<Product> productRepository)
     {
-        productRepository = _productRepository;
+        _productRepository = productRepository;
     }
 
     /// <summary>
@@ -31,7 +27,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProducts()
     {
-        var products = await productRepository.GetAll();
+        var products = await _productRepository.GetAll();
         var productsResponse = products.Select(e => new ProductDto
         {
             ProductName = e.Name,
@@ -50,7 +46,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddProduct(ProductDto productRequestBody)
     {
-        var duplicateProduct = await productRepository.Find(x => x.Name == productRequestBody.ProductName);
+        var duplicateProduct = await _productRepository.Find(x => x.Name == productRequestBody.ProductName);
         if (duplicateProduct.Any())
         {
             return BadRequest("Product with same name already exists");
@@ -65,7 +61,7 @@ public class ProductController : ControllerBase
                 UpdatedOn = DateTime.UtcNow
             };
 
-            var createdProduct = await productRepository.Create(product);
+            var createdProduct = await _productRepository.Create(product);
             return Ok(createdProduct.Id);
         }
     }
@@ -79,7 +75,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteProduct(int id)
     {
-        var deletedProduct = await productRepository.Delete(id);
+        var deletedProduct = await _productRepository.Delete(id);
         if (deletedProduct == null)
         {
             return NotFound();
@@ -96,7 +92,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductById(int id)
     {
-        var product = await productRepository.GetById(id);
+        var product = await _productRepository.GetById(id);
         if (product == null)
         {
             return NotFound();
@@ -132,7 +128,7 @@ public class ProductController : ControllerBase
             UpdatedOn = DateTime.UtcNow
         };
 
-        var updatedProduct = await productRepository.Update(product);
+        var updatedProduct = await _productRepository.Update(product);
         return Ok(updatedProduct.Id);
     }
 }
