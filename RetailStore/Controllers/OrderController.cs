@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Extensions;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
-using System.Net;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace RetailStore.Controllers;
 
@@ -36,11 +35,12 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> GetOrders()
     {
         var orderDetails = await _dbContext.Orders.Include(e => e.Details).ThenInclude(e => e.Product).Include(e => e.Customer)
-            .Select(e => new OrderDto() { 
+            .Select(e => new OrderDto()
+            {
                 CustomerName = e.Customer.Name,
-                Amount = (e.TotalAmount + e.Discount).AddDecimalPoints(),
-                Discount = e.Discount.AddDecimalPoints(),
-                TotalAmount = e.TotalAmount.AddDecimalPoints(),
+                Amount = (e.TotalAmount + e.Discount).ConvertToCurrencyString(),
+                Discount = e.Discount.ConvertToCurrencyString(),
+                TotalAmount = e.TotalAmount.ConvertToCurrencyString(),
                 Details = e.Details.Select(d => new OrderDetailDto()
                 {
                     ProductName = d.Product.Name,
@@ -89,7 +89,7 @@ public class OrderController : ControllerBase
         }).ToList();
         _dbContext.OrderDetails.AddRange(details);
         await _dbContext.SaveChangesAsync();
-        return Ok(createdOrder.Id);
+        return Ok(createdOrder.TotalAmount.ConvertToCurrencyString());
     }
 
     /// <summary>
@@ -179,9 +179,9 @@ public class OrderController : ControllerBase
         var result = await _dbContext.Orders.Include(e => e.Details).Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).Select(e => new OrderDto
         {
             CustomerName = e.Customer.Name,
-            Amount = (e.TotalAmount + e.Discount).AddDecimalPoints(),
-            Discount = e.Discount.AddDecimalPoints(),
-            TotalAmount = e.TotalAmount.AddDecimalPoints(),
+            Amount = (e.TotalAmount + e.Discount).ConvertToCurrencyString(),
+            Discount = e.Discount.ConvertToCurrencyString(),
+            TotalAmount = e.TotalAmount.ConvertToCurrencyString(),
             Details = e.Details.Select(d => new OrderDetailDto()
             {
                 ProductName = d.Product.Name,
@@ -203,6 +203,6 @@ public class OrderController : ControllerBase
         .Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date)
         .SumAsync(e => e.TotalAmount);
 
-        return Ok(totalCollection.AddDecimalPoints());
+        return Ok(totalCollection.ConvertToCurrencyString());
     }
 }

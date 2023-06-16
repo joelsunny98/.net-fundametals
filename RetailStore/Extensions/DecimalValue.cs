@@ -4,10 +4,9 @@ namespace RetailStore;
 
 public static class DecimalValue
 {
-    public static string AddDecimalPoints(this decimal TotalAmount)
+    public static string ConvertToCurrencyString(this decimal TotalAmount)
     {
-        decimal amount = Math.Round(TotalAmount,2);
-        string total = amount.ToString("C",CultureInfo.CurrentCulture);
+        string total = TotalAmount.ToString("C",CultureInfo.CurrentCulture);
         return total;
     }
 }
