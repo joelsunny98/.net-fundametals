@@ -6,12 +6,6 @@
     public class OrderDto
     {
         /// <summary>
-        /// Gets and sets Unique Identification number for order entity
-        /// </summary>
-        /// <example> 1 </example> 
-        public int Id { get; set; }
-
-        /// <summary>
         /// Gets and sets Name of the customer to be referred
         /// </summary>
         /// <example> "Aleena" </example> 

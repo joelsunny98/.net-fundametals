@@ -35,7 +35,6 @@ public class OrderController: ControllerBase
     {
         var orderDetails = await _dbContext.Orders.Include(e => e.Details).ThenInclude(e => e.Product).Include(e => e.Customer)
             .Select(e => new OrderDto() { 
-                Id = e.Id,
                 CustomerName = e.Customer.Name,
                 Amount = (e.TotalAmount + e.Discount).AddDecimalPoints(),
                 Discount = e.Discount.AddDecimalPoints(),
@@ -111,9 +110,17 @@ public class OrderController: ControllerBase
     /// Endpoint to fetch details of an order with given id.
     /// </summary>
     /// <param name="id">Order's Id to fetch order's data</param>
-    [HttpPut("orders")]
-    public async Task<IActionResult> UpdateOrder(Order order) 
+    [HttpPut("orders/{id}")]
+    [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateOrder(int id, OrderRequestDto orderRequestBody)
     {
+        var order = new Order
+        {
+            Id = id,
+            CustomerId = orderRequestBody.CustomerId,
+            UpdatedOn = DateTime.UtcNow,
+        };
+
         var updatedOrder = await customerRepository.Update(order);
         return Ok(updatedOrder);
     }
@@ -145,7 +152,6 @@ public class OrderController: ControllerBase
     {
         var result = await _dbContext.Orders.Include(e => e.Details).Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).Select(e => new OrderDto 
         {
-            Id = e.Id,
             CustomerName = e.Customer.Name,
             Amount = (e.TotalAmount + e.Discount).AddDecimalPoints(),
             Discount = e.Discount.AddDecimalPoints(),
