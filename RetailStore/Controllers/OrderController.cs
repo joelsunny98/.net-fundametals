@@ -114,15 +114,39 @@ public class OrderController: ControllerBase
     [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateOrder(int id, OrderRequestDto orderRequestBody)
     {
-        var order = new Order
-        {
-            Id = id,
-            CustomerId = orderRequestBody.CustomerId,
-            UpdatedOn = DateTime.UtcNow,
-        };
+        var order = _dbContext.Orders.FirstOrDefault(e => e.Id == id);
 
-        var updatedOrder = await customerRepository.Update(order);
-        return Ok(updatedOrder);
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        order.CustomerId = orderRequestBody.CustomerId;
+        order.UpdatedOn = DateTime.UtcNow;
+
+        var details = orderRequestBody.Details.Select(d =>
+        {
+            var product = _dbContext.Products.FirstOrDefault(p => p.Id == d.ProductId);
+            var orderDetail = new OrderDetail
+            {
+                ProductId = d.ProductId,
+                Quantity = d.Quantity,
+                Order = order
+            };
+
+            if (product != null)
+            {
+                var Amount = order.TotalAmount.TotalValue(product.Price, d.Quantity);
+                order.TotalAmount = Amount.DiscountedAmount;
+                order.Discount = Amount.DiscountValue;
+            }
+            return orderDetail;
+        }).ToList();
+
+
+        _dbContext.OrderDetails.AddRange(details);
+        await _dbContext.SaveChangesAsync();
+        return Ok(order.Id);
     }
 
     /// <summary>
