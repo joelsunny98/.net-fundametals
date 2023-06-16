@@ -15,10 +15,10 @@ namespace RetailStore.Controllers;
 [Route("api")]
 public class CustomerController : ControllerBase
 {
-    private readonly IRepository<Customer> customerRepository;
-    public CustomerController(IRepository<Customer> _customerRepository)
+    private readonly IRepository<Customer> _customerRepository;
+    public CustomerController(IRepository<Customer> customerRepository)
     {
-        customerRepository = _customerRepository;
+        _customerRepository = customerRepository;
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class CustomerController : ControllerBase
     [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomers()
     {
-        var customers = await customerRepository.GetAll();
+        var customers = await _customerRepository.GetAll();
         var responseCustomers = customers.Select(e => new CustomerDto
         {
             CustomerName = e.Name,
@@ -50,7 +50,7 @@ public class CustomerController : ControllerBase
     public async Task<IActionResult> AddCustomer(CustomerDto customerRequestBody)
     {
         var phoneNumber = customerRequestBody.PhoneNumber.ToString();
-        var duplicateCustomer = await customerRepository.Find(x => x.PhoneNumber == customerRequestBody.PhoneNumber);
+        var duplicateCustomer = await _customerRepository.Find(x => x.PhoneNumber == customerRequestBody.PhoneNumber);
 
         if (phoneNumber.Length !=10)
         {
@@ -70,7 +70,7 @@ public class CustomerController : ControllerBase
                 UpdatedOn = DateTime.UtcNow,
             };
 
-            var createdCustomer = await customerRepository.Create(customer);
+            var createdCustomer = await _customerRepository.Create(customer);
             return Ok(createdCustomer.Id);
         }
     }
@@ -84,7 +84,7 @@ public class CustomerController : ControllerBase
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteCustomer(int id)
     {
-        var deletedCustomer = await customerRepository.Delete(id);
+        var deletedCustomer = await _customerRepository.Delete(id);
         if (deletedCustomer == null)
         {
             return NotFound();
@@ -101,7 +101,7 @@ public class CustomerController : ControllerBase
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomerById(int id)
     {
-        var customer = await customerRepository.GetById(id);
+        var customer = await _customerRepository.GetById(id);
         if (customer == null)
         {
             return NotFound();
@@ -136,7 +136,7 @@ public class CustomerController : ControllerBase
             PhoneNumber = customerRequestBody.PhoneNumber,
             UpdatedOn = DateTime.UtcNow
         };
-        var updatedCustomer = await customerRepository.Update(customer);
+        var updatedCustomer = await _customerRepository.Update(customer);
         return Ok(updatedCustomer.Id);
 
     }
