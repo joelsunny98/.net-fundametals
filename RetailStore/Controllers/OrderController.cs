@@ -1,8 +1,11 @@
 ﻿using System.Net;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Extensions;
+using RetailStore.Features.OrderManagement.Commands;
+using RetailStore.Features.OrderManagement.Queries;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
@@ -13,8 +16,7 @@ namespace RetailStore.Controllers;
 /// Controller for managing Order of Retailstore
 /// </summary>
 [ApiController]
-[Route("api")]
-public class OrderController : ControllerBase
+public class OrderController : BaseController
 {
     private readonly IRepository<Order> _orderRepository;
     private readonly IRepository<Product> _productRepository;
@@ -34,20 +36,8 @@ public class OrderController : ControllerBase
     [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetOrders()
     {
-        var orderDetails = await _dbContext.Orders.Include(e => e.Details).ThenInclude(e => e.Product).Include(e => e.Customer)
-            .Select(e => new OrderDto()
-            {
-                CustomerName = e.Customer.Name,
-                Amount = (e.TotalAmount + e.Discount).ConvertToCurrencyString(),
-                Discount = e.Discount.ConvertToCurrencyString(),
-                TotalAmount = e.TotalAmount.ConvertToCurrencyString(),
-                Details = e.Details.Select(d => new OrderDetailDto()
-                {
-                    ProductName = d.Product.Name,
-                    Quantity = d.Quantity
-                }).ToList()
-            }).ToListAsync();
-        return Ok(orderDetails);
+        var result = await Mediator.Send(new GetOrdersQuery());
+        return Ok(result);
     }
 
     /// <summary>
@@ -59,37 +49,8 @@ public class OrderController : ControllerBase
     [HttpPost("orders")]
     public async Task<IActionResult> AddOrders(OrderRequestDto order)
     {
-        var createdOrder = new Order
-        {
-            CustomerId = order.CustomerId,
-            TotalAmount = 0,
-            Discount = 0,
-            CreatedOn = DateTime.UtcNow,
-            UpdatedOn = DateTime.UtcNow,
-        };
-        _dbContext.Orders.Add(createdOrder);
-
-        var details = order.Details.Select(d =>
-        {
-            var product = _productRepository.GetById(d.ProductId).Result;
-            var orderDetail = new OrderDetail
-            {
-                ProductId = d.ProductId,
-                Quantity = d.Quantity,
-                Order = createdOrder
-            };
-
-            if (product != null)
-            {
-                var Amount = createdOrder.TotalAmount.TotalValue(product.Price, d.Quantity);
-                createdOrder.TotalAmount = Amount.DiscountedAmount;
-                createdOrder.Discount = Amount.DiscountValue;
-            }
-            return orderDetail;
-        }).ToList();
-        _dbContext.OrderDetails.AddRange(details);
-        await _dbContext.SaveChangesAsync();
-        return Ok(createdOrder.TotalAmount.ConvertToCurrencyString());
+        var result = await Mediator.Send(new CreateOrderCommand { Data = order });
+        return Ok(result);
     }
 
     /// <summary>
@@ -176,19 +137,7 @@ public class OrderController : ControllerBase
     [HttpGet("orders/today")]
     public async Task<IActionResult> GetOrderByDay()
     {
-        var result = await _dbContext.Orders.Include(e => e.Details).Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).Select(e => new OrderDto
-        {
-            CustomerName = e.Customer.Name,
-            Amount = (e.TotalAmount + e.Discount).ConvertToCurrencyString(),
-            Discount = e.Discount.ConvertToCurrencyString(),
-            TotalAmount = e.TotalAmount.ConvertToCurrencyString(),
-            Details = e.Details.Select(d => new OrderDetailDto()
-            {
-                ProductName = d.Product.Name,
-                Quantity = d.Quantity
-            }).ToList()
-        }).ToListAsync();
-
+        var result = await Mediator.Send(new GetOrderByDayQuery());
         return Ok(result);
     }
 
