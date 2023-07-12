@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
+using RetailStore.Features.CustomerManagement.Queries;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
@@ -13,7 +14,7 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 [Route("api")]
-public class CustomerController : ControllerBase
+public class CustomerController : BaseController
 {
     private readonly IRepository<Customer> _customerRepository;
     public CustomerController(IRepository<Customer> customerRepository)
@@ -29,14 +30,8 @@ public class CustomerController : ControllerBase
     [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomers()
     {
-        var customers = await _customerRepository.GetAll();
-        var responseCustomers = customers.Select(e => new CustomerDto
-        {
-            CustomerName = e.Name,
-            PhoneNumber = (long)e.PhoneNumber
-        });
-
-        return Ok(responseCustomers);
+        var result = await Mediator.Send(new GetCustomersQuery());
+        return Ok(result);
     }
 
     /// <summary>
