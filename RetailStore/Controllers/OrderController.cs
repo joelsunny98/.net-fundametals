@@ -137,19 +137,7 @@ public class OrderController : BaseController
     [HttpGet("orders/today")]
     public async Task<IActionResult> GetOrderByDay()
     {
-        var result = await _dbContext.Orders.Include(e => e.Details).Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).Select(e => new OrderDto
-        {
-            CustomerName = e.Customer.Name,
-            Amount = (e.TotalAmount + e.Discount).ConvertToCurrencyString(),
-            Discount = e.Discount.ConvertToCurrencyString(),
-            TotalAmount = e.TotalAmount.ConvertToCurrencyString(),
-            Details = e.Details.Select(d => new OrderDetailDto()
-            {
-                ProductName = d.Product.Name,
-                Quantity = d.Quantity
-            }).ToList()
-        }).ToListAsync();
-
+        var result = await Mediator.Send(new GetOrderByDayQuery());
         return Ok(result);
     }
 
