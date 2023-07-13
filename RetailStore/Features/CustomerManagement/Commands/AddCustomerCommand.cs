@@ -13,14 +13,9 @@ using System.Threading.Tasks;
 public class AddCustomerCommand : IRequest<int>
 {
     /// <summary>
-    /// Gets and sets the Customer Name
+    /// Gets and sets Data
     /// </summary>
-    public string CustomerName { get; set; }
-
-    /// <summary>
-    /// Gets and sets the Phone Number of the Customer
-    /// </summary>
-    public long PhoneNumber { get; set; }
+    public CustomerDto Data { get; set; }
 }
 
 /// <summary>

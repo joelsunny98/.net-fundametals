@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Features.CustomerManagement.Queries;
 using RetailStore.Features.OrderManagement.Commands;
+using RetailStore.Features.OrderManagement.Queries;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
@@ -35,16 +36,17 @@ public class CustomerController : BaseController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Adding data of customer to the database
+    /// </summary>
+    /// <returns>
+    /// Id of customer inserted to the record
+    /// </returns> 
     [HttpPost("customers")]
-    public async Task<IActionResult> AddCustomer(CustomerDto customer)
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+    public async Task<IActionResult> AddCustomers(CustomerDto customer)
     {
-        var command = new AddCustomerCommand
-        {
-            CustomerName = customer.CustomerName,
-            PhoneNumber = customer.PhoneNumber
-        };
-
-        var result = await Mediator.Send(command);
+        var result = await Mediator.Send(new AddCustomerCommand { Data = customer});
         return Ok(result);
     }
 
@@ -75,19 +77,8 @@ public class CustomerController : BaseController
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomerById(int id)
     {
-        var customer = await _customerRepository.GetById(id);
-        if (customer == null)
-        {
-            return NotFound();
-        }
-
-        var customerResponse = new CustomerDto
-        {
-            CustomerName = customer.Name,
-            PhoneNumber = (long)customer.PhoneNumber
-        };
-
-        return Ok(customerResponse);
+        var result = await Mediator.Send(new GetCustomerByIdQuery());
+        return Ok(result);
     }
 
     /// <summary>
