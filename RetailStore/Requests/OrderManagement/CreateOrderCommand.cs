@@ -4,17 +4,13 @@ using RetailStore.Extensions;
 using RetailStore.Model;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.OrderManagement.Commands;
+namespace RetailStore.Requests.OrderManagement;
 
 /// <summary>
 /// Command to Create a new Order
 /// </summary>
-public class CreateOrderCommand : IRequest<string>
+public class CreateOrderCommand : OrderRequestDto, IRequest<string>
 {
-    /// <summary>
-    /// Gets and sets Data
-    /// </summary>
-    public OrderRequestDto Data { get; set; }
 }
 
 /// <summary>
@@ -43,7 +39,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
     {
         var createdOrder = new Order
         {
-            CustomerId = command.Data.CustomerId,
+            CustomerId = command.CustomerId,
             TotalAmount = 0,
             Discount = 0,
             CreatedOn = DateTime.UtcNow,
@@ -51,7 +47,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
         };
         _dbContext.Orders.Add(createdOrder);
 
-        var details = command.Data.Details.Select(d =>
+        var details = command.Details.Select(d =>
         {
             var product = _dbContext.Products.Where(x => x.Id == d.ProductId).FirstOrDefault();
             var orderDetail = new OrderDetail

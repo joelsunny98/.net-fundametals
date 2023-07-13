@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.OrderManagement.Queries
+namespace RetailStore.Requests.OrderManagement
 {
-    public class GetOrderByCustomerQuery: IRequest<List<CustomerByOrderDto>>
+    public class GetOrderByCustomerQuery : IRequest<List<CustomerByOrderDto>>
     {
     }
 
-    public class GetOrderByCustomerQueryHandler: IRequestHandler<GetOrderByCustomerQuery, List<CustomerByOrderDto>> 
+    public class GetOrderByCustomerQueryHandler : IRequestHandler<GetOrderByCustomerQuery, List<CustomerByOrderDto>>
     {
         private readonly RetailStoreDbContext _dbContext;
 
@@ -18,7 +18,7 @@ namespace RetailStore.Features.OrderManagement.Queries
             _dbContext = dbContext;
         }
 
-        public async Task<List<CustomerByOrderDto>> Handle(GetOrderByCustomerQuery request, CancellationToken cancellationToken) 
+        public async Task<List<CustomerByOrderDto>> Handle(GetOrderByCustomerQuery request, CancellationToken cancellationToken)
         {
             var result = await _dbContext.Orders.Include(t => t.Customer).GroupBy(c => c.CustomerId).Select(g => new CustomerByOrderDto
             {

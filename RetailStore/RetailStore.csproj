@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\ProductManagement\" />
+    <Folder Include="Requests\ProductManagement\" />
   </ItemGroup>
 
 </Project>
