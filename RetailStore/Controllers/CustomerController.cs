@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Features.CustomerManagement.Queries;
+using RetailStore.Features.OrderManagement.Commands;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
@@ -34,41 +35,19 @@ public class CustomerController : BaseController
         return Ok(result);
     }
 
-    /// <summary>
-    /// Adding customer data to the database
-    /// </summary>
-    /// <returns>
-    /// Id of inserted record
-    /// </returns>    
     [HttpPost("customers")]
-    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddCustomer(CustomerDto customerRequestBody)
+    public async Task<IActionResult> AddCustomer(CustomerDto customer)
     {
-        var phoneNumber = customerRequestBody.PhoneNumber.ToString();
-        var duplicateCustomer = await _customerRepository.Find(x => x.PhoneNumber == customerRequestBody.PhoneNumber);
+        var command = new AddCustomerCommand
+        {
+            CustomerName = customer.CustomerName,
+            PhoneNumber = customer.PhoneNumber
+        };
 
-        if (phoneNumber.Length !=10)
-        {
-            return BadRequest("Phonenumber Must be 10 digits");
-        }
-        else if (duplicateCustomer.Any())
-        {
-            return BadRequest("Phonenumber Must be unique");
-        }
-        else
-        {
-            var customer = new Customer
-            {
-                Name = customerRequestBody.CustomerName,
-                PhoneNumber = customerRequestBody.PhoneNumber,
-                CreatedOn = DateTime.UtcNow,
-                UpdatedOn = DateTime.UtcNow,
-            };
-
-            var createdCustomer = await _customerRepository.Create(customer);
-            return Ok(createdCustomer.Id);
-        }
+        var result = await Mediator.Send(command);
+        return Ok(result);
     }
+
 
     /// <summary>
     /// Endpoint to delete a customer by ID.
