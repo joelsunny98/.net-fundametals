@@ -60,12 +60,7 @@ public class OrderController : BaseController
     [HttpDelete("orders")]
     public async Task<IActionResult> DeleteOrders(int id)
     {
-        var deletedOrder = await _orderRepository.Delete(id);
-
-        if (deletedOrder == null)
-        {
-            return NotFound();
-        }
+        var deletedOrder = await Mediator.Send(new DeleteOrderByIdCommand { Id = id });
         return Ok(deletedOrder);
     }
 
