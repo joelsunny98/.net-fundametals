@@ -1,14 +1,8 @@
-﻿using System.Net;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
-using RetailStore.Extensions;
 using RetailStore.Features.OrderManagement.Commands;
 using RetailStore.Features.OrderManagement.Queries;
-using RetailStore.Model;
-using RetailStore.Persistence;
-using RetailStore.Repository;
+using System.Net;
 
 namespace RetailStore.Controllers;
 
@@ -18,16 +12,6 @@ namespace RetailStore.Controllers;
 [ApiController]
 public class OrderController : BaseController
 {
-    private readonly IRepository<Order> _orderRepository;
-    private readonly IRepository<Product> _productRepository;
-    private readonly RetailStoreDbContext _dbContext;
-    public OrderController(IRepository<Order> orderRepository, RetailStoreDbContext dbContext, IRepository<Product> productRepository)
-    {
-        _orderRepository = orderRepository;
-        _productRepository = productRepository;
-        _dbContext = dbContext;
-    }
-
     /// <summary>
     /// Endpoint to fetch details of orders of retail store.
     /// </summary>
@@ -72,8 +56,9 @@ public class OrderController : BaseController
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateOrder(int id, OrderRequestDto orderRequestBody)
     {
-        var result = await Mediator.Send(new UpdateOrderByIdCommand { 
-            Id = id, 
+        var result = await Mediator.Send(new UpdateOrderByIdCommand
+        {
+            Id = id,
             OrderRequest = orderRequestBody
         });
         return Ok(result);
