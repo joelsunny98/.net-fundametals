@@ -74,42 +74,14 @@ public class OrderController : BaseController
     /// </summary>
     /// <param name="id">Order's Id to fetch order's data</param>
     [HttpPut("orders/{id}")]
-    [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateOrder(int id, OrderRequestDto orderRequestBody)
     {
-        var order = _dbContext.Orders.FirstOrDefault(e => e.Id == id);
-
-        if (order == null)
-        {
-            return NotFound();
-        }
-
-        order.CustomerId = orderRequestBody.CustomerId;
-        order.UpdatedOn = DateTime.UtcNow;
-
-        var details = orderRequestBody.Details.Select(d =>
-        {
-            var product = _dbContext.Products.FirstOrDefault(p => p.Id == d.ProductId);
-            var orderDetail = new OrderDetail
-            {
-                ProductId = d.ProductId,
-                Quantity = d.Quantity,
-                Order = order
-            };
-
-            if (product != null)
-            {
-                var Amount = order.TotalAmount.TotalValue(product.Price, d.Quantity);
-                order.TotalAmount = Amount.DiscountedAmount;
-                order.Discount = Amount.DiscountValue;
-            }
-            return orderDetail;
-        }).ToList();
-
-
-        _dbContext.OrderDetails.AddRange(details);
-        await _dbContext.SaveChangesAsync();
-        return Ok(order.Id);
+        var result = await Mediator.Send(new UpdateOrderByIdCommand { 
+            Id = id, 
+            OrderRequest = orderRequestBody
+        });
+        return Ok(result);
     }
 
     /// <summary>
@@ -121,12 +93,7 @@ public class OrderController : BaseController
     [HttpGet("orders/customer")]
     public async Task<IActionResult> GetOrderByCustomer()
     {
-        var result = await _dbContext.Orders.Include(t => t.Customer).GroupBy(c => c.CustomerId).Select(g => new
-        {
-            CustomerName = g.FirstOrDefault().Customer.Name,
-            TotalOrders = g.Count()
-        }).ToListAsync();
-
+        var result = await Mediator.Send(new GetOrderByCustomerQuery());
         return Ok(result);
     }
 
