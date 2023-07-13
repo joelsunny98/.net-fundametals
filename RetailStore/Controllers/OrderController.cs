@@ -121,12 +121,7 @@ public class OrderController : BaseController
     [HttpGet("orders/customer")]
     public async Task<IActionResult> GetOrderByCustomer()
     {
-        var result = await _dbContext.Orders.Include(t => t.Customer).GroupBy(c => c.CustomerId).Select(g => new
-        {
-            CustomerName = g.FirstOrDefault().Customer.Name,
-            TotalOrders = g.Count()
-        }).ToListAsync();
-
+        var result = await Mediator.Send(new GetOrderByCustomerQuery());
         return Ok(result);
     }
 
