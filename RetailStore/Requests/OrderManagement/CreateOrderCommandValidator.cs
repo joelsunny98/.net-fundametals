@@ -2,7 +2,7 @@
 using RetailStore.Constants;
 using RetailStore.Dtos;
 
-namespace RetailStore.Features.OrderManagement.Commands;
+namespace RetailStore.Requests.OrderManagement;
 
 /// <summary>
 /// Validator for Create Order Command
@@ -15,11 +15,11 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
     public CreateOrderCommandValidator()
     {
         //Rules for required fields
-        RuleFor(x => x.Data.CustomerId).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
-        RuleForEach(x => x.Data.Details).ChildRules(p =>
+        RuleFor(x => x.CustomerId).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+        RuleForEach(x => x.Details).ChildRules(p =>
         {
             p.RuleFor(x => x.ProductId).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
-            p.RuleFor(x => x.Quantity).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+            p.RuleFor(x => x.Quantity).Must(x => x != 0).WithMessage(ValidationMessage.Required);
         });
     }
 }

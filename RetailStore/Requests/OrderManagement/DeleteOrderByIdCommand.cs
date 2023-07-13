@@ -2,7 +2,7 @@
 using RetailStore.Model;
 using RetailStore.Repository;
 
-namespace RetailStore.Features.OrderManagement.Commands;
+namespace RetailStore.Requests.OrderManagement;
 
 /// <summary>
 /// Command to Delete Order by Id
