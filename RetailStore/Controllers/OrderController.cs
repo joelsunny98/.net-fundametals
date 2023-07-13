@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
-using RetailStore.Features.OrderManagement.Commands;
-using RetailStore.Features.OrderManagement.Queries;
+using RetailStore.Requests.OrderManagement;
+using RetailStore.Model;
 using System.Net;
 
 namespace RetailStore.Controllers;
@@ -31,9 +31,10 @@ public class OrderController : BaseController
     /// Id of order inserted to the record
     /// </returns> 
     [HttpPost("orders")]
-    public async Task<IActionResult> AddOrders(OrderRequestDto order)
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> AddOrders([FromBody]CreateOrderCommand request)
     {
-        var result = await Mediator.Send(new CreateOrderCommand { Data = order });
+        var result = await Mediator.Send(request);
         return Ok(result);
     }
 
@@ -41,8 +42,9 @@ public class OrderController : BaseController
     /// Endpoint to delete a order by ID.
     /// </summary>
     /// <param name="id">order's Id to fetch order's data</param>
-    [HttpDelete("orders")]
-    public async Task<IActionResult> DeleteOrders(int id)
+    [HttpDelete("orders/{id}")]
+    [ProducesResponseType(typeof(Order), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> DeleteOrders([FromRoute]int id)
     {
         var deletedOrder = await Mediator.Send(new DeleteOrderByIdCommand { Id = id });
         return Ok(deletedOrder);
@@ -54,7 +56,7 @@ public class OrderController : BaseController
     /// <param name="id">Order's Id to fetch order's data</param>
     [HttpPut("orders/{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateOrder(int id, OrderRequestDto orderRequestBody)
+    public async Task<IActionResult> UpdateOrder([FromRoute]int id, [FromBody]OrderRequestDto orderRequestBody)
     {
         var result = await Mediator.Send(new UpdateOrderByIdCommand
         {
@@ -71,6 +73,7 @@ public class OrderController : BaseController
     /// Object
     /// </returns>
     [HttpGet("orders/customer")]
+    [ProducesResponseType(typeof(List<CustomerByOrderDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetOrderByCustomer()
     {
         var result = await Mediator.Send(new GetOrderByCustomerQuery());
@@ -82,6 +85,7 @@ public class OrderController : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet("orders/today")]
+    [ProducesResponseType(typeof(List<OrderDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetOrderByDay()
     {
         var result = await Mediator.Send(new GetOrderByDayQuery());
@@ -93,6 +97,7 @@ public class OrderController : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet("orders/collection")]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetCollectionByDay()
     {
         var result = await Mediator.Send(new GetCollectionByDayQuery());

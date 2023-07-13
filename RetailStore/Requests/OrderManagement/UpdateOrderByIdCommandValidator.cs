@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using RetailStore.Constants;
 
-namespace RetailStore.Features.OrderManagement.Commands;
+namespace RetailStore.Requests.OrderManagement;
 
 /// <summary>
 /// Validator for Update Order Command
 /// </summary>
-public class UpdateOrderByIdCommandValidator: AbstractValidator<UpdateOrderByIdCommand>
+public class UpdateOrderByIdCommandValidator : AbstractValidator<UpdateOrderByIdCommand>
 {
     /// <summary>
     /// Validator for defining specific rules for properties

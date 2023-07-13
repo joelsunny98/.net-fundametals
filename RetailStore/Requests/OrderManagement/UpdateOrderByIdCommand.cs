@@ -4,7 +4,7 @@ using RetailStore.Extensions;
 using RetailStore.Model;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.OrderManagement.Commands;
+namespace RetailStore.Requests.OrderManagement;
 
 /// <summary>
 /// Update Command for Order

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.OrderManagement.Queries
+namespace RetailStore.Requests.OrderManagement
 {
     /// <summary>
     /// Query to Get Collection by day
