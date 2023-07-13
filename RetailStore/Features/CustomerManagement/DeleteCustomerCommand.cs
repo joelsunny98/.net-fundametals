@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using RetailStore.Persistence;
 
+namespace RetailStore.Features.CustomerManagement.Commands;
 public class DeleteCustomerCommand : IRequest<int>
 {
     public int CustomerId { get; set; }

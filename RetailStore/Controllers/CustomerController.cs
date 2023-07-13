@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
-using RetailStore.Features.CustomerManagement.Queries;
-using RetailStore.Features.OrderManagement.Commands;
-using RetailStore.Features.OrderManagement.Queries;
+using RetailStore.Features.CustomerManagement;
+
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
@@ -46,27 +45,28 @@ public class CustomerController : BaseController
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddCustomers(CustomerDto customer)
     {
-        var result = await Mediator.Send(new AddCustomerCommand { Data = customer});
+        var result = await Mediator.Send(new AddCustomerCommand { Data = customer });
         return Ok(result);
     }
 
 
     /// <summary>
-    /// Endpoint to delete a customer by ID.
+    /// Delete a customer by ID.
     /// </summary>
-    /// <param name="id">customers's Id to fetch customers's data</param>
+    /// <param name="id">ID of the customer to be deleted</param>
     [HttpDelete("customers/{id}")]
-    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteCustomer(int id)
     {
-        var deletedCustomer = await _customerRepository.Delete(id);
-        if (deletedCustomer == null)
+        var result = await Mediator.Send(new DeleteCustomerCommand { CustomerId = id });
+
+        if (result == null)
         {
             return NotFound();
         }
 
-        return Ok(deletedCustomer.Id);
+        return Ok(result);
     }
 
     /// <summary>
@@ -94,16 +94,22 @@ public class CustomerController : BaseController
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateCustomer(int id, CustomerDto customerRequestBody)
     {
-        var customer = new Customer
+        var command = new UpdateCustomerCommand
         {
-            Id = id,
-            Name = customerRequestBody.CustomerName,
-            PhoneNumber = customerRequestBody.PhoneNumber,
-            UpdatedOn = DateTime.UtcNow
+            CustomerId = id,
+            CustomerName = customerRequestBody.CustomerName,
+            PhoneNumber = customerRequestBody.PhoneNumber
         };
-        var updatedCustomer = await _customerRepository.Update(customer);
-        return Ok(updatedCustomer.Id);
 
+        var updatedCustomerId = await Mediator.Send(command);
+
+        return Ok(updatedCustomerId);
     }
 }
+
+
+
+
+
+
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace RetailStore.Features.CustomerManagement;
 /// <summary>
 /// Command to Add a new Customer
 /// </summary>
@@ -44,8 +45,8 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
     {
         var customer = new Customer
         {
-            Name = command.CustomerName,
-            PhoneNumber = command.PhoneNumber,
+            Name = command.Data.CustomerName,
+            PhoneNumber = command.Data.PhoneNumber,
             CreatedOn = DateTime.UtcNow,
             UpdatedOn = DateTime.UtcNow,
         };
@@ -54,5 +55,6 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
         await _dbContext.SaveChangesAsync(cancellationToken);
         return customer.Id;
     }
+
 
 }
