@@ -110,10 +110,7 @@ public class OrderController : BaseController
     [HttpGet("orders/collection")]
     public async Task<IActionResult> GetCollectionByDay()
     {
-        var totalCollection = await _dbContext.Orders
-        .Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date)
-        .SumAsync(e => e.TotalAmount);
-
-        return Ok(totalCollection.ConvertToCurrencyString());
+        var result = await Mediator.Send(new GetCollectionByDayQuery());
+        return Ok(result);
     }
 }
