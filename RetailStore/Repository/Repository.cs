@@ -22,7 +22,7 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task<T> GetById(int id)
     {    
-        return await dbSet.FindAsync(id); ;
+        return await dbSet.FindAsync(id); ; 
     }
 
     public async Task<T> Create(T entity)
