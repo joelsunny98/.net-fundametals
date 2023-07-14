@@ -4,6 +4,8 @@ using RetailStore.Repository;
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using RetailStore.Contracts;
+using RetailStore.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,7 @@ app.Run();
 
 void ConfigureServices(IServiceCollection services)
 {
+    services.AddScoped<IProductBarCodeService, ProductBarCodeService>();
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();

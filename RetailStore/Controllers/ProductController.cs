@@ -2,6 +2,7 @@
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Repository;
+using RetailStore.Requests.ProductManagement;
 
 namespace RetailStore.Controllers;
 
@@ -10,7 +11,7 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 [Route("api")]
-public class ProductController : ControllerBase
+public class ProductController : BaseController
 {
     private readonly IRepository<Product> _productRepository;
 
@@ -130,5 +131,18 @@ public class ProductController : ControllerBase
 
         var updatedProduct = await _productRepository.Update(product);
         return Ok(updatedProduct.Id);
+    }
+
+    /// <summary>
+    /// Endpoint to generate a barcode for product
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("products/{id}/barcode")]
+    //[ProducesResponseType(typeof(Image), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductBarcode([FromRoute] int id)
+    {
+        var result = await Mediator.Send(new GetProductBarcodeQuery { ProductId = id });
+        return Ok(result);
     }
 }
