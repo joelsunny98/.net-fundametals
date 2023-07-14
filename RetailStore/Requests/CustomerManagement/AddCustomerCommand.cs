@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RetailStore.Features.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 /// <summary>
 /// Command to Add a new Customer

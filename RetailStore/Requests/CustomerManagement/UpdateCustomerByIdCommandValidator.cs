@@ -2,7 +2,7 @@
 using RetailStore.Constants;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
 {
     private readonly RetailStoreDbContext _dbContext;

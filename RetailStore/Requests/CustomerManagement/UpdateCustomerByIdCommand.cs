@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 public class UpdateCustomerCommand : IRequest<int>
 {
     public int CustomerId { get; set; }

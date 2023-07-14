@@ -3,38 +3,38 @@ using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.CustomerManagement
+namespace RetailStore.Requests.CustomerManagement;
+
+public class GetCustomerByIdQuery : IRequest<CustomerDto>
 {
-    public class GetCustomerByIdQuery : IRequest<CustomerDto>
+    public long? CustomerId { get; set; }
+}
+
+public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDto>
+{
+    private readonly RetailStoreDbContext _dbContext;
+
+    public GetCustomerByIdQueryHandler(RetailStoreDbContext dbContext)
     {
-        public long? CustomerId { get; set; }
+        _dbContext = dbContext;
     }
 
-    public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDto>
+    public async Task<CustomerDto> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)
     {
-        private readonly RetailStoreDbContext _dbContext;
+        var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == query.CustomerId);
 
-        public GetCustomerByIdQueryHandler(RetailStoreDbContext dbContext)
+        if (customer == null)
         {
-            _dbContext = dbContext;
+            throw new KeyNotFoundException();
         }
 
-        public async Task<CustomerDto> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)
+        var result = new CustomerDto
         {
-            var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == query.CustomerId);
+            CustomerName = customer.Name,
+            PhoneNumber = (long)customer.PhoneNumber,
+        };
 
-            if (customer == null)
-            {
-                throw new KeyNotFoundException();
-            }
-
-            var result = new CustomerDto
-            {
-                CustomerName = customer.Name,
-                PhoneNumber = (long)customer.PhoneNumber,
-            };
-
-            return result;
-        }
+        return result;
     }
 }
+
