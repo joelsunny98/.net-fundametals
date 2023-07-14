@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
+using RetailStore.Features.OrderManagement.Commands;
+using RetailStore.Features.OrderManagement.Queries;
+using RetailStore.Features.ProductManagement.Commands;
+using RetailStore.Features.ProductManagement.Queries;
 using RetailStore.Model;
 using RetailStore.Repository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace RetailStore.Controllers;
 
@@ -10,7 +16,7 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 [Route("api")]
-public class ProductController : ControllerBase
+public class ProductController : BaseController
 {
     private readonly IRepository<Product> _productRepository;
 
@@ -24,17 +30,14 @@ public class ProductController : ControllerBase
     /// </summary>
     /// <returns>It returns customer details</returns>
     [HttpGet("products")]
-    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ProductDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProducts()
     {
-        var products = await _productRepository.GetAll();
-        var productsResponse = products.Select(e => new ProductDto
-        {
-            ProductName = e.Name,
-            ProductPrice = e.Price
-        });
-        return Ok(productsResponse);
+        var products = await Mediator.Send(new GetAllProductsQuery());
+
+        return Ok(products);
     }
+
 
     /// <summary>
     /// Adding product data to the database
@@ -44,44 +47,28 @@ public class ProductController : ControllerBase
     /// </returns>    
     [HttpPost("products")]
     [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddProduct(ProductDto productRequestBody)
+    public async Task<IActionResult> AddProduct(ProductDto product)
     {
-        var duplicateProduct = await _productRepository.Find(x => x.Name == productRequestBody.ProductName);
-        if (duplicateProduct.Any())
-        {
-            return BadRequest("Product with same name already exists");
-        }
-        else
-        {
-            var product = new Product
-            {
-                Name = productRequestBody.ProductName,
-                Price = productRequestBody.ProductPrice,
-                CreatedOn = DateTime.UtcNow,
-                UpdatedOn = DateTime.UtcNow
-            };
-
-            var createdProduct = await _productRepository.Create(product);
-            return Ok(createdProduct.Id);
-        }
+ 
+            var result = await Mediator.Send(new AddProductCommand { Data = product});
+            return Ok(result);
+        
     }
+
 
     /// <summary>
     /// Endpoint to delete a product by ID.
     /// </summary>
     /// <param name="id">product's Id to fetch product's data</param>
-    [HttpDelete("products/{id}")]
-    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Nullable), StatusCodes.Status400BadRequest)]
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteProduct(int id)
     {
-        var deletedProduct = await _productRepository.Delete(id);
-        if (deletedProduct == null)
-        {
-            return NotFound();
-        }
+        var command = new DeleteProductCommand { ProductId = id };
+        var deletedProductId = await Mediator.Send(command);
 
-        return Ok(deletedProduct.Id);
+        return Ok(deletedProductId);
     }
 
     /// <summary>
@@ -92,20 +79,16 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductById(int id)
     {
-        var product = await _productRepository.GetById(id);
-        if (product == null)
+        var result = await Mediator.Send(new GetProductByIdQuery { Id = id });
+
+        if (result.Count == 0)
         {
             return NotFound();
         }
 
-        var productResponse = new ProductDto
-        {
-            ProductName = product.Name,
-            ProductPrice = product.Price
-        };
-
-        return Ok(productResponse);
+        return Ok(result);
     }
+
 
     /// <summary>
     /// Endpoint to update product record
@@ -116,19 +99,17 @@ public class ProductController : ControllerBase
     /// <returns> 
     /// Product id of updated record 
     /// </returns>
-    [HttpPut("products/{id}")]
-    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateProduct(int id, ProductDto productRequestBody)
     {
-        var product = new Product
-        {
-            Id = id,
-            Name = productRequestBody.ProductName,
-            Price = productRequestBody.ProductPrice,
-            UpdatedOn = DateTime.UtcNow
-        };
+        var updatedProductId = await Mediator.Send(new UpdateProductCommand { ProductId = id, ProductData = productRequestBody});
 
-        var updatedProduct = await _productRepository.Update(product);
-        return Ok(updatedProduct.Id);
+        if (updatedProductId == 0)
+        {
+            return NotFound();
+        }
+
+        return Ok(updatedProductId);
     }
 }
