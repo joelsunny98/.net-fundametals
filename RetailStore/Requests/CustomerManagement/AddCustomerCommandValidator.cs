@@ -1,21 +1,21 @@
 ﻿using FluentValidation;
 using RetailStore.Constants;
 
-namespace RetailStore.Requests.CustomerManagement;
-
-/// <summary>
-/// Validator for Add Customer Command
-/// </summary>
-public class AddCustomerCommandValidator : AbstractValidator<AddCustomerCommand>
+namespace RetailStore.Requests.CustomerManagement
 {
     /// <summary>
-    /// Validator for defining specific rules for properties
+    /// Validator for Add Customer Command
     /// </summary>
-    public AddCustomerCommandValidator()
+    public class AddCustomerCommandValidator : AbstractValidator<AddCustomerCommand>
     {
-        RuleFor(command => command.CustomerName)
-            .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
-            .MaximumLength(100).WithMessage(ValidationMessage.Length);
+        /// <summary>
+        /// Validator for defining specific rules for properties
+        /// </summary>
+        public AddCustomerCommandValidator()
+        {
+            RuleFor(command => command.CustomerName)
+                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
+                .MaximumLength(25).WithMessage(ValidationMessage.Length);
 
         RuleFor(command => command.PhoneNumber).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
 
