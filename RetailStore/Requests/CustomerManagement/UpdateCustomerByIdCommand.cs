@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 /// <summary>
 /// Update Command for Customer

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using RetailStore.Constants;
 
-namespace RetailStore.Features.CustomerManagement
+namespace RetailStore.Requests.CustomerManagement
 {
     /// <summary>
     /// Validator for Update Customer Command
