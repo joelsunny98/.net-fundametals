@@ -2,7 +2,7 @@
 using RetailStore.Model;
 using RetailStore.Repository;
 
-namespace RetailStore.Features.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 /// <summary>
 /// Command to Delete Customer by Id
