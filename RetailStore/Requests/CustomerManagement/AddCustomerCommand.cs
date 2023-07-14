@@ -8,15 +8,12 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace RetailStore.Features.CustomerManagement;
+
 /// <summary>
 /// Command to Add a new Customer
 /// </summary>
-public class AddCustomerCommand : IRequest<int>
+public class AddCustomerCommand : CustomerDto, IRequest<int>
 {
-    /// <summary>
-    /// Gets and sets Data
-    /// </summary>
-    public CustomerDto Data { get; set; }
 }
 
 /// <summary>
@@ -45,8 +42,8 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
     {
         var customer = new Customer
         {
-            Name = command.Data.CustomerName,
-            PhoneNumber = command.Data.PhoneNumber,
+            Name = command.CustomerName,
+            PhoneNumber = command.PhoneNumber,
             CreatedOn = DateTime.UtcNow,
             UpdatedOn = DateTime.UtcNow,
         };

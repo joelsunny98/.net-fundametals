@@ -1,38 +1,24 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using RetailStore.Dtos;
-using RetailStore.Persistence;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using RetailStore.Constants;
 
-namespace RetailStore.Features.CustomerManagement;
-public class AddCustomerCommandValidator : AbstractValidator<AddCustomerCommand>
+namespace RetailStore.Features.CustomerManagement
 {
-    private readonly RetailStoreDbContext _dbContext;
-
-    public AddCustomerCommandValidator(RetailStoreDbContext dbContext)
+    /// <summary>
+    /// Validator for Add Customer Command
+    /// </summary>
+    public class AddCustomerCommandValidator : AbstractValidator<AddCustomerCommand>
     {
-        _dbContext = dbContext;
+        /// <summary>
+        /// Validator for defining specific rules for properties
+        /// </summary>
+        public AddCustomerCommandValidator()
+        {
+            RuleFor(command => command.CustomerName)
+                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
+                .MaximumLength(100).WithMessage(ValidationMessage.Length);
 
-        RuleFor(command => command.Data.CustomerName)
-            .NotEmpty().WithMessage("Customer name is required.");
+            RuleFor(command => command.PhoneNumber).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
 
-        RuleFor(command => command.Data.PhoneNumber)
-            //.NotEmpty().WithMessage("Phone number is required.")
-            .Must(BeValidPhoneNumber).WithMessage("Phone number must be 10 digits.")
-            .MustAsync(BeUniquePhoneNumber).WithMessage("Phone number must be unique.");
-    }
-
-    private bool BeValidPhoneNumber(long phoneNumber)
-    {
-        string phoneNumberString = phoneNumber.ToString();
-        return phoneNumberString.Length == 10;
-    }
-
-    private async Task<bool> BeUniquePhoneNumber(AddCustomerCommand command, long phoneNumber, CancellationToken cancellationToken)
-    {
-        var duplicateCustomer = await _dbContext.Customers.AnyAsync(x => x.PhoneNumber == command.Data.PhoneNumber, cancellationToken);
-        return !duplicateCustomer;
+        }
     }
 }

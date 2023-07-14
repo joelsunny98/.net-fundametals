@@ -1,33 +1,52 @@
 ﻿using MediatR;
+using RetailStore.Model;
 using RetailStore.Persistence;
+using RetailStore.Repository;
+using RetailStore.Requests.OrderManagement;
 
-namespace RetailStore.Features.CustomerManagement.Commands;
-public class DeleteCustomerCommand : IRequest<int>
+namespace RetailStore.Features.CustomerManagement;
+
+/// <summary>
+/// Command to Delete Customer by Id
+/// </summary>
+public class DeleteCustomerCommand : IRequest<Customer>
 {
     public int CustomerId { get; set; }
 }
 
-public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, int>
+/// <summary>
+/// Handler for Delete Customer by Id command
+/// </summary>
+public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Customer>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRepository<Customer> _customerRepository;
 
-    public DeleteCustomerCommandHandler(RetailStoreDbContext dbContext)
+    /// <summary>
+    /// Injects IRepository class
+    /// </summary>
+    /// <param name="customerRepository"></param>
+    public DeleteCustomerCommandHandler(IRepository<Customer> customerRepository)
     {
-        _dbContext = dbContext;
+        _customerRepository = customerRepository;
     }
 
-    public async Task<int> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
+    /// <summary>
+    /// Deletes Customer by Id
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Customer</returns>
+    /// <exception cref="KeyNotFoundException"></exception>
+    public async Task<Customer> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
     {
-        var customer = await _dbContext.Customers.FindAsync(command.CustomerId);
+        var deletedCustomer = await _customerRepository.Delete(command.CustomerId);
 
-        if (customer == null)
+        if (deletedCustomer == null)
         {
-            return default;
+            throw new KeyNotFoundException();
         }
 
-        _dbContext.Customers.Remove(customer);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        return deletedCustomer;
 
-        return customer.Id;
     }
 }

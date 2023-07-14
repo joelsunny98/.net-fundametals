@@ -2,11 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Features.CustomerManagement;
-
 using RetailStore.Model;
-using RetailStore.Persistence;
 using RetailStore.Repository;
-using System.Formats.Asn1;
 
 namespace RetailStore.Controllers;
 
@@ -17,12 +14,6 @@ namespace RetailStore.Controllers;
 [Route("api")]
 public class CustomerController : BaseController
 {
-    private readonly IRepository<Customer> _customerRepository;
-    public CustomerController(IRepository<Customer> customerRepository)
-    {
-        _customerRepository = customerRepository;
-    }
-
     /// <summary>
     /// Endpoint to fetch details of an customer.
     /// </summary>
@@ -43,9 +34,9 @@ public class CustomerController : BaseController
     /// </returns> 
     [HttpPost("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddCustomers(CustomerDto customer)
+    public async Task<IActionResult> AddCustomers(AddCustomerCommand request)
     {
-        var result = await Mediator.Send(new AddCustomerCommand { Data = customer });
+        var result = await Mediator.Send(request);
         return Ok(result);
     }
 
@@ -56,18 +47,12 @@ public class CustomerController : BaseController
     /// <param name="id">ID of the customer to be deleted</param>
     [HttpDelete("customers/{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteCustomer(int id)
+    public async Task<IActionResult> DeleteCustomer([FromRoute] int id)
     {
-        var result = await Mediator.Send(new DeleteCustomerCommand { CustomerId = id });
-
-        if (result == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(result);
+        var deleteCustomer = await Mediator.Send(new DeleteCustomerCommand { CustomerId = id });
+        return Ok(deleteCustomer);
     }
+
 
     /// <summary>
     /// Endpoint to fetch details of an customer with given id.
@@ -75,9 +60,12 @@ public class CustomerController : BaseController
     /// <param name="id">Customers's Id to fetch customer's data</param>
     [HttpGet("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCustomerById(int id)
+    public async Task<IActionResult> GetCustomerById([FromRoute]int id)
     {
-        var result = await Mediator.Send(new GetCustomerByIdQuery());
+        var result = await Mediator.Send(new GetCustomerByIdQuery
+        {
+            CustomerId = id
+        }) ;
         return Ok(result);
     }
 
@@ -92,18 +80,15 @@ public class CustomerController : BaseController
     /// </returns>
     [HttpPut("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateCustomer(int id, CustomerDto customerRequestBody)
+    public async Task<IActionResult> UpdateCustomer([FromRoute]int id, [FromBody]CustomerDto customerRequestBody)
     {
-        var command = new UpdateCustomerCommand
+        var result = await Mediator.Send(new UpdateCustomerCommand
         {
             CustomerId = id,
             CustomerName = customerRequestBody.CustomerName,
             PhoneNumber = customerRequestBody.PhoneNumber
-        };
-
-        var updatedCustomerId = await Mediator.Send(command);
-
-        return Ok(updatedCustomerId);
+        });
+        return Ok(result);
     }
 }
 

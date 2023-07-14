@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 

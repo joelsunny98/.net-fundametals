@@ -1,26 +1,25 @@
 ﻿using FluentValidation;
-namespace RetailStore.Features.CustomerManagement.Commands;
+using RetailStore.Constants;
+using RetailStore.Persistence;
 
-
+namespace RetailStore.Features.CustomerManagement;
 public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
 {
-    public UpdateCustomerCommandValidator()
+    private readonly RetailStoreDbContext _dbContext;
+
+    public UpdateCustomerCommandValidator(RetailStoreDbContext dbContext)
     {
+        _dbContext = dbContext;
+
         RuleFor(command => command.CustomerId)
-            .GreaterThan(0).WithMessage("Invalid customer ID.");
+            .GreaterThan(0).WithMessage(ValidationMessage.Invalid);
 
         RuleFor(command => command.CustomerName)
-            .NotEmpty().WithMessage("Customer name is required.");
+            .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
+            .MaximumLength(100).WithMessage(ValidationMessage.Length);
 
         RuleFor(command => command.PhoneNumber)
-            .NotEmpty().WithMessage("Phone number is required.")
-            .Must(BeValidPhoneNumber).WithMessage("Phone number must be 10 digits.");
+            .NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
     }
-
-    private bool BeValidPhoneNumber(long phoneNumber)
-    {
-        string phoneNumberString = phoneNumber.ToString();
-        return phoneNumberString.Length == 10;
-    }
+         
 }
-

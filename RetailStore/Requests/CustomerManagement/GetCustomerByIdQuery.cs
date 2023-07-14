@@ -1,8 +1,7 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace RetailStore.Features.CustomerManagement
 {
@@ -22,17 +21,17 @@ namespace RetailStore.Features.CustomerManagement
 
         public async Task<CustomerDto> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)
         {
-            var customer = await _dbContext.Customers.FindAsync(query.CustomerId);
+            var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == query.CustomerId);
 
             if (customer == null)
             {
-                return null;
+                throw new KeyNotFoundException();
             }
 
             var result = new CustomerDto
             {
                 CustomerName = customer.Name,
-                // PhoneNumber = customer.PhoneNumber,
+                PhoneNumber = (long)customer.PhoneNumber,
             };
 
             return result;
