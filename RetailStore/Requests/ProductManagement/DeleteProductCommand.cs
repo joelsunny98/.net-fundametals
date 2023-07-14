@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.ProductManagement.Commands
+namespace RetailStore.Requests.ProductManagement
 {
     public class DeleteProductCommand : IRequest<int>
     {

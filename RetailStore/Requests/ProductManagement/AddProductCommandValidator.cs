@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace RetailStore.Features.ProductManagement.Commands
+namespace RetailStore.Requests.ProductManagement
 {
     public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
     {

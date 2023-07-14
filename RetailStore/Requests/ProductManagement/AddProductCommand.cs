@@ -3,7 +3,7 @@ using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.ProductManagement.Commands
+namespace RetailStore.Requests.ProductManagement
 {
     public class AddProductCommand : IRequest<int>
     {
@@ -11,7 +11,7 @@ namespace RetailStore.Features.ProductManagement.Commands
         /// Gets and sets Data
         /// </summary>
         public ProductDto Data { get; set; }
-        
+
     }
 
     public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>

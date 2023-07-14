@@ -2,7 +2,7 @@
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.ProductManagement.Commands
+namespace RetailStore.Requests.ProductManagement
 {
     public class UpdateProductCommand : IRequest<int>
     {

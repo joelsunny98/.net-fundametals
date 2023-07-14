@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.ProductManagement.Queries
+namespace RetailStore.Requests.ProductManagement
 {
-    public class GetProductByIdQuery: IRequest<List<ProductDto>>
+    public class GetProductByIdQuery : IRequest<List<ProductDto>>
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
     }
 
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, List<ProductDto>>

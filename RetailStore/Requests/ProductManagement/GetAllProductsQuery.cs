@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.ProductManagement.Queries
+namespace RetailStore.Requests.ProductManagement
 {
     public class GetAllProductsQuery : IRequest<List<ProductDto>>
     {

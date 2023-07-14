@@ -1,13 +1,7 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
-using RetailStore.Features.OrderManagement.Commands;
-using RetailStore.Features.OrderManagement.Queries;
-using RetailStore.Features.ProductManagement.Commands;
-using RetailStore.Features.ProductManagement.Queries;
 using RetailStore.Model;
-using RetailStore.Repository;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using RetailStore.Requests.ProductManagement;
 
 namespace RetailStore.Controllers;
 
@@ -18,12 +12,6 @@ namespace RetailStore.Controllers;
 [Route("api")]
 public class ProductController : BaseController
 {
-    private readonly IRepository<Product> _productRepository;
-
-    public ProductController(IRepository<Product> productRepository)
-    {
-        _productRepository = productRepository;
-    }
 
     /// <summary>
     /// Endpoint to fetch details of an product.
@@ -49,10 +37,10 @@ public class ProductController : BaseController
     [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddProduct(ProductDto product)
     {
- 
-            var result = await Mediator.Send(new AddProductCommand { Data = product});
-            return Ok(result);
-        
+
+        var result = await Mediator.Send(new AddProductCommand { Data = product });
+        return Ok(result);
+
     }
 
 
@@ -103,7 +91,7 @@ public class ProductController : BaseController
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateProduct(int id, ProductDto productRequestBody)
     {
-        var updatedProductId = await Mediator.Send(new UpdateProductCommand { ProductId = id, ProductData = productRequestBody});
+        var updatedProductId = await Mediator.Send(new UpdateProductCommand { ProductId = id, ProductData = productRequestBody });
 
         if (updatedProductId == 0)
         {
