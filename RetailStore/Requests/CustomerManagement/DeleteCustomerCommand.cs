@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using RetailStore.Model;
-using RetailStore.Persistence;
 using RetailStore.Repository;
 
 namespace RetailStore.Features.CustomerManagement;
