@@ -15,7 +15,7 @@ namespace RetailStore.Features.CustomerManagement
         {
             RuleFor(command => command.CustomerName)
                 .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
-                .MaximumLength(100).WithMessage(ValidationMessage.Length);
+                .MaximumLength(25).WithMessage(ValidationMessage.Length);
 
             RuleFor(command => command.PhoneNumber).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
 

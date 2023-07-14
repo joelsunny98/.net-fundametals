@@ -1,25 +1,27 @@
 ﻿using FluentValidation;
 using RetailStore.Constants;
-using RetailStore.Persistence;
 
-namespace RetailStore.Features.CustomerManagement;
-public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
+namespace RetailStore.Features.CustomerManagement
 {
-    private readonly RetailStoreDbContext _dbContext;
-
-    public UpdateCustomerCommandValidator(RetailStoreDbContext dbContext)
+    /// <summary>
+    /// Validator for Update Customer Command
+    /// </summary>
+    public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
     {
-        _dbContext = dbContext;
+        /// <summary>
+        /// Validator for defining specific rules for properties
+        /// </summary>
+        public UpdateCustomerCommandValidator()
+        {
+            RuleFor(command => command.CustomerId)
+                .GreaterThan(0).WithMessage(ValidationMessage.Invalid);
 
-        RuleFor(command => command.CustomerId)
-            .GreaterThan(0).WithMessage(ValidationMessage.Invalid);
+            RuleFor(command => command.CustomerName)
+                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
+                .MaximumLength(25).WithMessage(ValidationMessage.Length);
 
-        RuleFor(command => command.CustomerName)
-            .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
-            .MaximumLength(100).WithMessage(ValidationMessage.Length);
-
-        RuleFor(command => command.PhoneNumber)
-            .NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+            RuleFor(command => command.PhoneNumber)
+                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+        }
     }
-         
 }

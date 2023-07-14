@@ -2,7 +2,6 @@
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Repository;
-using RetailStore.Requests.OrderManagement;
 
 namespace RetailStore.Features.CustomerManagement;
 
