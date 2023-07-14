@@ -4,7 +4,7 @@ using RetailStore.Persistence;
 using RetailStore.Repository;
 using RetailStore.Requests.OrderManagement;
 
-namespace RetailStore.Features.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 /// <summary>
 /// Command to Delete Customer by Id

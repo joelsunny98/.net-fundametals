@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Extentions;
 using RetailStore.Persistence;
-using System.Reflection.Metadata.Ecma335;
 
 namespace RetailStore.Controllers;
 
@@ -12,7 +11,7 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 [Route("api")]
-public class OrderDetailController: ControllerBase
+public class OrderDetailController : ControllerBase
 {
     private readonly RetailStoreDbContext _dbContext;
 
