@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using RetailStore.Dtos;
-using RetailStore.Extensions;
 using RetailStore.Model;
 using RetailStore.Persistence;
+using RetailStore.Helpers;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -69,10 +69,11 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
 
             if (product != null)
             {
-                var Amount = order.TotalAmount.TotalValue(product.Price, d.Quantity);
-                order.TotalAmount = Amount.DiscountedAmount;
-                order.Discount = Amount.DiscountValue;
+                var amountDto = AmountHelper.CalculateTotalValue(product.Price, d.Quantity);
+                order.TotalAmount = amountDto.DiscountedAmount;
+                order.Discount = amountDto.DiscountValue;
             }
+
             return orderDetail;
         }).ToList();
 

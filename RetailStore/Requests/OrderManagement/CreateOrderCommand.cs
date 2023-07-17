@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using RetailStore.Dtos;
-using RetailStore.Extensions;
+using RetailStore.Helpers;
 using RetailStore.Model;
 using RetailStore.Persistence;
 
@@ -30,7 +30,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
     }
 
     /// <summary>
-    /// Adds new order to the database
+    /// Adds a new order to the database
     /// </summary>
     /// <param name="command"></param>
     /// <param name="cancellationToken"></param>
@@ -49,7 +49,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
 
         var details = command.Details.Select(d =>
         {
-            var product = _dbContext.Products.Where(x => x.Id == d.ProductId).FirstOrDefault();
+            var product = _dbContext.Products.FirstOrDefault(x => x.Id == d.ProductId);
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,
@@ -59,12 +59,14 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
 
             if (product != null)
             {
-                var Amount = createdOrder.TotalAmount.TotalValue(product.Price, d.Quantity);
-                createdOrder.TotalAmount = Amount.DiscountedAmount;
-                createdOrder.Discount = Amount.DiscountValue;
+                var amountDto = AmountHelper.CalculateTotalValue(product.Price, d.Quantity);
+                createdOrder.TotalAmount = amountDto.DiscountedAmount;
+                createdOrder.Discount = amountDto.DiscountValue;
             }
+
             return orderDetail;
         }).ToList();
+
         _dbContext.OrderDetails.AddRange(details);
 
         await _dbContext.SaveChangesAsync();
