@@ -2,12 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Contracts;
 using RetailStore.Persistence;
+using System.Runtime.CompilerServices;
 
 namespace RetailStore.Services;
 
 public class ProductBarCodeService : IProductBarCodeService
 {
     private readonly RetailStoreDbContext _dbContext;
+  
     public ProductBarCodeService(RetailStoreDbContext dbContext)
     {
         _dbContext = dbContext;
