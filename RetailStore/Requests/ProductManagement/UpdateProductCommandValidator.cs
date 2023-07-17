@@ -2,8 +2,14 @@
 
 namespace RetailStore.Requests.ProductManagement
 {
+    /// <summary>
+    /// Valdiator for Update Product Command
+    /// </summary>
     public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
     {
+        /// <summary>
+        /// Validator rules for Specific Rules
+        /// </summary>
         public UpdateProductCommandValidator()
         {
             RuleFor(command => command.ProductId)
