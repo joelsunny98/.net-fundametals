@@ -28,14 +28,17 @@ public class UpdateOrderByIdCommand : IRequest<int>
 public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdCommand, int>
 {
     private readonly RetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects RetailDbContext Class
     /// </summary>
     /// <param name="dbContext"></param>
-    public UpdateOrderByIdCommandHandler(RetailStoreDbContext dbContext)
+    public UpdateOrderByIdCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateOrderByIdCommand> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
+
     }
 
     /// <summary>
@@ -51,6 +54,7 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
 
         if (order == null)
         {
+            _logger.LogError("No order with Id: {OrderId}", command.Id);
             throw new KeyNotFoundException();
         }
 
@@ -79,6 +83,7 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
         _dbContext.OrderDetails.AddRange(details);
         await _dbContext.SaveChangesAsync();
 
+        _logger.LogInformation("Updated Order with Id: {OrderId", command.Id);
         return order.Id;
     }
 }

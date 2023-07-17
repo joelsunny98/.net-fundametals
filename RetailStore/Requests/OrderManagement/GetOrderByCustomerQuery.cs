@@ -12,10 +12,13 @@ namespace RetailStore.Requests.OrderManagement
     public class GetOrderByCustomerQueryHandler : IRequestHandler<GetOrderByCustomerQuery, List<CustomerByOrderDto>>
     {
         private readonly RetailStoreDbContext _dbContext;
+        private readonly ILogger _logger;
 
-        public GetOrderByCustomerQueryHandler(RetailStoreDbContext dbContext)
+        public GetOrderByCustomerQueryHandler(RetailStoreDbContext dbContext, ILogger<GetOrderByCustomerQuery> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
+
         }
 
         public async Task<List<CustomerByOrderDto>> Handle(GetOrderByCustomerQuery request, CancellationToken cancellationToken)
@@ -26,6 +29,7 @@ namespace RetailStore.Requests.OrderManagement
                 TotalOrders = g.Count()
             }).ToListAsync();
 
+            _logger.LogInformation("Retreived {CustomerCount} Customer", result.Count);
             return result;
         }
     }

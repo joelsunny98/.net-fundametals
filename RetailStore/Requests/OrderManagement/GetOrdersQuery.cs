@@ -18,14 +18,17 @@ public class GetOrdersQuery : IRequest<List<OrderDto>>
 public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<OrderDto>>
 {
     private readonly RetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects the RetailStoreDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
-    public GetOrdersQueryHandler(RetailStoreDbContext dbContext)
+    public GetOrdersQueryHandler(RetailStoreDbContext dbContext, ILogger<GetOrdersQuery> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
+
     }
 
     /// <summary>
@@ -50,6 +53,7 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<OrderD
                 }).ToList()
             }).ToListAsync();
 
+        _logger.LogInformation("Retreived {OrderCount} Orders", result.Count);
         return result;
     }
 }

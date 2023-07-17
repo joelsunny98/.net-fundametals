@@ -21,14 +21,17 @@ public class DeleteOrderByIdCommand : IRequest<Order>
 public class DeleteOrderByIdCommandHandler : IRequestHandler<DeleteOrderByIdCommand, Order>
 {
     private readonly IRepository<Order> _orderRepository;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects IRpository class
     /// </summary>
     /// <param name="orderRepository"></param>
-    public DeleteOrderByIdCommandHandler(IRepository<Order> orderRepository)
+    public DeleteOrderByIdCommandHandler(IRepository<Order> orderRepository, ILogger<DeleteOrderByIdCommand> logger)
     {
         _orderRepository = orderRepository;
+        _logger = logger;
+
     }
 
     /// <summary>
@@ -44,9 +47,11 @@ public class DeleteOrderByIdCommandHandler : IRequestHandler<DeleteOrderByIdComm
 
         if (deletedOrder == null)
         {
+            _logger.LogError("No Order with Id {OrderId}", command.Id);
             throw new KeyNotFoundException();
         }
 
+        _logger.LogInformation("Order Delted {OrderId}", command.Id);
         return deletedOrder;
     }
 }
