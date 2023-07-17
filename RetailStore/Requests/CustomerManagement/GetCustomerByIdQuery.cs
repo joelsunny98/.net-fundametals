@@ -13,28 +13,43 @@ public class GetCustomerByIdQuery : IRequest<CustomerDto>
 public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDto>
 {
     private readonly RetailStoreDbContext _dbContext;
+    private readonly ILogger<GetCustomerByIdQueryHandler> _logger;
 
-    public GetCustomerByIdQueryHandler(RetailStoreDbContext dbContext)
+
+    public GetCustomerByIdQueryHandler(RetailStoreDbContext dbContext, ILogger<GetCustomerByIdQueryHandler> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
+
 
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)
     {
-        var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == query.CustomerId);
-
-        if (customer == null)
+        try
         {
-            throw new KeyNotFoundException();
+            var customer = await _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == query.CustomerId);
+
+            if (customer == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            var result = new CustomerDto
+            {
+                CustomerName = customer.Name,
+                PhoneNumber = (long)customer.PhoneNumber,
+            };
+
+            _logger.LogInformation("Retrieved customer by ID: {CustomerId}", query.CustomerId);
+
+            return result;
         }
-
-        var result = new CustomerDto
+        catch (KeyNotFoundException ex)
         {
-            CustomerName = customer.Name,
-            PhoneNumber = (long)customer.PhoneNumber,
-        };
-
-        return result;
+            _logger.LogError(ex, "Failed to retrieve customer with ID: {CustomerId}", query.CustomerId);
+            throw;
+        }
     }
+
 }
 

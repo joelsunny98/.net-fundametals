@@ -18,15 +18,19 @@ public class DeleteCustomerCommand : IRequest<Customer>
 public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Customer>
 {
     private readonly IRepository<Customer> _customerRepository;
+    private readonly ILogger<DeleteCustomerCommandHandler> _logger;
+
 
     /// <summary>
     /// Injects IRepository class
     /// </summary>
     /// <param name="customerRepository"></param>
-    public DeleteCustomerCommandHandler(IRepository<Customer> customerRepository)
+    public DeleteCustomerCommandHandler(IRepository<Customer> customerRepository, ILogger<DeleteCustomerCommandHandler> logger)
     {
         _customerRepository = customerRepository;
+        _logger = logger;
     }
+
 
     /// <summary>
     /// Deletes Customer by Id
@@ -37,14 +41,23 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
     /// <exception cref="KeyNotFoundException"></exception>
     public async Task<Customer> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
     {
-        var deletedCustomer = await _customerRepository.Delete(command.CustomerId);
-
-        if (deletedCustomer == null)
+        try
         {
-            throw new KeyNotFoundException();
+            var deletedCustomer = await _customerRepository.Delete(command.CustomerId);
+
+            if (deletedCustomer == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            _logger.LogInformation("Customer deleted: {CustomerId}", deletedCustomer.Id);
+
+            return deletedCustomer;
         }
-
-        return deletedCustomer;
-
+        catch (KeyNotFoundException ex)
+        {
+            _logger.LogError(ex, "Failed to delete customer with ID: {CustomerId}", command.CustomerId);
+            throw;
+        }
     }
 }
