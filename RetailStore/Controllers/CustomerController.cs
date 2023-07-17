@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
-using RetailStore.Features.CustomerManagement;
+
 using RetailStore.Model;
-using RetailStore.Repository;
+using RetailStore.Requests.CustomerManagement;
 
 namespace RetailStore.Controllers;
 
@@ -60,12 +59,12 @@ public class CustomerController : BaseController
     /// <param name="id">Customers's Id to fetch customer's data</param>
     [HttpGet("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCustomerById([FromRoute]int id)
+    public async Task<IActionResult> GetCustomerById([FromRoute] int id)
     {
         var result = await Mediator.Send(new GetCustomerByIdQuery
         {
             CustomerId = id
-        }) ;
+        });
         return Ok(result);
     }
 
@@ -80,7 +79,7 @@ public class CustomerController : BaseController
     /// </returns>
     [HttpPut("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateCustomer([FromRoute]int id, [FromBody]CustomerDto customerRequestBody)
+    public async Task<IActionResult> UpdateCustomer([FromRoute] int id, [FromBody] CustomerDto customerRequestBody)
     {
         var result = await Mediator.Send(new UpdateCustomerCommand
         {

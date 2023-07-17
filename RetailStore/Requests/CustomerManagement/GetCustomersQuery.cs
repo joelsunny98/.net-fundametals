@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
-namespace RetailStore.Features.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 public class GetCustomersQuery : IRequest<List<CustomerDto>>
 {

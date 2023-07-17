@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using RetailStore.Constants;
 
-namespace RetailStore.Features.CustomerManagement
+namespace RetailStore.Requests.CustomerManagement
 {
     /// <summary>
     /// Validator for Add Customer Command
@@ -15,10 +15,10 @@ namespace RetailStore.Features.CustomerManagement
         {
             RuleFor(command => command.CustomerName)
                 .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
-                .MaximumLength(100).WithMessage(ValidationMessage.Length);
+                .MaximumLength(25).WithMessage(ValidationMessage.Length);
 
-            RuleFor(command => command.PhoneNumber).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+        RuleFor(command => command.PhoneNumber).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
 
-        }
     }
 }
+
