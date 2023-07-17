@@ -4,5 +4,5 @@ namespace RetailStore.Contracts;
 
 public interface IProductBarCodeService
 {
-    public Task<Image> GeneratedBarcode(int id);
+    public Task<GeneratedBarcode> GeneratedBarcode(int id);
 }

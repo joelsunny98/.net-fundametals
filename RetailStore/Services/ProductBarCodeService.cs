@@ -13,7 +13,7 @@ public class ProductBarCodeService : IProductBarCodeService
         _dbContext = dbContext;
     }
 
-    public async Task<Image> GeneratedBarcode(int id)
+    public async Task<GeneratedBarcode> GeneratedBarcode(int id)
     {
         var product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -22,13 +22,13 @@ public class ProductBarCodeService : IProductBarCodeService
             throw new KeyNotFoundException(nameof(product));
         }
 
-        var barcode = BarcodeWriter.CreateBarcode(product.ToString(), BarcodeWriterEncoding.Code128);
+        var barcode = BarcodeWriter.CreateBarcode(product.Name.ToString(), BarcodeWriterEncoding.Code128);
 
-        barcode.SaveAsImage("barcode.png");
+        
 
         Image barcodeImage = barcode.Image;
 
 
-        return barcodeImage;
+        return barcode;
     }
 }
