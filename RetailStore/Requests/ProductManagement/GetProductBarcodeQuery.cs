@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using RetailStore.Contracts;
 
 namespace RetailStore.Requests.ProductManagement;
@@ -6,7 +7,7 @@ namespace RetailStore.Requests.ProductManagement;
 /// <summary>
 /// Gets Product Barcode
 /// </summary>
-public class GetProductBarcodeQuery : IRequest<string>
+public class GetProductBarcodeQuery : IRequest<FileContentResult>
 {
     /// <summary>
     /// Gets and sets Product ID
@@ -17,7 +18,7 @@ public class GetProductBarcodeQuery : IRequest<string>
 /// <summary>
 /// Handler for the Get Product Barcode Query
 /// </summary>
-public class GetProductBarcodeQueryHandler : IRequestHandler<GetProductBarcodeQuery, string>
+public class GetProductBarcodeQueryHandler : IRequestHandler<GetProductBarcodeQuery, FileContentResult>
 {
     private readonly IProductBarCodeService _barcodeServcie;
     private readonly ILogger _logger;
@@ -38,13 +39,22 @@ public class GetProductBarcodeQueryHandler : IRequestHandler<GetProductBarcodeQu
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<string> Handle(GetProductBarcodeQuery request, CancellationToken cancellationToken)
+    public async Task<FileContentResult> Handle(GetProductBarcodeQuery request, CancellationToken cancellationToken)
     {
         var barcode = await _barcodeServcie.GeneratedBarcode(request.ProductId);
 
-        var result = barcode.Value;
+        var image = barcode.BinaryStream;
 
-        _logger.LogInformation("Generated Product Bardcode");
-        return result;
+        byte[] imageBytes;
+
+        using (var memoryStream = new MemoryStream())
+        {
+            image.CopyTo(memoryStream);
+            imageBytes = memoryStream.ToArray();
+        }
+
+        _logger.LogInformation("Generated a barcode for Product with Id: {ProductId}", request.ProductId);
+        return new FileContentResult(imageBytes, "image/png");
+
     }
 }
