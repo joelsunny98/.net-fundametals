@@ -20,14 +20,16 @@ public class GetProductBarcodeQuery : IRequest<string>
 public class GetProductBarcodeQueryHandler : IRequestHandler<GetProductBarcodeQuery, string>
 {
     private readonly IProductBarCodeService _barcodeServcie;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects RetailStoreDbContext class
     /// </summary>
     /// <param name="barCodeService"></param>
-    public GetProductBarcodeQueryHandler(IProductBarCodeService barCodeService)
+    public GetProductBarcodeQueryHandler(IProductBarCodeService barCodeService, ILogger<GetProductBarcodeQuery> logger)
     {
         _barcodeServcie = barCodeService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -42,6 +44,7 @@ public class GetProductBarcodeQueryHandler : IRequestHandler<GetProductBarcodeQu
 
         var result = barcode.Value;
 
+        _logger.LogInformation("Generated Product Bardcode");
         return result;
     }
 }
