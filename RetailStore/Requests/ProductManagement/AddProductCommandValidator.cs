@@ -2,8 +2,14 @@
 
 namespace RetailStore.Requests.ProductManagement
 {
+    /// <summary>
+    /// Validator for Add product command
+    /// </summary>
     public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
     {
+        /// <summary>
+        /// Validation rules for specific properties
+        /// </summary>
         public AddProductCommandValidator()
         {
             RuleFor(command => command.Data.ProductName).NotNull().NotEmpty()

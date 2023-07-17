@@ -4,21 +4,46 @@ using RetailStore.Persistence;
 
 namespace RetailStore.Requests.ProductManagement
 {
+    /// <summary>
+    /// Command to Update Product
+    /// </summary>
     public class UpdateProductCommand : IRequest<int>
     {
+        /// <summary>
+        /// Gets and sets ProductId
+        /// </summary>
         public int ProductId { get; set; }
+
+        /// <summary>
+        /// Gets and sets ProductData
+        /// </summary>
         public ProductDto ProductData { get; set; }
     }
 
+    /// <summary>
+    /// Handler For Update Product Command
+    /// </summary>
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, int>
     {
         private readonly RetailStoreDbContext _dbContext;
+        private readonly ILogger _logger;
 
-        public UpdateProductCommandHandler(RetailStoreDbContext dbContext)
+        /// <summary>
+        /// Injects RetailStoreDbContext class
+        /// </summary>
+        /// <param name="dbContext"></param>
+        public UpdateProductCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateProductCommand> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
+        /// <summary>
+        /// Updates Product by Id
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<int> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
             var product = await _dbContext.Products.FindAsync(request.ProductId);
@@ -33,6 +58,7 @@ namespace RetailStore.Requests.ProductManagement
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
+            _logger.LogInformation("Update Product with Id: {Product Id}", request.ProductId);
             return product.Id;
         }
     }
