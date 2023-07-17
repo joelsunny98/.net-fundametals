@@ -19,14 +19,16 @@ namespace RetailStore.Requests.ProductManagement
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, List<ProductDto>>
     {
         private readonly RetailStoreDbContext _dbContext;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Injects RetailDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
-        public GetProductByIdQueryHandler(RetailStoreDbContext dbContext)
+        public GetProductByIdQueryHandler(RetailStoreDbContext dbContext, ILogger<GetProductByIdQuery> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         /// <summary>
@@ -46,6 +48,7 @@ namespace RetailStore.Requests.ProductManagement
                 })
                 .ToListAsync(cancellationToken);
 
+            _logger.LogInformation("Retrieved Product with Id: {ProductId}", request.Id);
             return result;
         }
 

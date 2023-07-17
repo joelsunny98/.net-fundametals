@@ -20,14 +20,16 @@ namespace RetailStore.Requests.ProductManagement
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, int>
     {
         private readonly RetailStoreDbContext _dbContext;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Injects RetailStoreDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
-        public DeleteProductCommandHandler(RetailStoreDbContext dbContext)
+        public DeleteProductCommandHandler(RetailStoreDbContext dbContext, ILogger<DeleteProductCommand> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
         
         /// <summary>
@@ -41,12 +43,14 @@ namespace RetailStore.Requests.ProductManagement
             var deletedProduct = await _dbContext.Products.FindAsync(request.ProductId);
             if (deletedProduct == null)
             {
-                return 0; // Or throw an exception to indicate the product was not found
+                _logger.LogError("Product with Id {ProductId} not found", request.ProductId);
+                throw new KeyNotFoundException();
             }
 
             _dbContext.Products.Remove(deletedProduct);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
+            _logger.LogInformation("Deleted Product with the Id: {ProductId}", request.ProductId);
             return deletedProduct.Id;
         }
     }
