@@ -100,4 +100,17 @@ public class ProductController : BaseController
 
         return Ok(updatedProductId);
     }
+
+    /// <summary>
+    /// Endpoint to generate a barcode for product
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("products/{id}/barcode")]
+    //[ProducesResponseType(typeof(Image), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductBarcode([FromRoute] int id)
+    {
+        var result = await Mediator.Send(new GetProductBarcodeQuery { ProductId = id });
+        return Ok(result);
+    }
 }
