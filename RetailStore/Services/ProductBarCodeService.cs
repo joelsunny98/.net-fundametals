@@ -11,7 +11,7 @@ public class ProductBarCodeService : IProductBarCodeService
     public ProductBarCodeService(RetailStoreDbContext dbContext)
     {
         _dbContext = dbContext;
-    }
+    } 
 
     public async Task<GeneratedBarcode> GeneratedBarcode(int id)
     {

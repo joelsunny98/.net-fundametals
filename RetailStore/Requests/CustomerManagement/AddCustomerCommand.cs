@@ -22,14 +22,17 @@ public class AddCustomerCommand : CustomerDto, IRequest<int>
 public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int>
 {
     private readonly RetailStoreDbContext _dbContext;
+    private readonly ILogger<AddCustomerCommandHandler> _logger;
+
 
     /// <summary>
     /// Injects RetailStoreDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
-    public AddCustomerCommandHandler(RetailStoreDbContext dbContext)
+    public AddCustomerCommandHandler(RetailStoreDbContext dbContext, ILogger<AddCustomerCommandHandler> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     /// <summary>
@@ -50,8 +53,12 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
 
         _dbContext.Customers.Add(customer);
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("New customer added: {CustomerId}", customer.Id);
+
         return customer.Id;
     }
+
 
 
 }
