@@ -8,5 +8,7 @@ public class ValidationMessage
 
     public const string Length = "{PropertyName} is exceeds its limit";
 
+    public const string PhoneNumberLength = "{PropertyName} should be 10 digits";
+
     public const string Invalid = "{PropertyName} is invalid";
 }
