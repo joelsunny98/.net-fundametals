@@ -22,6 +22,7 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
         _logger = logger;
     }
 
+
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)
     {
         try
@@ -30,7 +31,6 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
 
             if (customer == null)
             {
-                _logger.LogWarning("Customer not found with ID: {CustomerId}", query.CustomerId);
                 throw new KeyNotFoundException();
             }
 
@@ -40,7 +40,7 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
                 PhoneNumber = (long)customer.PhoneNumber,
             };
 
-            _logger.LogInformation("Retrieved customer with ID: {CustomerId}", query.CustomerId);
+            _logger.LogInformation("Retrieved customer by ID: {CustomerId}", query.CustomerId);
 
             return result;
         }

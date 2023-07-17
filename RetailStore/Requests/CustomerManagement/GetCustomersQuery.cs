@@ -21,6 +21,7 @@ public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<C
         _logger = logger;
     }
 
+
     public async Task<List<CustomerDto>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
     {
         try
