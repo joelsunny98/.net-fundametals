@@ -31,11 +31,15 @@ public class UpdateCustomerCommand : IRequest<int>
 public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, int>
 {
     private readonly RetailStoreDbContext _dbContext;
+    private readonly ILogger<UpdateCustomerCommandHandler> _logger;
 
-    public UpdateCustomerCommandHandler(RetailStoreDbContext dbContext)
+
+    public UpdateCustomerCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateCustomerCommandHandler> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
+
 
     public async Task<int> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
     {
@@ -55,6 +59,9 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        _logger.LogInformation("Customer updated: {CustomerId}", customer.Id);
+
         return customer.Id;
     }
+
 }
