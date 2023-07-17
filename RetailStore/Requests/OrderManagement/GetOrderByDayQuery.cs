@@ -18,14 +18,17 @@ public class GetOrderByDayQuery : IRequest<List<OrderDto>>
 public class GetOrderByDayQueryHandler : IRequestHandler<GetOrderByDayQuery, List<OrderDto>>
 {
     private readonly RetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects RetailDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
-    public GetOrderByDayQueryHandler(RetailStoreDbContext dbContext)
+    public GetOrderByDayQueryHandler(RetailStoreDbContext dbContext, ILogger<GetOrderByDayQuery> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
+
     }
 
     /// <summary>
@@ -49,6 +52,7 @@ public class GetOrderByDayQueryHandler : IRequestHandler<GetOrderByDayQuery, Lis
             }).ToList()
         }).ToListAsync();
 
+        _logger.LogInformation("Retrieved {OrderCount} for the day", result.Count);
         return result;
     }
 }

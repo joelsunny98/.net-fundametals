@@ -17,14 +17,17 @@ namespace RetailStore.Requests.OrderManagement
     public class GetCollectionByDayQueryHandler : IRequestHandler<GetCollectionByDayQuery, string>
     {
         private readonly RetailStoreDbContext _dbContext;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Inject RetailDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
-        public GetCollectionByDayQueryHandler(RetailStoreDbContext dbContext)
+        public GetCollectionByDayQueryHandler(RetailStoreDbContext dbContext, ILogger<GetCollectionByDayQuery> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
+
         }
 
         /// <summary>
@@ -37,6 +40,7 @@ namespace RetailStore.Requests.OrderManagement
         {
             var totalCollection = await _dbContext.Orders.Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).SumAsync(e => e.TotalAmount);
 
+            _logger.LogInformation("Retreived Total Collection for the day");
             return totalCollection.ConvertToCurrencyString();
         }
     }

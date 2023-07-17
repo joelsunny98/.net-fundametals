@@ -19,14 +19,16 @@ public class CreateOrderCommand : OrderRequestDto, IRequest<string>
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, string>
 {
     private readonly RetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects RetailStoreDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
-    public CreateOrderCommandHandler(RetailStoreDbContext dbContext)
+    public CreateOrderCommandHandler(RetailStoreDbContext dbContext, ILogger<CreateOrderCommand> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     /// <summary>
@@ -69,6 +71,8 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
 
         await _dbContext.SaveChangesAsync();
         var result = createdOrder.TotalAmount.ConvertToCurrencyString();
+
+        _logger.LogInformation("New order added: {OrderId}", createdOrder.Id);
 
         return result;
     }

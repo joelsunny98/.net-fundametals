@@ -18,14 +18,16 @@ namespace RetailStore.Requests.ProductManagement
     public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, List<ProductDto>>
     {
         private readonly RetailStoreDbContext _dbContext;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Injects RetailDbContextClass
         /// </summary>
         /// <param name="dbContext"></param>
-        public GetAllProductsQueryHandler(RetailStoreDbContext dbContext)
+        public GetAllProductsQueryHandler(RetailStoreDbContext dbContext, ILogger<GetAllProductsQuery> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         /// <summary>
@@ -36,14 +38,14 @@ namespace RetailStore.Requests.ProductManagement
         /// <returns>List of Products</returns>
         public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await _dbContext.Products.ToListAsync(cancellationToken);
-            var productsResponse = products.Select(e => new ProductDto
+            var products = await _dbContext.Products.Select(e => new ProductDto 
             {
                 ProductName = e.Name,
                 ProductPrice = e.Price
-            }).ToList();
+            }).ToListAsync();
 
-            return productsResponse;
+            _logger.LogInformation("Retrieved {ProductCount} Products", products.Count);
+            return products;
         }
     }
 
