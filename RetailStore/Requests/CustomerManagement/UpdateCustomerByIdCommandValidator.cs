@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
 
 namespace RetailStore.Requests.CustomerManagement
@@ -8,6 +9,7 @@ namespace RetailStore.Requests.CustomerManagement
     /// </summary>
     public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
     {
+
         /// <summary>
         /// Validator for defining specific rules for properties
         /// </summary>
@@ -18,10 +20,17 @@ namespace RetailStore.Requests.CustomerManagement
 
             RuleFor(command => command.CustomerName)
                 .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
-                .MaximumLength(25).WithMessage(ValidationMessage.Length);
+                .MaximumLength(25).WithMessage(ValidationMessage.Length + " (Max 25 characters)");
 
             RuleFor(command => command.PhoneNumber)
-                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
+                .Must(BeValidPhoneNumber).WithMessage(ValidationMessage.PhoneNumberLength + " (10 digits)");
         }
+
+        private bool BeValidPhoneNumber(long phoneNumber)
+        {
+            var phoneNumberString = phoneNumber.ToString();
+            return phoneNumberString.Length == 10;
+        }     
     }
 }
