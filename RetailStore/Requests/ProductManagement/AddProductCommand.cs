@@ -17,14 +17,17 @@ namespace RetailStore.Requests.ProductManagement
     public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
     {
         private readonly RetailStoreDbContext _dbContext;
+        private readonly ILogger _logger;
 
-        public AddProductCommandHandler(RetailStoreDbContext dbContext)
+        public AddProductCommandHandler(RetailStoreDbContext dbContext, ILogger<AddProductCommandHandler> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task<int> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Added Product to Databaase ");
             var product = new Product
             {
                 Name = request.Data.ProductName,
