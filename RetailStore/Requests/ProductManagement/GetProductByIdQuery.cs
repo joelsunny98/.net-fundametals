@@ -5,8 +5,14 @@ using RetailStore.Persistence;
 
 namespace RetailStore.Requests.ProductManagement
 {
+    /// <summary>
+    /// Query to fetch Product by Id
+    /// </summary>
     public class GetProductByIdQuery : IRequest<List<ProductDto>>
     {
+        /// <summary>
+        /// Gets and sets Id
+        /// </summary>
         public int Id { get; set; }
     }
 
@@ -23,6 +29,12 @@ namespace RetailStore.Requests.ProductManagement
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Fetches Product by Id
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Product</returns>
         public async Task<List<ProductDto>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _dbContext.Products

@@ -5,6 +5,9 @@ using RetailStore.Persistence;
 
 namespace RetailStore.Requests.ProductManagement
 {
+    /// <summary>
+    /// Command to add a new Product
+    /// </summary>
     public class AddProductCommand : IRequest<int>
     {
         /// <summary>
@@ -14,17 +17,31 @@ namespace RetailStore.Requests.ProductManagement
 
     }
 
+    /// <summary>
+    /// Handler for the add product command
+    /// </summary>
     public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
     {
         private readonly RetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Inject Dependency classes
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public AddProductCommandHandler(RetailStoreDbContext dbContext, ILogger<AddProductCommandHandler> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
         }
-
+        
+        /// <summary>
+        /// Adds a new product to database
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Product Id</returns>
         public async Task<int> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Added Product to Databaase ");
