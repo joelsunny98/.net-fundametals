@@ -2,10 +2,6 @@
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Persistence;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace RetailStore.Requests.CustomerManagement;
 
