@@ -5,15 +5,26 @@ using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderManagement
 {
+    /// <summary>
+    /// Query to get Customers by order
+    /// </summary>
     public class GetOrderByCustomerQuery : IRequest<List<CustomerByOrderDto>>
     {
     }
 
+    /// <summary>
+    /// Handles Get Order by customer query
+    /// </summary>
     public class GetOrderByCustomerQueryHandler : IRequestHandler<GetOrderByCustomerQuery, List<CustomerByOrderDto>>
     {
         private readonly RetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Injects RetailDbContext and Logger
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public GetOrderByCustomerQueryHandler(RetailStoreDbContext dbContext, ILogger<GetOrderByCustomerQuery> logger)
         {
             _dbContext = dbContext;
@@ -21,6 +32,12 @@ namespace RetailStore.Requests.OrderManagement
 
         }
 
+        /// <summary>
+        /// Fetches list of customer by order
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Customer by Order</returns>
         public async Task<List<CustomerByOrderDto>> Handle(GetOrderByCustomerQuery request, CancellationToken cancellationToken)
         {
             var result = await _dbContext.Orders.Include(t => t.Customer).GroupBy(c => c.CustomerId).Select(g => new CustomerByOrderDto

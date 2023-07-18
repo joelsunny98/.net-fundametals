@@ -13,11 +13,6 @@ public class RetailStoreDbContext: DbContext, IRetailStoreDbContext
     public DbSet<OrderDetail> OrderDetails { get; set; }
     public DbSet<Customer> Customers { get; set; }
 
-    //public async Task RunMigrations()
-    //{
-    //    await Database.MigrateAsync();
-    //}
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(RetailStoreDbContext).Assembly);
