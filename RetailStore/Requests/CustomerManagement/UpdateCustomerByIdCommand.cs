@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using RetailStore.Constants;
 using RetailStore.Persistence;
 
 namespace RetailStore.Requests.CustomerManagement;
@@ -59,7 +60,7 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("Customer updated: {CustomerId}", customer.Id);
+        _logger.LogInformation(LogMessage.UpdatedItem, customer.Id);
 
         return customer.Id;
     }

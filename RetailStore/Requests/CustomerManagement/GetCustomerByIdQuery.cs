@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
@@ -40,13 +41,13 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
                 PhoneNumber = (long)customer.PhoneNumber,
             };
 
-            _logger.LogInformation("Retrieved customer by ID: {CustomerId}", query.CustomerId);
+            _logger.LogInformation(LogMessage.GetItemById, query.CustomerId);
 
             return result;
         }
         catch (KeyNotFoundException ex)
         {
-            _logger.LogError(ex, "Failed to retrieve customer with ID: {CustomerId}", query.CustomerId);
+            _logger.LogError(ex, LogMessage.SearchFail, query.CustomerId);
             throw;
         }
     }

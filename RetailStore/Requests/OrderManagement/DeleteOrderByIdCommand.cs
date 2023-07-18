@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;
 
@@ -47,11 +48,11 @@ public class DeleteOrderByIdCommandHandler : IRequestHandler<DeleteOrderByIdComm
 
         if (deletedOrder == null)
         {
-            _logger.LogError("No Order with Id {OrderId}", command.Id);
+            _logger.LogError(LogMessage.SearchFail, command.Id);
             throw new KeyNotFoundException();
         }
 
-        _logger.LogInformation("Order Delted {OrderId}", command.Id);
+        _logger.LogInformation(LogMessage.DeleteItem, command.Id);
         return deletedOrder;
     }
 }

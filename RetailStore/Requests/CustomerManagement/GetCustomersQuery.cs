@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
@@ -34,13 +35,13 @@ public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<C
                 })
                 .ToListAsync();
 
-            _logger.LogInformation("Retrieved {CustomerCount} customers", result.Count);
+            _logger.LogInformation(LogMessage.GetAllItems, result.Count);
 
             return result;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve customers");
+            _logger.LogError(ex, LogMessage.FailedToGetAllItems);
             throw;
         }
     }

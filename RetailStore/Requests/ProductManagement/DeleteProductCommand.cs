@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RetailStore.Constants;
 using RetailStore.Persistence;
 
 namespace RetailStore.Requests.ProductManagement
@@ -43,14 +44,14 @@ namespace RetailStore.Requests.ProductManagement
             var deletedProduct = await _dbContext.Products.FindAsync(request.ProductId);
             if (deletedProduct == null)
             {
-                _logger.LogError("Product with Id {ProductId} not found", request.ProductId);
+                _logger.LogError(LogMessage.SearchFail, request.ProductId);
                 throw new KeyNotFoundException();
             }
 
             _dbContext.Products.Remove(deletedProduct);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Deleted Product with the Id: {ProductId}", request.ProductId);
+            _logger.LogInformation(LogMessage.DeleteItem, request.ProductId);
             return deletedProduct.Id;
         }
     }

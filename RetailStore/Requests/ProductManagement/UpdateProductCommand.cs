@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
@@ -40,7 +41,8 @@ namespace RetailStore.Requests.ProductManagement
             var product = await _dbContext.Products.FindAsync(request.Id);
             if (product == null)
             {
-                return 0; // Or throw an exception to indicate the product was not found
+                _logger.LogError(LogMessage.SearchFail, request.Id);
+                throw new KeyNotFoundException();
             }
 
             product.Name = request.ProductName;
@@ -49,7 +51,7 @@ namespace RetailStore.Requests.ProductManagement
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Update Product with Id: {Product Id}", request.Id);
+            _logger.LogInformation(LogMessage.UpdatedItem, request.Id);
             return product.Id;
         }
     }

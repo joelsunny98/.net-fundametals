@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Persistence;
@@ -50,8 +51,8 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
         _dbContext.Customers.Add(customer);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("New customer added: {CustomerId}", customer.Id);
-
+        
+        _logger.LogInformation(LogMessage.NewItem, customer.Id);
         return customer.Id;
     }
 

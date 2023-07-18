@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;
 
@@ -50,13 +51,13 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
                 throw new KeyNotFoundException();
             }
 
-            _logger.LogInformation("Customer deleted: {CustomerId}", deletedCustomer.Id);
+            _logger.LogInformation(LogMessage.DeleteItem, deletedCustomer.Id);
 
             return deletedCustomer;
         }
         catch (KeyNotFoundException ex)
         {
-            _logger.LogError(ex, "Failed to delete customer with ID: {CustomerId}", command.CustomerId);
+            _logger.LogError(ex, LogMessage.SearchFail, command.CustomerId);
             throw;
         }
     }

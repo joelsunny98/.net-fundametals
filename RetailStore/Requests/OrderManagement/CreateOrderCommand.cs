@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Helpers;
 using RetailStore.Model;
@@ -74,7 +75,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
         await _dbContext.SaveChangesAsync();
         var result = createdOrder.TotalAmount.ConvertToCurrencyString();
 
-        _logger.LogInformation("New order added: {OrderId}", createdOrder.Id);
+        _logger.LogInformation(LogMessage.NewItem, createdOrder.Id);
 
         return result;
     }
