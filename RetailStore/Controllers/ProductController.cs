@@ -35,10 +35,10 @@ public class ProductController : BaseController
     /// </returns>    
     [HttpPost("products")]
     [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddProduct(ProductDto product)
+    public async Task<IActionResult> AddProduct(AddProductCommand product)
     {
 
-        var result = await Mediator.Send(new AddProductCommand { Data = product });
+        var result = await Mediator.Send(product);
         return Ok(result);
 
     }
@@ -87,11 +87,11 @@ public class ProductController : BaseController
     /// <returns> 
     /// Product id of updated record 
     /// </returns>
-    [HttpPut("{id}")]
+    [HttpPut("product")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateProduct(int id, ProductDto productRequestBody)
+    public async Task<IActionResult> UpdateProduct( UpdateProductCommand command)
     {
-        var updatedProductId = await Mediator.Send(new UpdateProductCommand { ProductId = id, ProductData = productRequestBody });
+        var updatedProductId = await Mediator.Send(command );
 
         if (updatedProductId == 0)
         {
