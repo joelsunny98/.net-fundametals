@@ -8,13 +8,8 @@ namespace RetailStore.Requests.ProductManagement
     /// <summary>
     /// Command to add a new Product
     /// </summary>
-    public class AddProductCommand : IRequest<int>
+    public class AddProductCommand : ProductDto, IRequest<int>
     {
-        /// <summary>
-        /// Gets and sets Data
-        /// </summary>
-        public ProductDto Data { get; set; }
-
     }
 
     /// <summary>
@@ -47,8 +42,8 @@ namespace RetailStore.Requests.ProductManagement
             _logger.LogInformation("Added Product to Databaase ");
             var product = new Product
             {
-                Name = request.Data.ProductName,
-                Price = request.Data.ProductPrice,
+                Name = request.ProductName,
+                Price = request.ProductPrice,
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow
             };

@@ -1,22 +1,22 @@
 ﻿using FluentValidation;
+using RetailStore.Constants;
 
-namespace RetailStore.Requests.ProductManagement
+namespace RetailStore.Requests.ProductManagement;
+
+/// <summary>
+/// Validator for Add product command
+/// </summary>
+public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
 {
     /// <summary>
-    /// Validator for Add product command
+    /// Validation rules for specific properties
     /// </summary>
-    public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
+    public AddProductCommandValidator()
     {
-        /// <summary>
-        /// Validation rules for specific properties
-        /// </summary>
-        public AddProductCommandValidator()
-        {
-            RuleFor(command => command.Data.ProductName).NotNull().NotEmpty()
-                .WithMessage("Product name is required.");
+        RuleFor(command => command.ProductName).NotNull().NotEmpty()
+            .WithMessage(ValidationMessage.Required);
 
-            RuleFor(command => command.Data.ProductPrice).NotNull().NotEmpty()
-                .WithMessage("Product price is required.");
-        }
+        RuleFor(command => command.ProductPrice).NotNull().NotEmpty()
+            .WithMessage(ValidationMessage.Required);
     }
 }
