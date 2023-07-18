@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Contracts;
 using RetailStore.Persistence;
-using System.Runtime.CompilerServices;
 
 namespace RetailStore.Services;
 
@@ -10,12 +9,12 @@ public class ProductBarCodeService : IProductBarCodeService
 {
     private readonly RetailStoreDbContext _dbContext;
     private readonly ILogger _logger;
-  
+
     public ProductBarCodeService(RetailStoreDbContext dbContext, ILogger<ProductBarCodeService> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
-    } 
+    }
 
     public async Task<GeneratedBarcode> GeneratedBarcode(int id)
     {
