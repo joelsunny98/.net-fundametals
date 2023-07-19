@@ -4,7 +4,7 @@ public class ValidationMessage
 {
     public const string Required = "{0} is required";
 
-    public const string UniquePhoneNumber = "{PropertyName} is already exists";
+    public const string Unique = "{PropertyName} is already exists";
 
     public const string Length = "{0} is exceeds its limit";
 

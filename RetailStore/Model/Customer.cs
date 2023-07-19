@@ -2,6 +2,9 @@
 
 namespace RetailStore.Model;
 
+/// <summary>
+/// Entity for customers
+/// </summary>
 public class Customer: DomainAudit
 {
 

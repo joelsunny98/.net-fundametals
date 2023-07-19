@@ -54,6 +54,7 @@ public class OrderController : BaseController
     /// Endpoint to fetch details of an order with given id.
     /// </summary>
     /// <param name="id">Order's Id to fetch order's data</param>
+    /// <param name="orderRequestBody"></param>
     [HttpPut("orders/{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateOrder([FromRoute]int id, [FromBody]OrderRequestDto orderRequestBody)

@@ -4,8 +4,15 @@ using RetailStore.Model;
 
 namespace RetailStore.Persistence.EntityConfiguration;
 
+/// <summary>
+/// Entity Configuration for Order Detail entity
+/// </summary>
 public class OrderDetailEntityConfiguration: IEntityTypeConfiguration<OrderDetail>
 {
+    /// <summary>
+    /// Method to configure OrderDetail Entity
+    /// </summary>
+    /// <param name="builder"></param>
     public void Configure(EntityTypeBuilder<OrderDetail> builder) 
     {
         builder.Property(e => e.Id)

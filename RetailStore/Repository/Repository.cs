@@ -1,28 +1,44 @@
-﻿using System.Linq.Expressions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RetailStore.Persistence;
 using RetailStore.Repository;
+using System.Linq.Expressions;
 
+/// <summary>
+/// Context of Repository
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class Repository<T> : IRepository<T> where T : class
 {
     private readonly RetailStoreDbContext dbContext;
     private readonly DbSet<T> dbSet;
 
+    /// <summary>
+    /// Injects dependencies
+    /// </summary>
+    /// <param name="_dbContext"></param>
     public Repository(RetailStoreDbContext _dbContext)
     {
         this.dbContext = _dbContext;
         this.dbSet = _dbContext.Set<T>();
     }
 
+    /// <summary>
+    /// Method to Get All records
+    /// </summary>
+    /// <returns></returns>
     public async Task<IEnumerable<T>> GetAll()
     {
         return await dbSet.ToListAsync();
     }
 
+    /// <summary>
+    /// Method to Get record by Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public async Task<T> GetById(int id)
-    {    
-        return await dbSet.FindAsync(id); ; 
+    {
+        return await dbSet.FindAsync(id); ;
     }
 
     public async Task<T> Create(T entity)
@@ -32,6 +48,11 @@ public class Repository<T> : IRepository<T> where T : class
         return entity;
     }
 
+    /// <summary>
+    /// Methd to Delete record
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public async Task<T> Delete(int id)
     {
         var entity = await dbSet.FindAsync(id);
@@ -40,6 +61,11 @@ public class Repository<T> : IRepository<T> where T : class
         return entity;
     }
 
+    /// <summary>
+    /// Method to update record
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <returns></returns>
     public async Task<T> Update(T entity)
     {
         var idProperty = typeof(T).GetProperty("Id");
@@ -50,6 +76,11 @@ public class Repository<T> : IRepository<T> where T : class
         return entity;
     }
 
+    /// <summary>
+    /// Method to find record
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
     public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
     {
         return await dbContext.Set<T>().Where(predicate).ToListAsync();

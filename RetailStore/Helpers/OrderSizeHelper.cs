@@ -6,22 +6,23 @@ namespace RetailStore.Helpers
     {
         public static string CalculateOrderSize(int count)
         {
-            int orderSize = 0;
-
             if (count >= 10)
             {
-                orderSize = 0;
+                return Enum.GetName(typeof(Enums.OrderSize), 0);
             }
             else if (count >= 5)
             {
-                orderSize = 1;
+                return Enum.GetName(typeof(Enums.OrderSize), 1);
             }
-            else if (count == 1)
+            else if (count >= 2)
             {
-                orderSize = 2;
+                return Enum.GetName(typeof(Enums.OrderSize), 2);
+            }
+            else
+            {
+                return Enum.GetName(typeof(Enums.OrderSize), 3);
             }
 
-            return Enum.GetName(typeof(Enums.OrderSize), orderSize);
         }
     }
 }
