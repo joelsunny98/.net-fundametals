@@ -20,7 +20,8 @@ namespace RetailStore.Requests.ProductManagement
                 .MaximumLength(50).WithMessage("Product name cannot exceed 50 characters.");
 
             RuleFor(command => command.ProductPrice)
-                .GreaterThan(0).WithMessage("Product price must be greater than 0.");
+                .GreaterThan(0).WithMessage("Product price must be greater than 0.")
+                .NotEqual(0).WithMessage("Product price cannot be 0.");
         }
     }
 }
