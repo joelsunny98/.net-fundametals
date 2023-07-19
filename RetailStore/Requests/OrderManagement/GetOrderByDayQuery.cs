@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
@@ -52,7 +53,7 @@ public class GetOrderByDayQueryHandler : IRequestHandler<GetOrderByDayQuery, Lis
             }).ToList()
         }).ToListAsync();
 
-        _logger.LogInformation("Retrieved {OrderCount} for the day", result.Count);
+        _logger.LogInformation(LogMessage.OrderForTheDay, result.Count);
         return result;
     }
 }

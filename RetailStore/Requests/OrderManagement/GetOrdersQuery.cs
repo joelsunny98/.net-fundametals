@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
@@ -53,7 +54,7 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<OrderD
                 }).ToList()
             }).ToListAsync();
 
-        _logger.LogInformation("Retreived {OrderCount} Orders", result.Count);
+        _logger.LogInformation(LogMessage.GetAllItems, result.Count);
         return result;
     }
 }

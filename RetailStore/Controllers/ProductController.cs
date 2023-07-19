@@ -30,6 +30,7 @@ public class ProductController : BaseController
     /// <summary>
     /// Adding product data to the database
     /// </summary>
+    /// <param name="product"></param>
     /// <returns>
     /// Id of inserted record
     /// </returns>    
@@ -50,7 +51,6 @@ public class ProductController : BaseController
     /// <param name="id">product's Id to fetch product's data</param>
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteProduct(int id)
     {
         var command = new DeleteProductCommand { ProductId = id };
@@ -81,7 +81,7 @@ public class ProductController : BaseController
     /// <summary>
     /// Endpoint to update product record
     /// </summary>
-    /// <param name="product">
+    /// <param name="command">
     /// Product contains the updated products's data
     /// </param>
     /// <returns> 
@@ -107,7 +107,7 @@ public class ProductController : BaseController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("products/{id}/barcode")]
-    //[ProducesResponseType(typeof(Image), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Image), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductBarcode([FromRoute] int id)
     {
         var result = await Mediator.Send(new GetProductBarcodeQuery { ProductId = id });

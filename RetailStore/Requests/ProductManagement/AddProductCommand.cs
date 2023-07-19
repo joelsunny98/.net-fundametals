@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Persistence;
@@ -39,7 +41,9 @@ namespace RetailStore.Requests.ProductManagement
         /// <returns>Product Id</returns>
         public async Task<int> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Added Product to Databaase ");
+            var validator = new AddProductCommandValidator(_dbContext);
+            await validator.ValidateAndThrowAsync(request, cancellationToken);
+
             var product = new Product
             {
                 Name = request.ProductName,
@@ -51,6 +55,7 @@ namespace RetailStore.Requests.ProductManagement
             _dbContext.Products.Add(product);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
+            _logger.LogInformation(LogMessage.NewItem);
             return product.Id;
         }
     }

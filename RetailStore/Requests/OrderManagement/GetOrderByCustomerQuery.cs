@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
@@ -46,7 +47,7 @@ namespace RetailStore.Requests.OrderManagement
                 TotalOrders = g.Count()
             }).ToListAsync();
 
-            _logger.LogInformation("Retreived {CustomerCount} Customer", result.Count);
+            _logger.LogInformation(LogMessage.GetAllItems, result.Count);
             return result;
         }
     }

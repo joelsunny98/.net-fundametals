@@ -70,7 +70,8 @@ public class CustomerController : BaseController
     /// <summary>
     /// Endpoint to update customer record
     /// </summary>
-    /// <param name="customer">
+    /// <param name="id">
+    /// <param name="customerRequestBody">
     /// customer contains the updated customers's data
     /// </param>
     /// <returns> 

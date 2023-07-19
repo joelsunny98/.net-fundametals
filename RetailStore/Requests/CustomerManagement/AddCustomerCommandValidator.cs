@@ -25,7 +25,7 @@ namespace RetailStore.Requests.CustomerManagement
             RuleFor(command => command.PhoneNumber)
                 .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
                 .Must(BeValidPhoneNumber).WithMessage(ValidationMessage.PhoneNumberLength)
-                .Must(BeUniquePhoneNumber).WithMessage(ValidationMessage.UniquePhoneNumber);
+                .Must(BeUniquePhoneNumber).WithMessage(ValidationMessage.Unique);
         }
 
         private bool BeValidPhoneNumber(long phoneNumber)

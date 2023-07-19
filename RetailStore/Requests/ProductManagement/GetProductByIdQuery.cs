@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
@@ -48,7 +49,7 @@ namespace RetailStore.Requests.ProductManagement
                 })
                 .ToListAsync(cancellationToken);
 
-            _logger.LogInformation("Retrieved Product with Id: {ProductId}", request.Id);
+            _logger.LogInformation(LogMessage.GetItemById, request.Id);
             return result;
         }
 

@@ -3,6 +3,7 @@ using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Helpers;
+using RetailStore.Constants;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -54,7 +55,7 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
 
         if (order == null)
         {
-            _logger.LogError("No order with Id: {OrderId}", command.Id);
+            _logger.LogError(LogMessage.SearchFail, command.Id);
             throw new KeyNotFoundException();
         }
 
@@ -84,7 +85,7 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
         _dbContext.OrderDetails.AddRange(details);
         await _dbContext.SaveChangesAsync();
 
-        _logger.LogInformation("Updated Order with Id: {OrderId", command.Id);
+        _logger.LogInformation(LogMessage.UpdatedItem, command.Id);
         return order.Id;
     }
 }

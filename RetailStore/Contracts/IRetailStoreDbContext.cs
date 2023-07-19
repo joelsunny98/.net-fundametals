@@ -25,6 +25,5 @@ public interface IRetailStoreDbContext
     /// </summary>
     DbSet<Customer> Customers { get; set; }
 
-    //Task RunMigrations();
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

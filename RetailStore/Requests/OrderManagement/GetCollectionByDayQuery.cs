@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderManagement
@@ -40,7 +41,7 @@ namespace RetailStore.Requests.OrderManagement
         {
             var totalCollection = await _dbContext.Orders.Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).SumAsync(e => e.TotalAmount);
 
-            _logger.LogInformation("Retreived Total Collection for the day");
+            _logger.LogInformation(LogMessage.DayCollection);
             return totalCollection.ConvertToCurrencyString();
         }
     }

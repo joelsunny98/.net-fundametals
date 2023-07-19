@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 
@@ -44,7 +45,7 @@ namespace RetailStore.Requests.ProductManagement
                 ProductPrice = e.Price
             }).ToListAsync();
 
-            _logger.LogInformation("Retrieved {ProductCount} Products", products.Count);
+            _logger.LogInformation(LogMessage.GetAllItems, products.Count);
             return products;
         }
     }

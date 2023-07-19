@@ -2,6 +2,9 @@
 
 namespace RetailStore.Model;
 
+/// <summary>
+/// Entity for Products
+/// </summary>
 public class Product: DomainAudit
 {
 

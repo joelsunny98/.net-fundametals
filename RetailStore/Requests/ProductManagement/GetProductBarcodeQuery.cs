@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RetailStore.Constants;
 using RetailStore.Contracts;
 
 namespace RetailStore.Requests.ProductManagement;
@@ -53,7 +54,7 @@ public class GetProductBarcodeQueryHandler : IRequestHandler<GetProductBarcodeQu
             imageBytes = memoryStream.ToArray();
         }
 
-        _logger.LogInformation("Generated a barcode for Product with Id: {ProductId}", request.ProductId);
+        _logger.LogInformation(LogMessage.GenerateBarCode, request.ProductId);
         return new FileContentResult(imageBytes, "image/png");
 
     }
