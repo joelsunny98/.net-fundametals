@@ -23,17 +23,16 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
             .WithMessage(ValidationMessage.Required)
             .MaximumLength(50).WithMessage(command => string.Format(ValidationMessage.CharExceedsFifty, command.ProductName));
 
-        RuleFor(command => command.ProductName).MustAsync(IsUniqueProduct);
+        RuleFor(command => command.ProductName).Must(IsUniqueProduct).WithMessage(command => string.Format(ValidationMessage.Unique, command.ProductName));
 
         RuleFor(command => command.ProductPrice).NotNull().NotEmpty()
             .WithMessage(ValidationMessage.Required)
             .GreaterThan(0).WithMessage(ValidationMessage.GreaterThanZero);
     }
 
-    private async Task<bool> IsUniqueProduct(string productName, CancellationToken cancellationToken) 
+    private bool IsUniqueProduct(string productName) 
     {
-        var product = await _dbContext.Products.FirstOrDefaultAsync(e => e.Name == productName);
-
-        return product != null;
+        var product = _dbContext.Products.Any(e => e.Name == productName);  
+        return !product;
     }
 }

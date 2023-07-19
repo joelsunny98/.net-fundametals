@@ -38,6 +38,8 @@ namespace RetailStore.Requests.ProductManagement
         /// <returns></returns>
         public async Task<int> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
+            var validator = new UpdateProductCommandValidator()
+
             var product = await _dbContext.Products.FindAsync(request.Id);
             if (product == null)
             {

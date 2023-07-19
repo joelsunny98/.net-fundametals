@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Model;
@@ -40,6 +41,9 @@ namespace RetailStore.Requests.ProductManagement
         /// <returns>Product Id</returns>
         public async Task<int> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
+            var validator = new AddProductCommandValidator(_dbContext);
+            await validator.ValidateAndThrowAsync(request, cancellationToken);
+
             var product = new Product
             {
                 Name = request.ProductName,
