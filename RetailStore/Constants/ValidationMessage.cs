@@ -13,12 +13,12 @@ public class ValidationMessage
     /// <summary>
     /// Is Unique
     /// </summary>
-    public const string Unique = "{PropertyName} is already exists";
+    public const string Unique = "{0} is already exists";
 
     /// <summary>
     /// Length Limit
     /// </summary>
-    public const string Length = "{0} is exceeds its limit";
+    public const string Length = "{0} exceeds its limit";
 
     /// <summary>
     /// PHone number must have 10 digits
@@ -38,5 +38,5 @@ public class ValidationMessage
     /// <summary>
     /// Amount must be greater that 0
     /// </summary>
-    public const string GreaterThanZero = "{PropertyName} must be greater than 0";
+    public const string GreaterThanZero = "Amount must be greater than 0";
 }

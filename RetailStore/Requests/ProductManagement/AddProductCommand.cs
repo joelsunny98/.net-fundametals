@@ -55,7 +55,7 @@ namespace RetailStore.Requests.ProductManagement
             _dbContext.Products.Add(product);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation(LogMessage.NewItem);
+            _logger.LogInformation(LogMessage.NewItem, product.Id);
             return product.Id;
         }
     }

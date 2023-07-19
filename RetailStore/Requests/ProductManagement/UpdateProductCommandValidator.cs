@@ -22,8 +22,8 @@ namespace RetailStore.Requests.ProductManagement
                 .GreaterThan(0).WithMessage(ValidationMessage.Invalid);
 
             RuleFor(command => command.ProductName)
-                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
-                .MaximumLength(50).WithMessage(ValidationMessage.Length)
+                .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "Product Name"))
+                .MaximumLength(50).WithMessage(command => string.Format(ValidationMessage.Length, command.ProductName))
                 .Must(IsUniqueProduct).WithMessage(command => string.Format(ValidationMessage.Unique, command.ProductName));
 
             RuleFor(command => command.ProductPrice)

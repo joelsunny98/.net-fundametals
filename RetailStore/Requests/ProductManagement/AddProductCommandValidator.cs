@@ -20,13 +20,13 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
         _dbContext = dbcontext;
 
         RuleFor(command => command.ProductName).NotNull().NotEmpty()
-            .WithMessage(ValidationMessage.Required)
+            .WithMessage(command => string.Format(ValidationMessage.Required, "Product Name"))
             .MaximumLength(50).WithMessage(command => string.Format(ValidationMessage.CharExceedsFifty, command.ProductName));
 
         RuleFor(command => command.ProductName).Must(IsUniqueProduct).WithMessage(command => string.Format(ValidationMessage.Unique, command.ProductName));
 
         RuleFor(command => command.ProductPrice).NotNull().NotEmpty()
-            .WithMessage(ValidationMessage.Required)
+            .WithMessage(command => string.Format(ValidationMessage.Required, "Price"))
             .GreaterThan(0).WithMessage(ValidationMessage.GreaterThanZero);
     }
 
