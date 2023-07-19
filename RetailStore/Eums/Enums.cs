@@ -2,7 +2,7 @@
 {
     public static class Enums
     {
-        public enum OrderSize 
+        public enum OrderSize : short 
         {
             Large = 0,
             Small = 1,
