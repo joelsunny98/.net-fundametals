@@ -1,5 +1,6 @@
 ﻿using IronBarCode;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Persistence;
 
@@ -36,13 +37,13 @@ public class ProductBarCodeService : IProductBarCodeService
 
         if (product == null)
         {
-            _logger.LogError("Prouct with {ProductId} not found", product.Id);
+            _logger.LogError(LogMessage.SearchFail, product.Id);
             throw new KeyNotFoundException(nameof(product));
         }
 
         var barcode = BarcodeWriter.CreateBarcode(product.Name.ToString(), BarcodeWriterEncoding.Code128);
 
-        _logger.LogInformation("Barcode for Product {ProductId} generated", product.Id);
+        _logger.LogInformation(LogMessage.BarcodeGenerated, product.Id);
         return barcode;
     }
 }
