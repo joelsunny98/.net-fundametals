@@ -14,5 +14,7 @@ public class ValidationMessage
 
     public const string CharExceedsFifty = "{0} exceeds 50 characters";
 
-    public const string GreaterThanZero = "Price must be greater thatn 0";
+    public const string Invalid = "{0} is invalid";
+
+    public const string GreaterThanZero = "{PropertyName} must be greater than 0";
 }
