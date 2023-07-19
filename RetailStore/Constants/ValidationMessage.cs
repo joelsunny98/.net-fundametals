@@ -11,4 +11,6 @@ public class ValidationMessage
     public const string PhoneNumberLength = "{PropertyName} should be 10 digits";
 
     public const string Invalid = "{PropertyName} is invalid";
+
+    public const string GreaterThanZero = "{PropertyName} must be greater than 0";
 }

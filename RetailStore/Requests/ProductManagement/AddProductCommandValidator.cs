@@ -17,6 +17,7 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
             .WithMessage(ValidationMessage.Required);
 
         RuleFor(command => command.ProductPrice).NotNull().NotEmpty()
-            .WithMessage(ValidationMessage.Required);
+            .WithMessage(ValidationMessage.Required)
+            .NotEqual(0).WithMessage(ValidationMessage.GreaterThanZero);
     }
 }
