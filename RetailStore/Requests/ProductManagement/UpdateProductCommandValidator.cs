@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using RetailStore.Constants;
+
 
 namespace RetailStore.Requests.ProductManagement
 {
@@ -13,14 +15,14 @@ namespace RetailStore.Requests.ProductManagement
         public UpdateProductCommandValidator()
         {
             RuleFor(command => command.Id)
-                .GreaterThan(0).WithMessage("Invalid product ID.");
+                .GreaterThan(0).WithMessage(ValidationMessage.Invalid);
 
             RuleFor(command => command.ProductName)
-                .NotNull().NotEmpty().WithMessage("Product name is required.")
-                .MaximumLength(50).WithMessage("Product name cannot exceed 50 characters.");
+                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
+                .MaximumLength(50).WithMessage(ValidationMessage.Length) ;
 
             RuleFor(command => command.ProductPrice)
-                .GreaterThan(0).WithMessage("Product price must be greater than 0.");
+                .NotEqual(0).WithMessage(ValidationMessage.GreaterThanZero);
         }
     }
 }
