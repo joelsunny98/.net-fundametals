@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace RetailStore.Requests.ProductManagement
 {
@@ -38,7 +40,8 @@ namespace RetailStore.Requests.ProductManagement
         /// <returns></returns>
         public async Task<int> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var validator = new UpdateProductCommandValidator()
+            var validator = new UpdateProductCommandValidator(_dbContext);
+            await validator.ValidateAndThrowAsync(request, cancellationToken);
 
             var product = await _dbContext.Products.FindAsync(request.Id);
             if (product == null)
