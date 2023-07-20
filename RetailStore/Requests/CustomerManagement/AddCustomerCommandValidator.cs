@@ -19,13 +19,13 @@ namespace RetailStore.Requests.CustomerManagement
             _dbContext = dbContext;
 
             RuleFor(command => command.CustomerName)
-                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
-                .MaximumLength(25).WithMessage(ValidationMessage.Length);
+                .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "Customer Name"))
+                .MaximumLength(25).WithMessage(command => string.Format(ValidationMessage.Length, "CustomerName"));
 
             RuleFor(command => command.PhoneNumber)
-                .NotNull().NotEmpty().WithMessage(ValidationMessage.Required)
-                .Must(BeValidPhoneNumber).WithMessage(ValidationMessage.PhoneNumberLength)
-                .Must(BeUniquePhoneNumber).WithMessage(ValidationMessage.Unique);
+                .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "Phone Number"))
+                .Must(BeValidPhoneNumber).WithMessage(command => string.Format(ValidationMessage.PhoneNumberLength, "Phone Number"))
+                .Must(BeUniquePhoneNumber).WithMessage(command => string.Format(ValidationMessage.Unique, "Phone Number"));
         }
 
         private bool BeValidPhoneNumber(long phoneNumber)
