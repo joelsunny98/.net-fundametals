@@ -49,7 +49,7 @@ public class ProductController : BaseController
     /// Endpoint to delete a product by ID.
     /// </summary>
     /// <param name="id">product's Id to fetch product's data</param>
-    [HttpDelete("{id}")]
+    [HttpDelete("products/{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> DeleteProduct(int id)
     {
