@@ -19,7 +19,7 @@ namespace RetailStore.Requests.CustomerManagement
             _dbContext = dbContext;
 
             RuleFor(command => command.CustomerName)
-                .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "Customer Name"))
+                .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "CustomerName"))
                 .MaximumLength(25).WithMessage(command => string.Format(ValidationMessage.Length, "CustomerName"));
 
             RuleFor(command => command.PhoneNumber)
