@@ -35,6 +35,7 @@ app.Run();
 void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped<IProductBarCodeService, ProductBarCodeService>();
+    services.AddScoped<IPremiumCodeService, PremiumCodeService>();
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen(c =>
