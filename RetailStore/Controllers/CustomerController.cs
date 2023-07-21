@@ -2,6 +2,7 @@
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
+using RetailStore.Requests.OrderDetailManagement;
 
 namespace RetailStore.Controllers;
 
@@ -27,9 +28,7 @@ public class CustomerController : BaseController
     /// <summary>
     /// Adding data of customer to the database
     /// </summary>
-    /// <returns>
-    /// Id of customer inserted to the record
-    /// </returns> 
+    /// <returns>Id of customer inserted to the record</returns> 
     [HttpPost("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddCustomers(AddCustomerCommand request)
@@ -88,6 +87,17 @@ public class CustomerController : BaseController
             PhoneNumber = customerRequestBody.PhoneNumber
         });
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Endpoint to fetch details of a premium customer.
+    /// </summary>
+    /// <returns>It returns best purchasing customer details</returns>
+    [HttpGet("premium")]
+    public async Task<IActionResult> GetPremiumCustomers()
+    {
+        var premiumCustomers = await Mediator.Send(new GetPremiumCustomersQuery());
+        return Ok(premiumCustomers);
     }
 }
 
