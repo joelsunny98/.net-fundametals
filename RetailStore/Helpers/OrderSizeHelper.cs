@@ -1,26 +1,35 @@
-﻿using RetailStore.Eums;
+﻿using RetailStore.Constants;
+using RetailStore.Eums;
 
 namespace RetailStore.Helpers
 {
+    /// <summary>
+    /// Helper for Order Size
+    /// </summary>
     public static class OrderSizeHelper
     {
+        /// <summary>
+        /// Method to get Order Size
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static string CalculateOrderSize(int count)
         {
-            if (count >= 10)
+            if (count >= MagicNumber.Ten)
             {
-                return Enum.GetName(typeof(Enums.OrderSize), 0);
+                return Enums.OrderSize.Large.ToString();
             }
-            else if (count >= 5)
+            else if (count >= MagicNumber.Five)
             {
-                return Enum.GetName(typeof(Enums.OrderSize), 1);
+                return Enums.OrderSize.Medium.ToString();
             }
-            else if (count >= 2)
+            else if (count >= MagicNumber.Two)
             {
-                return Enum.GetName(typeof(Enums.OrderSize), 2);
+                return Enums.OrderSize.Small.ToString();
             }
             else
             {
-                return Enum.GetName(typeof(Enums.OrderSize), 3);
+                return Enums.OrderSize.SingleItem.ToString();
             }
 
         }
