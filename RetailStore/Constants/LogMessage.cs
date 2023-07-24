@@ -59,4 +59,9 @@ public class LogMessage
     /// "Barcode for Product {ProductId} generated"
     /// </summary>
     public const string BarcodeGenerated = "Barcode for Product {ProductId} generated";
+
+    /// <summary>
+    /// "Failed to retrieve premium customer"
+    /// </summary>
+    public const string GetPremiumCustomersFailed = "Failed to retrieve premium customer";
 }
