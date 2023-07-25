@@ -41,8 +41,6 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
     public async Task<Customer> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
     {
         var deletedCustomer = await _customerRepository.Delete(command.CustomerId);
-
-        var customerName = deletedCustomer.Name;
         _logger.LogInformation(LogMessage.DeleteItem, deletedCustomer.Id);
 
         return deletedCustomer;
