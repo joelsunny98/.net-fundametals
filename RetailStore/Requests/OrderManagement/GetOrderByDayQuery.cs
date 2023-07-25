@@ -25,6 +25,7 @@ public class GetOrderByDayQueryHandler : IRequestHandler<GetOrderByDayQuery, Lis
     /// Injects RetailDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
+    /// <param name="logger"></param>
     public GetOrderByDayQueryHandler(RetailStoreDbContext dbContext, ILogger<GetOrderByDayQuery> logger)
     {
         _dbContext = dbContext;
@@ -51,7 +52,7 @@ public class GetOrderByDayQueryHandler : IRequestHandler<GetOrderByDayQuery, Lis
                 ProductName = d.Product.Name,
                 Quantity = d.Quantity
             }).ToList()
-        }).ToListAsync();
+        }).ToListAsync(cancellationToken);
 
         _logger.LogInformation(LogMessage.OrderForTheDay, result.Count);
         return result;

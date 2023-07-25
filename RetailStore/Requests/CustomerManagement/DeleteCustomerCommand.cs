@@ -3,15 +3,18 @@ using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;
 
-namespace RetailStore.Requests.CustomerManagement
+namespace RetailStore.Requests.CustomerManagement;
+
+/// <summary>
+/// Command to Delete Customer by Id
+/// </summary>
+public class DeleteCustomerCommand : IRequest<Customer>
 {
     /// <summary>
-    /// Command to Delete Customer by Id
+    /// Gets and sets CustomerId
     /// </summary>
-    public class DeleteCustomerCommand : IRequest<Customer>
-    {
-        public int CustomerId { get; set; }
-    }
+    public int CustomerId { get; set; }
+}
 
     /// <summary>
     /// Handler for Delete Customer by Id command
@@ -21,15 +24,17 @@ namespace RetailStore.Requests.CustomerManagement
         private readonly IRepository<Customer> _customerRepository;
         private readonly ILogger<DeleteCustomerCommandHandler> _logger;
 
-        /// <summary>
-        /// Injects IRepository class
-        /// </summary>
-        /// <param name="customerRepository"></param>
-        public DeleteCustomerCommandHandler(IRepository<Customer> customerRepository, ILogger<DeleteCustomerCommandHandler> logger)
-        {
-            _customerRepository = customerRepository;
-            _logger = logger;
-        }
+
+    /// <summary>
+    /// Injects IRepository class
+    /// </summary>
+    /// <param name="customerRepository"></param>
+    /// <param name="logger"></param>
+    public DeleteCustomerCommandHandler(IRepository<Customer> customerRepository, ILogger<DeleteCustomerCommandHandler> logger)
+    {
+        _customerRepository = customerRepository;
+        _logger = logger;
+    }
 
         /// <summary>
         /// Deletes Customer by Id
@@ -48,4 +53,4 @@ namespace RetailStore.Requests.CustomerManagement
             return deletedCustomer;
         }
     }
-}
+

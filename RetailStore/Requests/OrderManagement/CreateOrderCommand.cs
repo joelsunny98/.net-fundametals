@@ -73,7 +73,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
 
         _dbContext.OrderDetails.AddRange(details);
 
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
         var result = createdOrder.TotalAmount.ConvertToCurrencyString();
 
         _logger.LogInformation(LogMessage.NewItem, createdOrder.Id);

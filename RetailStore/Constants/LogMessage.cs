@@ -64,4 +64,9 @@ public class LogMessage
     /// "Failed to retrieve premium customer"
     /// </summary>
     public const string GetPremiumCustomersFailed = "Failed to retrieve premium customer";
+
+    /// <summary>
+    /// "Generated Premium Customers"
+    /// </summary>
+    public const string GeneratePremiumCustomer = "Generated Premium Customers";
 }

@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RetailStore.Model;
+using RetailStore.Constants;
 using RetailStore.Persistence;
 
 namespace RetailStore.Requests.CustomerManagement
@@ -21,8 +20,8 @@ namespace RetailStore.Requests.CustomerManagement
             _dbContext = dbContext;
 
             RuleFor(command => command.CustomerId)
-                .GreaterThan(0).WithMessage("CustomerId must be greater than 0.")
-                .MustAsync(BeExistingCustomerId).WithMessage("Customer with the given ID does not exist.");
+                .GreaterThan(0).WithMessage(ValidationMessage.CustomerIDGreaterThanZero)
+                .MustAsync(BeExistingCustomerId).WithMessage(e => string.Format(ValidationMessage.CustomerIdDoesNotExist, e.CustomerId));
         }
 
         private async Task<bool> BeExistingCustomerId(int customerId, CancellationToken cancellationToken)

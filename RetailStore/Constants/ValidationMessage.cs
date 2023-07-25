@@ -6,37 +6,82 @@
 public class ValidationMessage
 {
     /// <summary>
-    /// Is required
+    /// "Customer Name is required
     /// </summary>
-    public const string Required = "{0} is required";
+    public const string CustomerNameRequired = "Customer Name is required";
 
     /// <summary>
-    /// Is Unique
+    /// "Customer Name can not be more that 25 characters"
     /// </summary>
-    public const string Unique = "{0} is already exists";
+    public const string CustomerNameLength = "Customer Name can not be more that 25 characters";
 
     /// <summary>
-    /// Length Limit
+    /// "Phone Number is required"
     /// </summary>
-    public const string Length = "{0} exceeds its limit";
+    public const string PhoneNumberRequired = "Phone Number is required";
 
     /// <summary>
-    /// PHone number must have 10 digits
+    /// "Phone number must be valid"
     /// </summary>
-    public const string PhoneNumberLength = "{0} should be 10 digits";
+    public const string PhoneNumberValid = "Phone number must be valid";
 
     /// <summary>
-    /// Is Invalid
+    /// "Phone number must be unique"
     /// </summary>
-    public const string Invalid = "{0} is invalid";
+    public const string PhoneNumverUnique = "Phone number must be unique";
 
     /// <summary>
-    /// Exceeds 50 characters
+    /// "Customer Id is required"
     /// </summary>
-    public const string CharExceedsFifty = "{0} exceeds 50 characters";
+    public const string CustomerIdRequried = "Customer Id is required";
+    /// <summary>
+    /// "Product Id is required"
+    /// </summary>
+    public const string ProductIdRequired = "Product Id is required";
 
     /// <summary>
-    /// Amount must be greater that 0
+    /// "Quantity is required"
     /// </summary>
-    public const string GreaterThanZero = "Amount must be greater than 0";
+    public const string QuantityRequired = "Quantity is required";
+
+    /// <summary>
+    /// "Customer Id must be greater that 0"
+    /// </summary>
+    public const string CustomerIDGreaterThanZero = "Customer Id must be greater that 0";
+
+    /// <summary>
+    /// "Customer does not exist"
+    /// </summary>
+    public const string CustomerIdDoesNotExist = "Customer with {0} does not exist";
+
+    /// <summary>
+    /// "Product Name is required"
+    /// </summary>
+    public const string ProductNameRequired = "Product Name is required";
+
+    /// <summary>
+    /// "Product Name can not be more than 50 characters"
+    /// </summary>
+    public const string ProductNameLength = "Product Name can not be more than 50 characters";
+
+    /// <summary>
+    /// "Product Name must be unique"
+    /// </summary>
+    public const string ProductNameUnique = "Product Name must be unique";
+
+    /// <summary>
+    /// "Price is required"
+    /// </summary>
+    public const string PriceRequired = "Price is required";
+
+    /// <summary>
+    /// "Price must be greater than 0"
+    /// </summary>
+    public const string PriceGreaterThanZero = "Price must be greater than 0";
+
+    /// <summary>
+    /// "Product Id must be greater than 0"
+    /// </summary>
+    public const string ProductIdGreaterThanZero = "Product Id must be greater than 0";
+
 }

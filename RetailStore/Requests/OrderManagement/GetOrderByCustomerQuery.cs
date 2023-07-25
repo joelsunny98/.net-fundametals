@@ -45,7 +45,7 @@ namespace RetailStore.Requests.OrderManagement
             {
                 CustomerName = g.FirstOrDefault().Customer.Name,
                 TotalOrders = g.Count()
-            }).ToListAsync();
+            }).ToListAsync(cancellationToken);
 
             _logger.LogInformation(LogMessage.GetAllItems, result.Count);
             return result;
