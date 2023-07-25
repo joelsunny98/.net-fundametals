@@ -44,8 +44,8 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
 
     public async Task<int> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
     {
-        var validator = new UpdateCustomerCommandValidator(_dbContext);
-        await validator.ValidateAndThrowAsync(command, cancellationToken);
+       var validator = new UpdateCustomerCommandValidator(_dbContext);
+       await validator.ValidateAndThrowAsync(command, cancellationToken);
 
         var customer = await _dbContext.Customers.FindAsync(command.CustomerId);
 

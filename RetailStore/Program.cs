@@ -37,6 +37,7 @@ app.Run();
 void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped<IProductBarCodeService, ProductBarCodeService>();
+    services.AddScoped<IPremiumCodeService, PremiumCodeService>();
     services.AddControllers();
     services.AddHttpClient<ITwilioRestClient, TwilioClient>();
     services.AddScoped<ITwilioRestClient, TwilioClient>();
