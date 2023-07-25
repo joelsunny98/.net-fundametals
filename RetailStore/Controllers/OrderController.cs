@@ -3,6 +3,11 @@ using RetailStore.Dtos;
 using RetailStore.Requests.OrderManagement;
 using RetailStore.Model;
 using System.Net;
+using Twilio.Clients;
+using Twilio.Rest.Chat.V1.Service.Channel;
+using Twilio.Types;
+using Twilio.TwiML.Messaging;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace RetailStore.Controllers;
 
@@ -12,6 +17,11 @@ namespace RetailStore.Controllers;
 [ApiController]
 public class OrderController : BaseController
 {
+    private readonly ITwilioRestClient _client;
+    public OrderController(ITwilioRestClient client)
+    {
+        _client = client;
+    }
     /// <summary>
     /// Endpoint to fetch details of orders of retail store.
     /// </summary>
@@ -36,6 +46,14 @@ public class OrderController : BaseController
     {
         var result = await Mediator.Send(request);
         return Ok(result);
+    }
+
+    [HttpGet("sms/{id}")]
+    public async Task<IActionResult> SendSms(long id)
+    {
+        
+        return Ok(await Mediator.Send(new SendSmsQuery{ Id = id}));
+
     }
 
     /// <summary>
