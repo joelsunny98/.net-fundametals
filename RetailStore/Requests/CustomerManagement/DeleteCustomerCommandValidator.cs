@@ -2,33 +2,32 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
 using RetailStore.Persistence;
-using RetailStore.Constants;
-using RetailStore.Model;
-using RetailStore.Repository;
-using System.Threading.Tasks;
 
 namespace RetailStore.Requests.CustomerManagement
 {
+    /// <summary>
+    /// Validator for Delete Customer Command
+    /// </summary>
     public class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCommand>
     {
-        private readonly IRepository<Customer> _customerRepository;
+        private readonly RetailStoreDbContext _dbContext;
 
-        public DeleteCustomerCommandValidator(IRepository<Customer> customerRepository)
+        /// <summary>
+        /// Validator to validate the Delete Customer Command
+        /// </summary>
+        public DeleteCustomerCommandValidator(RetailStoreDbContext dbContext)
         {
-            _customerRepository = customerRepository;
+            _dbContext = dbContext;
 
             RuleFor(command => command.CustomerId)
                 .GreaterThan(0).WithMessage(ValidationMessage.CustomerIDGreaterThanZero)
                 .MustAsync(BeExistingCustomerId).WithMessage(e => string.Format(ValidationMessage.CustomerIdDoesNotExist, e.CustomerId));
-                .GreaterThan(0).WithMessage((command => string.Format(ValidationMessage.Valid, "CustomerId")))
-                .MustAsync(NotExists).WithMessage(ValidationMessage.NotExist);
         }
 
-        private async Task<bool> NotExists(int customerId, CancellationToken cancellationToken)
+        private async Task<bool> BeExistingCustomerId(int customerId, CancellationToken cancellationToken)
         {
-            var customer = await _customerRepository.GetById(customerId);
-            return customer == null;
+            var customerExists = await _dbContext.Customers.AnyAsync(c => c.Id == customerId, cancellationToken);
+            return customerExists;
         }
-
     }
 }
