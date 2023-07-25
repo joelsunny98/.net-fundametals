@@ -6,8 +6,15 @@ using RetailStore.Persistence;
 
 namespace RetailStore.Requests.CustomerManagement;
 
+/// <summary>
+/// Query to fetch customer by Id
+/// </summary>
 public class GetCustomerByIdQuery : IRequest<CustomerDto>
 {
+
+    /// <summary>
+    /// Gets and sets Id
+    /// </summary>
     public long? CustomerId { get; set; }
 }
 
@@ -16,14 +23,22 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
     private readonly RetailStoreDbContext _dbContext;
     private readonly ILogger<GetCustomerByIdQueryHandler> _logger;
 
-
+    /// <summary>
+    /// Injects RetailDbContext class
+    /// </summary>
+    /// <param name="dbContext"></param>
     public GetCustomerByIdQueryHandler(RetailStoreDbContext dbContext, ILogger<GetCustomerByIdQueryHandler> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
     }
 
-
+    /// <summary>
+    /// Fetches customer by Id
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Customer</returns>
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)
     {
         try

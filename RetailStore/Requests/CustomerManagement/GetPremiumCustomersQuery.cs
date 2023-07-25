@@ -6,8 +6,9 @@ using MediatR;
 using RetailStore.Dtos;
 using RetailStore.Persistence;
 using RetailStore.Services;
-using RetailStore.Helpers; // Add the using statement for the helper class
+using RetailStore.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace RetailStore.Requests.CustomerManagement
 {
@@ -18,15 +19,17 @@ namespace RetailStore.Requests.CustomerManagement
     public class GetPremiumCustomersQueryHandler : IRequestHandler<GetPremiumCustomersQuery, List<PremiumCustomerDto>>
     {
         private readonly RetailStoreDbContext _dbContext;
+        private readonly ILogger<GetPremiumCustomersQueryHandler> _logger;
 
-        public GetPremiumCustomersQueryHandler(RetailStoreDbContext dbContext)
+        public GetPremiumCustomersQueryHandler(RetailStoreDbContext dbContext, ILogger<GetPremiumCustomersQueryHandler> logger) 
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task<List<PremiumCustomerDto>> Handle(GetPremiumCustomersQuery query, CancellationToken cancellationToken)
         {
-            var premiumCodeService = new PremiumCodeService(); // Create a new instance of the PremiumCodeService
+            var premiumCodeService = new PremiumCodeService();
 
             var allCustomers = await _dbContext.Orders
                 .GroupBy(order => order.CustomerId)
@@ -39,13 +42,13 @@ namespace RetailStore.Requests.CustomerManagement
                 })
                 .ToListAsync();
 
-            var premiumCustomers = PremiumCustomerHelper.GetPremiumCustomers(allCustomers); // Use the helper to filter premium customers
-
-            // Generate unique premium codes for premium customers using the new instance of PremiumCodeService
+            var premiumCustomers = PremiumCustomerHelper.GetPremiumCustomers(allCustomers);
             foreach (var premiumCustomer in premiumCustomers)
             {
                 premiumCustomer.PremiumCode = premiumCodeService.GeneratePremiumCode();
             }
+
+            _logger.LogInformation("Processed {customerCount} customers for premium code generation.", premiumCustomers.Count);
 
             return premiumCustomers;
         }

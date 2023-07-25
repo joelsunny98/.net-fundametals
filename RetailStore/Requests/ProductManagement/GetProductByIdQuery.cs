@@ -52,7 +52,5 @@ namespace RetailStore.Requests.ProductManagement
             _logger.LogInformation(LogMessage.GetItemById, request.Id);
             return result;
         }
-
-
     }
 }

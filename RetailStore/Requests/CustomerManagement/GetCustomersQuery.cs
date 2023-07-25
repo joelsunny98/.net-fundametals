@@ -6,23 +6,37 @@ using RetailStore.Persistence;
 
 namespace RetailStore.Requests.CustomerManagement;
 
+/// <summary>
+/// Query to get all customers
+/// </summary>
 public class GetCustomersQuery : IRequest<List<CustomerDto>>
 {
 }
 
+/// <summary>
+/// Handler for Get all Product query
+/// </summary>
 public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<CustomerDto>>
 {
     private readonly RetailStoreDbContext _dbContext;
     private readonly ILogger<GetCustomerQueryHandler> _logger;
 
-
+    /// <summary>
+    /// Injects RetailDbContextClass
+    /// </summary>
+    /// <param name="dbContext"></param>
     public GetCustomerQueryHandler(RetailStoreDbContext dbContext, ILogger<GetCustomerQueryHandler> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
     }
 
-
+    /// <summary>
+    /// Fetches all customers from the database
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>List of Customers</returns>
     public async Task<List<CustomerDto>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
     {
         try
