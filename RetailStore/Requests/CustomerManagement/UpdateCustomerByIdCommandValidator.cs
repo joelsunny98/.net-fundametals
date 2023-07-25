@@ -19,16 +19,16 @@ namespace RetailStore.Requests.CustomerManagement
         {
             _dbContext = dbContext;
             RuleFor(command => command.CustomerId)
-                .GreaterThan(0).WithMessage(ValidationMessage.Invalid);
+                .GreaterThan(0).WithMessage(ValidationMessage.CustomerIDGreaterThanZero);
 
             RuleFor(command => command.CustomerName)
-                .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "Customer Name"))
-                .MaximumLength(25).WithMessage(command => string.Format(ValidationMessage.Length, "CustomerName"));
+                .NotNull().NotEmpty().WithMessage(ValidationMessage.CustomerNameRequired)
+                .MaximumLength(25).WithMessage(ValidationMessage.CustomerNameLength);
 
             RuleFor(command => command.PhoneNumber)
-                  .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "Phone Number"))
-                  .Must(BeValidPhoneNumber).WithMessage(command => string.Format(ValidationMessage.PhoneNumberLength, "Phone Number"))
-                  .Must(BeUniquePhoneNumber).WithMessage(command => string.Format(ValidationMessage.Unique, "Phone Number"));
+                  .NotNull().NotEmpty().WithMessage(ValidationMessage.PhoneNumberRequired)
+                  .Must(BeValidPhoneNumber).WithMessage(ValidationMessage.PhoneNumberValid)
+                  .Must(BeUniquePhoneNumber).WithMessage(ValidationMessage.PhoneNumverUnique);
         }
 
         private bool BeValidPhoneNumber(long phoneNumber)

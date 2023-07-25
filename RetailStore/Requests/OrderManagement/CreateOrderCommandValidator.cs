@@ -15,11 +15,11 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
     public CreateOrderCommandValidator()
     {
         //Rules for required fields
-        RuleFor(x => x.CustomerId).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+        RuleFor(x => x.CustomerId).NotNull().NotEmpty().WithMessage(ValidationMessage.CustomerIdRequried);
         RuleForEach(x => x.Details).ChildRules(p =>
         {
-            p.RuleFor(x => x.ProductId).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
-            p.RuleFor(x => x.Quantity).Must(x => x != 0).WithMessage(ValidationMessage.Required);
+            p.RuleFor(x => x.ProductId).NotNull().NotEmpty().WithMessage(ValidationMessage.ProductIdRequired);
+            p.RuleFor(x => x.Quantity).Must(x => x != 0).WithMessage(ValidationMessage.QuantityRequired);
         });
     }
 }

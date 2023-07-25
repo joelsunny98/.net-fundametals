@@ -20,14 +20,14 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
         _dbContext = dbcontext;
 
         RuleFor(command => command.ProductName).NotNull().NotEmpty()
-            .WithMessage(command => string.Format(ValidationMessage.Required, "Product Name"))
-            .MaximumLength(50).WithMessage(command => string.Format(ValidationMessage.CharExceedsFifty, command.ProductName));
+            .WithMessage(ValidationMessage.ProductNameRequired)
+            .MaximumLength(50).WithMessage(ValidationMessage.ProductNameLength);
 
-        RuleFor(command => command.ProductName).Must(IsUniqueProduct).WithMessage(command => string.Format(ValidationMessage.Unique, command.ProductName));
+        RuleFor(command => command.ProductName).Must(IsUniqueProduct).WithMessage(ValidationMessage.ProductNameUnique);
 
         RuleFor(command => command.ProductPrice).NotNull().NotEmpty()
-            .WithMessage(command => string.Format(ValidationMessage.Required, "Price"))
-            .GreaterThan(0).WithMessage(ValidationMessage.GreaterThanZero);
+            .WithMessage(ValidationMessage.PriceRequired)
+            .GreaterThan(0).WithMessage(ValidationMessage.PriceGreaterThanZero);
     }
 
     private bool IsUniqueProduct(string productName)
