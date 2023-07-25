@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
-using RetailStore.Persistence;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.CustomerManagement
 {
@@ -10,12 +10,12 @@ namespace RetailStore.Requests.CustomerManagement
     /// </summary>
     public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
 
         /// <summary>
         /// Validator for defining specific rules for properties
         /// </summary>
-        public UpdateCustomerCommandValidator(RetailStoreDbContext dbContext)
+        public UpdateCustomerCommandValidator(IRetailStoreDbContext dbContext)
         {
             _dbContext = dbContext;
             RuleFor(command => command.CustomerId)

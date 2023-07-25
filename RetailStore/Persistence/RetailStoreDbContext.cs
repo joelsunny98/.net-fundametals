@@ -44,4 +44,9 @@ public class RetailStoreDbContext: DbContext, IRetailStoreDbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(RetailStoreDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
+
+    public async Task RunMigrations()
+    {
+        await Database.MigrateAsync();
+    }
 }

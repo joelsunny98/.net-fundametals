@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.ProductManagement
 {
@@ -18,7 +18,7 @@ namespace RetailStore.Requests.ProductManagement
     /// </summary>
     public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, List<ProductDto>>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace RetailStore.Requests.ProductManagement
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
-        public GetAllProductsQueryHandler(RetailStoreDbContext dbContext, ILogger<GetAllProductsQuery> logger)
+        public GetAllProductsQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetAllProductsQuery> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -40,7 +40,7 @@ namespace RetailStore.Requests.ProductManagement
         /// <returns>List of Products</returns>
         public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await _dbContext.Products.Select(e => new ProductDto 
+            var products = await _dbContext.Products.Select(e => new ProductDto
             {
                 ProductName = e.Name,
                 ProductPrice = e.Price

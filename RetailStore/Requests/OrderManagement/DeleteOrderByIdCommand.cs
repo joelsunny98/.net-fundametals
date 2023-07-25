@@ -32,7 +32,6 @@ public class DeleteOrderByIdCommandHandler : IRequestHandler<DeleteOrderByIdComm
     {
         _orderRepository = orderRepository;
         _logger = logger;
-
     }
 
     /// <summary>

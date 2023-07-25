@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Helpers;
-using RetailStore.Persistence;
 using RetailStore.Services;
 
 namespace RetailStore.Requests.CustomerManagement;
@@ -19,7 +19,7 @@ public class GetPremiumCustomersQuery : IRequest<List<PremiumCustomerDto>>
 /// </summary>
 public class GetPremiumCustomersQueryHandler : IRequestHandler<GetPremiumCustomersQuery, List<PremiumCustomerDto>>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
     private readonly ILogger _logger;
 
     /// <summary>
@@ -27,7 +27,7 @@ public class GetPremiumCustomersQueryHandler : IRequestHandler<GetPremiumCustome
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public GetPremiumCustomersQueryHandler(RetailStoreDbContext dbContext, ILogger<GetPremiumCustomersQuery> logger)
+    public GetPremiumCustomersQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetPremiumCustomersQuery> logger)
     {
         _dbContext = dbContext;
         _logger = logger;

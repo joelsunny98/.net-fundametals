@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
-using RetailStore.Persistence;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.OrderManagement
 {
@@ -17,7 +17,7 @@ namespace RetailStore.Requests.OrderManagement
     /// </summary>
     public class GetCollectionByDayQueryHandler : IRequestHandler<GetCollectionByDayQuery, string>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace RetailStore.Requests.OrderManagement
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
-        public GetCollectionByDayQueryHandler(RetailStoreDbContext dbContext, ILogger<GetCollectionByDayQuery> logger)
+        public GetCollectionByDayQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetCollectionByDayQuery> logger)
         {
             _dbContext = dbContext;
             _logger = logger;

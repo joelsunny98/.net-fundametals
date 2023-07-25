@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Nanoid;
-using RetailStore.Constants;
+﻿using RetailStore.Constants;
 using RetailStore.Contracts;
 
 namespace RetailStore.Services

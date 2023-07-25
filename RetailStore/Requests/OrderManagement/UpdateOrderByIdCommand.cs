@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using RetailStore.Dtos;
-using RetailStore.Model;
-using RetailStore.Persistence;
-using RetailStore.Helpers;
-using RetailStore.Constants;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
+using RetailStore.Contracts;
+using RetailStore.Dtos;
+using RetailStore.Helpers;
+using RetailStore.Model;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -29,7 +29,7 @@ public class UpdateOrderByIdCommand : IRequest<int>
 /// </summary>
 public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdCommand, int>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
     private readonly ILogger _logger;
 
     /// <summary>
@@ -37,7 +37,7 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public UpdateOrderByIdCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateOrderByIdCommand> logger)
+    public UpdateOrderByIdCommandHandler(IRetailStoreDbContext dbContext, ILogger<UpdateOrderByIdCommand> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -65,13 +65,12 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
         order.UpdatedOn = DateTime.UtcNow;
 
         var productIds = command.OrderRequest.Details.Select(e => e.ProductId).ToList();
-
         var products = await _dbContext.Products.Where(e => productIds.Contains(e.Id)).ToListAsync(cancellationToken);
 
         var details = command.OrderRequest.Details.Select(d =>
         {
             var product = products.FirstOrDefault(e => e.Id == d.ProductId);
-            
+
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,

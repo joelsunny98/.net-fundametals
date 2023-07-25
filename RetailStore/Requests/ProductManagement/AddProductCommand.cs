@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Model;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.ProductManagement
 {
@@ -19,7 +19,7 @@ namespace RetailStore.Requests.ProductManagement
     /// </summary>
     public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -27,12 +27,12 @@ namespace RetailStore.Requests.ProductManagement
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
-        public AddProductCommandHandler(RetailStoreDbContext dbContext, ILogger<AddProductCommandHandler> logger)
+        public AddProductCommandHandler(IRetailStoreDbContext dbContext, ILogger<AddProductCommandHandler> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
         }
-        
+
         /// <summary>
         /// Adds a new product to database
         /// </summary>

@@ -8,14 +8,20 @@ using RetailStore.Contracts;
 using Twilio.Rest.Api.V2010.Account;
 using RetailStore.Services;
 using Twilio.Clients;
+using SixLabors.ImageSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-ConfigureServices(builder.Services);
-var dbContext = ConfigureDbContext(builder.Services, builder.Configuration);
+ConfigureServices(builder.Services, builder.Configuration);
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope()) 
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<IRetailStoreDbContext>();
+    await dbContext.RunMigrations();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -30,12 +36,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-dbContext.Database.Migrate();
-
 app.Run();
 
-void ConfigureServices(IServiceCollection services)
+void ConfigureServices(IServiceCollection services, ConfigurationManager configuration)
 {
+    services.AddDbContext<RetailStoreDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DbConnection")));
+    services.AddScoped<IRetailStoreDbContext>(provider => provider.GetService<RetailStoreDbContext>());
+
     services.AddScoped<IProductBarCodeService, ProductBarCodeService>();
     services.AddScoped<IPremiumCodeService, PremiumCodeService>();
     services.AddControllers();
@@ -53,14 +60,4 @@ void ConfigureServices(IServiceCollection services)
     services.AddMediatR(configure => configure.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     services.AddFluentValidationAutoValidation();
     services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-}
-
-RetailStoreDbContext ConfigureDbContext(IServiceCollection services, ConfigurationManager configuration)
-{
-    var dbContextOptions = new DbContextOptionsBuilder<RetailStoreDbContext>().UseNpgsql(configuration.GetConnectionString("DbConnection")).Options;
-    var dbContext = new RetailStoreDbContext(dbContextOptions);
-
-    services.AddSingleton(dbContext);
-
-    return dbContext;
 }
