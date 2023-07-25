@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.ProductManagement
 {
@@ -22,7 +22,7 @@ namespace RetailStore.Requests.ProductManagement
     /// </summary>
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, List<ProductDto>>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace RetailStore.Requests.ProductManagement
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
-        public GetProductByIdQueryHandler(RetailStoreDbContext dbContext, ILogger<GetProductByIdQuery> logger)
+        public GetProductByIdQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetProductByIdQuery> logger)
         {
             _dbContext = dbContext;
             _logger = logger;

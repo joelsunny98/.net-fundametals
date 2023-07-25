@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using RetailStore.Constants;
-using RetailStore.Persistence;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.CustomerManagement;
 
@@ -9,12 +9,12 @@ namespace RetailStore.Requests.CustomerManagement;
 /// </summary>
 public class AddCustomerCommandValidator : AbstractValidator<AddCustomerCommand>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
 
     /// <summary>
     /// Validator for defining specific rules for properties
     /// </summary>
-    public AddCustomerCommandValidator(RetailStoreDbContext dbContext)
+    public AddCustomerCommandValidator(IRetailStoreDbContext dbContext)
     {
         _dbContext = dbContext;
 
@@ -38,7 +38,7 @@ public class AddCustomerCommandValidator : AbstractValidator<AddCustomerCommand>
         var phoneNumberString = phoneNumber.ToString();
         return phoneNumberString.Length == 10;
     }
-    
+
     /// <summary>
     /// Method to check unique Phonenumber
     /// </summary>

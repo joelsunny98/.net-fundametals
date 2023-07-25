@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using RetailStore.Constants;
-using RetailStore.Persistence;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.CustomerManagement;
 
@@ -31,7 +31,7 @@ public class UpdateCustomerCommand : IRequest<int>
 /// </summary>
 public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, int>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
     private readonly ILogger<UpdateCustomerCommandHandler> _logger;
 
     /// <summary>
@@ -39,7 +39,7 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public UpdateCustomerCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateCustomerCommandHandler> logger)
+    public UpdateCustomerCommandHandler(IRetailStoreDbContext dbContext, ILogger<UpdateCustomerCommandHandler> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -54,8 +54,8 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
     /// <exception cref="KeyNotFoundException"></exception>
     public async Task<int> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
     {
-       var validator = new UpdateCustomerCommandValidator(_dbContext);
-       await validator.ValidateAndThrowAsync(command, cancellationToken);
+        var validator = new UpdateCustomerCommandValidator(_dbContext);
+        await validator.ValidateAndThrowAsync(command, cancellationToken);
 
         var customer = await _dbContext.Customers.FindAsync(command.CustomerId);
 

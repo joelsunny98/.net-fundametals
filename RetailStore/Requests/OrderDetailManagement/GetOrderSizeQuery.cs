@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Contracts;
 using RetailStore.Helpers;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderDetailManagement;
 
 /// <summary>
 /// Query to fetch the size of Order
 /// </summary>
-public class GetOrderSizeQuery: IRequest<string>
+public class GetOrderSizeQuery : IRequest<string>
 {
     /// <summary>
     /// Gets and sets OrderId
@@ -20,15 +19,15 @@ public class GetOrderSizeQuery: IRequest<string>
 /// <summary>
 /// Handler for Get Order size Query
 /// </summary>
-public class GetOrderSizeQueryHandler : IRequestHandler<GetOrderSizeQuery, string> 
+public class GetOrderSizeQueryHandler : IRequestHandler<GetOrderSizeQuery, string>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
 
     /// <summary>
     /// Injects RetailDbContext class and Logger
     /// </summary>
     /// <param name="dbContext"></param>
-    public GetOrderSizeQueryHandler(RetailStoreDbContext dbContext)
+    public GetOrderSizeQueryHandler(IRetailStoreDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -39,7 +38,7 @@ public class GetOrderSizeQueryHandler : IRequestHandler<GetOrderSizeQuery, strin
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Order Size</returns>
-    public async Task<string> Handle(GetOrderSizeQuery request, CancellationToken cancellationToken) 
+    public async Task<string> Handle(GetOrderSizeQuery request, CancellationToken cancellationToken)
     {
         var count = await _dbContext.OrderDetails.Where(e => e.OrderId == request.OrderId).CountAsync(cancellationToken);
 

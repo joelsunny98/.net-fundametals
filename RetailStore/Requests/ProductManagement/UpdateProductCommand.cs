@@ -1,16 +1,15 @@
 ﻿using FluentValidation;
 using MediatR;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
-using RetailStore.Persistence;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace RetailStore.Requests.ProductManagement
 {
     /// <summary>
     /// Command to Update Product
     /// </summary>
-    public class UpdateProductCommand :UpdateProductData ,IRequest<int>
+    public class UpdateProductCommand : UpdateProductData, IRequest<int>
     {
     }
 
@@ -19,7 +18,7 @@ namespace RetailStore.Requests.ProductManagement
     /// </summary>
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, int>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace RetailStore.Requests.ProductManagement
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
-        public UpdateProductCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateProductCommand> logger)
+        public UpdateProductCommandHandler(IRetailStoreDbContext dbContext, ILogger<UpdateProductCommand> logger)
         {
             _dbContext = dbContext;
             _logger = logger;

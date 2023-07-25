@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using RetailStore.Constants;
-using RetailStore.Persistence;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.ProductManagement
 {
@@ -20,7 +20,7 @@ namespace RetailStore.Requests.ProductManagement
     /// </summary>
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, int>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -28,12 +28,12 @@ namespace RetailStore.Requests.ProductManagement
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
-        public DeleteProductCommandHandler(RetailStoreDbContext dbContext, ILogger<DeleteProductCommand> logger)
+        public DeleteProductCommandHandler(IRetailStoreDbContext dbContext, ILogger<DeleteProductCommand> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
         }
-        
+
         /// <summary>
         /// Deletes a prodcut by Id
         /// </summary>
