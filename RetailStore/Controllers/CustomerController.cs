@@ -37,7 +37,6 @@ public class CustomerController : BaseController
         return Ok(result);
     }
 
-
     /// <summary>
     /// Delete a customer by ID.
     /// </summary>
@@ -49,7 +48,6 @@ public class CustomerController : BaseController
         var deleteCustomer = await Mediator.Send(new DeleteCustomerCommand { CustomerId = id });
         return Ok(deleteCustomer);
     }
-
 
     /// <summary>
     /// Endpoint to fetch details of an customer with given id.
@@ -100,10 +98,3 @@ public class CustomerController : BaseController
         return Ok(premiumCustomers);
     }
 }
-
-
-
-
-
-
-

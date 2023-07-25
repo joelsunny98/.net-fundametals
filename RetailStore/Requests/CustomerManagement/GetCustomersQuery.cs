@@ -7,14 +7,14 @@ using RetailStore.Dtos;
 namespace RetailStore.Requests.CustomerManagement;
 
 /// <summary>
-/// Query to get Cutomers
+/// Query to get all customers
 /// </summary>
 public class GetCustomersQuery : IRequest<List<CustomerDto>>
 {
 }
 
 /// <summary>
-/// Handler for Get Customer Query
+/// Handler for Get all Product query
 /// </summary>
 public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<CustomerDto>>
 {
@@ -22,7 +22,7 @@ public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<C
     private readonly ILogger<GetCustomerQueryHandler> _logger;
 
     /// <summary>
-    /// Injects Dependencies
+    /// Injects RetailDbContextClass
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
@@ -33,11 +33,11 @@ public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<C
     }
 
     /// <summary>
-    /// Fetches all Customers from Database
+    /// Fetches all customers from the database
     /// </summary>
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <returns>List of Customers</returns>
     public async Task<List<CustomerDto>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
     {
         try

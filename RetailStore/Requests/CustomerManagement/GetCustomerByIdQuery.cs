@@ -7,12 +7,13 @@ using RetailStore.Dtos;
 namespace RetailStore.Requests.CustomerManagement;
 
 /// <summary>
-/// Get Customer by Id Query
+/// Query to fetch customer by Id
 /// </summary>
 public class GetCustomerByIdQuery : IRequest<CustomerDto>
 {
+
     /// <summary>
-    /// Gets and sets CustomerID
+    /// Gets and sets Id
     /// </summary>
     public long? CustomerId { get; set; }
 }
@@ -26,7 +27,7 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
     private readonly ILogger<GetCustomerByIdQueryHandler> _logger;
 
     /// <summary>
-    /// Injects Dependencies
+    /// Injects RetailDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
@@ -37,9 +38,9 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
     }
 
     /// <summary>
-    /// Fetches Customer By Id
+    /// Fetches customer by Id
     /// </summary>
-    /// <param name="query"></param>
+    /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Customer</returns>
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)

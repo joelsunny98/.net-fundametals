@@ -82,6 +82,20 @@ public class ValidationMessage
     /// <summary>
     /// "Product Id must be greater than 0"
     /// </summary>
-    public const string ProductIdGreaterThanZero = "Product Id must be greater than 0";
+    public const string GreaterThanZero = "Amount must be greater than 0";
 
+    /// <summary>
+    /// Amount must be greater that 0
+    /// </summary>
+    public const string Valid = "Id must be greater than 0";
+
+    /// <summary>
+    /// Amount must be greater that 0
+    /// </summary>
+    public const string NotExist = "Id is not Exist in the Retailstore";
+
+    /// <summary>
+    /// "Product Id must be greater than 0"
+    /// </summary>
+    public const string ProductIdGreaterThanZero = "Product Id must be greater than 0";
 }
