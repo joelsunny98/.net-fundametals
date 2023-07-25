@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
 using RetailStore.Dtos;
 using RetailStore.Helpers;
@@ -51,9 +52,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
         };
         _dbContext.Orders.Add(createdOrder);
 
+        var productIds = command.Details.Select(e => e.ProductId).ToList();
+        var products = await _dbContext.Products.Where(e => productIds.Contains(e.Id)).ToListAsync(cancellationToken);
+
         var details = command.Details.Select(d =>
         {
-            var product = _dbContext.Products.FirstOrDefault(x => x.Id == d.ProductId);
+            var product = products.FirstOrDefault(e => e.Id == d.ProductId);
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,

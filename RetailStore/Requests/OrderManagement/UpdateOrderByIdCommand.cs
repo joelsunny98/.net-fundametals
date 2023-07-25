@@ -65,7 +65,6 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
         order.UpdatedOn = DateTime.UtcNow;
 
         var productIds = command.OrderRequest.Details.Select(e => e.ProductId).ToList();
-
         var products = await _dbContext.Products.Where(e => productIds.Contains(e.Id)).ToListAsync(cancellationToken);
 
         var details = command.OrderRequest.Details.Select(d =>
