@@ -28,6 +28,7 @@ public class GetProductBarcodeQueryHandler : IRequestHandler<GetProductBarcodeQu
     /// Injects RetailStoreDbContext class
     /// </summary>
     /// <param name="barCodeService"></param>
+    /// <param name="logger"></param>
     public GetProductBarcodeQueryHandler(IProductBarCodeService barCodeService, ILogger<GetProductBarcodeQuery> logger)
     {
         _barcodeServcie = barCodeService;
