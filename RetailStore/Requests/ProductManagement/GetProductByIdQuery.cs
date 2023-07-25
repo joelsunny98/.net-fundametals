@@ -26,6 +26,7 @@ namespace RetailStore.Requests.ProductManagement
         /// Injects RetailDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public GetProductByIdQueryHandler(RetailStoreDbContext dbContext, ILogger<GetProductByIdQuery> logger)
         {
             _dbContext = dbContext;
