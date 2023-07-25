@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Helpers;
 using RetailStore.Model;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -20,7 +20,7 @@ public class CreateOrderCommand : OrderRequestDto, IRequest<string>
 /// </summary>
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, string>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
     private readonly ILogger _logger;
 
     /// <summary>
@@ -28,7 +28,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public CreateOrderCommandHandler(RetailStoreDbContext dbContext, ILogger<CreateOrderCommand> logger)
+    public CreateOrderCommandHandler(IRetailStoreDbContext dbContext, ILogger<CreateOrderCommand> logger)
     {
         _dbContext = dbContext;
         _logger = logger;

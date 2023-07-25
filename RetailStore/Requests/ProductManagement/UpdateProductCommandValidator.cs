@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using RetailStore.Constants;
-using RetailStore.Persistence;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.ProductManagement
 {
@@ -9,12 +9,12 @@ namespace RetailStore.Requests.ProductManagement
     /// </summary>
     public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
 
         /// <summary>
         /// Validator rules for Specific Rules
         /// </summary>
-        public UpdateProductCommandValidator(RetailStoreDbContext dbContext)
+        public UpdateProductCommandValidator(IRetailStoreDbContext dbContext)
         {
             _dbContext = dbContext;
 

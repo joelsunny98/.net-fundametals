@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Contracts;
 using RetailStore.Extensions;
-using RetailStore.Persistence;
 using Twilio.Clients;
 using Twilio.Types;
 
@@ -23,13 +23,13 @@ namespace RetailStore.Requests.OrderManagement
     /// </summary>
     public class SendSmsQueryHandler : IRequestHandler<SendSmsQuery, decimal>
     {
-        private readonly RetailStoreDbContext _retailStoreDbContext;
+        private readonly IRetailStoreDbContext _retailStoreDbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SendSmsQueryHandler"/> class.
         /// </summary>
         /// <param name="retailStoreDbContext">The RetailStoreDbContext.</param>
-        public SendSmsQueryHandler(RetailStoreDbContext retailStoreDbContext)
+        public SendSmsQueryHandler(IRetailStoreDbContext retailStoreDbContext)
         {
             _retailStoreDbContext = retailStoreDbContext;
         }

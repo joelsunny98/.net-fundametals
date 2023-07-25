@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
 using RetailStore.Contracts;
-using RetailStore.Persistence;
 
 namespace RetailStore.Services;
 
@@ -11,7 +10,7 @@ namespace RetailStore.Services;
 /// </summary>
 public class ProductBarCodeService : IProductBarCodeService
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
     private readonly ILogger _logger;
 
     /// <summary>
@@ -19,7 +18,7 @@ public class ProductBarCodeService : IProductBarCodeService
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public ProductBarCodeService(RetailStoreDbContext dbContext, ILogger<ProductBarCodeService> logger)
+    public ProductBarCodeService(IRetailStoreDbContext dbContext, ILogger<ProductBarCodeService> logger)
     {
         _dbContext = dbContext;
         _logger = logger;

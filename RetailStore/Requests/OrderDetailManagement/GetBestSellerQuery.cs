@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Extentions;
 using RetailStore.Persistence;
@@ -18,13 +19,13 @@ public class GetBestSellerQuery : IRequest<BestSellerDto>
 /// </summary>
 public class GetBestSellerQueryHandler : IRequestHandler<GetBestSellerQuery, BestSellerDto>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
 
     /// <summary>
     /// Injects RetailDbContext cladd
     /// </summary>
     /// <param name="dbContext"></param>
-    public GetBestSellerQueryHandler(RetailStoreDbContext dbContext) 
+    public GetBestSellerQueryHandler(IRetailStoreDbContext dbContext) 
     {
         _dbContext = dbContext;
     }

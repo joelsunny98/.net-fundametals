@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
-using RetailStore.Persistence;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.CustomerManagement
 {
@@ -10,12 +10,12 @@ namespace RetailStore.Requests.CustomerManagement
     /// </summary>
     public class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCommand>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
 
         /// <summary>
         /// Validator to validate the Delete Customer Command
         /// </summary>
-        public DeleteCustomerCommandValidator(RetailStoreDbContext dbContext)
+        public DeleteCustomerCommandValidator(IRetailStoreDbContext dbContext)
         {
             _dbContext = dbContext;
 

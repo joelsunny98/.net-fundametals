@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Model;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.CustomerManagement;
 
@@ -18,7 +18,7 @@ public class AddCustomerCommand : CustomerDto, IRequest<int>
 /// </summary>
 public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
     private readonly ILogger<AddCustomerCommandHandler> _logger;
 
 
@@ -27,7 +27,7 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public AddCustomerCommandHandler(RetailStoreDbContext dbContext, ILogger<AddCustomerCommandHandler> logger)
+    public AddCustomerCommandHandler(IRetailStoreDbContext dbContext, ILogger<AddCustomerCommandHandler> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -52,7 +52,7 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
         _dbContext.Customers.Add(customer);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        
+
         _logger.LogInformation(LogMessage.NewItem, customer.Id);
         return customer.Id;
     }

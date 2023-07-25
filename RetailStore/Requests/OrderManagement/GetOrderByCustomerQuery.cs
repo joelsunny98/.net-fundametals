@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderManagement
 {
@@ -18,7 +18,7 @@ namespace RetailStore.Requests.OrderManagement
     /// </summary>
     public class GetOrderByCustomerQueryHandler : IRequestHandler<GetOrderByCustomerQuery, List<CustomerByOrderDto>>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace RetailStore.Requests.OrderManagement
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
-        public GetOrderByCustomerQueryHandler(RetailStoreDbContext dbContext, ILogger<GetOrderByCustomerQuery> logger)
+        public GetOrderByCustomerQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetOrderByCustomerQuery> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
