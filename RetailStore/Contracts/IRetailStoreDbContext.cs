@@ -26,5 +26,5 @@ public interface IRetailStoreDbContext
     DbSet<Customer> Customers { get; set; }
 
     Task RunMigrations();
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -1,14 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using RetailStore.Persistence;
-using RetailStore.Repository;
-using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 using RetailStore.Contracts;
-using Twilio.Rest.Api.V2010.Account;
+using RetailStore.Persistence;
+using RetailStore.Repository;
 using RetailStore.Services;
+using System.Reflection;
 using Twilio.Clients;
-using SixLabors.ImageSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +15,7 @@ ConfigureServices(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope()) 
+using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<IRetailStoreDbContext>();
     await dbContext.RunMigrations();
