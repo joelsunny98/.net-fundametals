@@ -26,6 +26,7 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
     /// Injects RetailStoreDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
+    /// <param name="logger"></param>
     public AddCustomerCommandHandler(RetailStoreDbContext dbContext, ILogger<AddCustomerCommandHandler> logger)
     {
         _dbContext = dbContext;

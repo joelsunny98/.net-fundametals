@@ -15,15 +15,15 @@ namespace RetailStore.Helpers
         /// <returns></returns>
         public static string CalculateOrderSize(int count)
         {
-            if (count >= MagicNumber.Ten)
+            if (count >= Constants.Constant.Ten)
             {
                 return Enums.OrderSize.Large.ToString();
             }
-            else if (count >= MagicNumber.Five)
+            else if (count >= Constants.Constant.Five)
             {
                 return Enums.OrderSize.Medium.ToString();
             }
-            else if (count >= MagicNumber.Two)
+            else if (count >= Constants.Constant.Two)
             {
                 return Enums.OrderSize.Small.ToString();
             }

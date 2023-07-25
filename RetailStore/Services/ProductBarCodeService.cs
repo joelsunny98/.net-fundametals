@@ -37,7 +37,7 @@ public class ProductBarCodeService : IProductBarCodeService
 
         if (product == null)
         {
-            _logger.LogError(LogMessage.SearchFail, product.Id);
+            _logger.LogError(LogMessage.SearchFail, id);
             throw new KeyNotFoundException(nameof(product));
         }
 

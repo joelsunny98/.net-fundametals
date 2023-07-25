@@ -24,6 +24,7 @@ namespace RetailStore.Requests.OrderManagement
         /// Inject RetailDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public GetCollectionByDayQueryHandler(RetailStoreDbContext dbContext, ILogger<GetCollectionByDayQuery> logger)
         {
             _dbContext = dbContext;
@@ -39,7 +40,7 @@ namespace RetailStore.Requests.OrderManagement
         /// <returns>Total Collection</returns>
         public async Task<string> Handle(GetCollectionByDayQuery request, CancellationToken cancellationToken)
         {
-            var totalCollection = await _dbContext.Orders.Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).SumAsync(e => e.TotalAmount);
+            var totalCollection = await _dbContext.Orders.Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).SumAsync(e => e.TotalAmount, cancellationToken);
 
             _logger.LogInformation(LogMessage.DayCollection);
             return totalCollection.ConvertToCurrencyString();

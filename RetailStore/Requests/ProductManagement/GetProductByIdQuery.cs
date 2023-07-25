@@ -17,6 +17,9 @@ namespace RetailStore.Requests.ProductManagement
         public int Id { get; set; }
     }
 
+    /// <summary>
+    /// Handler for Get Product By Id Query
+    /// </summary>
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, List<ProductDto>>
     {
         private readonly RetailStoreDbContext _dbContext;
@@ -26,6 +29,7 @@ namespace RetailStore.Requests.ProductManagement
         /// Injects RetailDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public GetProductByIdQueryHandler(RetailStoreDbContext dbContext, ILogger<GetProductByIdQuery> logger)
         {
             _dbContext = dbContext;

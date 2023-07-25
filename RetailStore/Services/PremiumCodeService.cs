@@ -25,7 +25,7 @@ namespace RetailStore.Services
             {
                 do
                 {
-                    premiumCode = Nanoid.Nanoid.Generate(premiumcustom.AllowedChars, premiumcustom.Size);
+                    premiumCode = Nanoid.Nanoid.Generate(PremiumCustomer.AllowedChars, PremiumCustomer.Size);
                 } while (_generatedCodes.Contains(premiumCode));
 
                 _generatedCodes.Add(premiumCode);

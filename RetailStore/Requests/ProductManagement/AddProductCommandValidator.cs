@@ -30,7 +30,7 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
             .GreaterThan(0).WithMessage(ValidationMessage.GreaterThanZero);
     }
 
-    private bool IsUniqueProduct(string productName) 
+    private bool IsUniqueProduct(string productName)
     {
         var product = _dbContext.Products.Any(e => e.Name == productName);  
         return !product;

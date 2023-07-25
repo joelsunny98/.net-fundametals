@@ -28,7 +28,6 @@ public class GetOrderSizeQueryHandler : IRequestHandler<GetOrderSizeQuery, strin
     /// Injects RetailDbContext class and Logger
     /// </summary>
     /// <param name="dbContext"></param>
-    /// <param name="logger"></param>
     public GetOrderSizeQueryHandler(RetailStoreDbContext dbContext)
     {
         _dbContext = dbContext;
@@ -42,7 +41,7 @@ public class GetOrderSizeQueryHandler : IRequestHandler<GetOrderSizeQuery, strin
     /// <returns>Order Size</returns>
     public async Task<string> Handle(GetOrderSizeQuery request, CancellationToken cancellationToken) 
     {
-        var count = await _dbContext.OrderDetails.Where(e => e.OrderId == request.OrderId).CountAsync();
+        var count = await _dbContext.OrderDetails.Where(e => e.OrderId == request.OrderId).CountAsync(cancellationToken);
 
         var result = OrderSizeHelper.CalculateOrderSize(count);
 

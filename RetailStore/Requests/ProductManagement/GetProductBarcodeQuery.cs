@@ -55,7 +55,7 @@ public class GetProductBarcodeQueryHandler : IRequestHandler<GetProductBarcodeQu
         }
 
         _logger.LogInformation(LogMessage.GenerateBarCode, request.ProductId);
-        return new FileContentResult(imageBytes, "image/png");
+        return new FileContentResult(imageBytes, Constant.ImageFormat);
 
     }
 }

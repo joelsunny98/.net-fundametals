@@ -11,6 +11,7 @@ namespace RetailStore.Requests.CustomerManagement
     public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
     {
         private readonly RetailStoreDbContext _dbContext;
+
         /// <summary>
         /// Validator for defining specific rules for properties
         /// </summary>

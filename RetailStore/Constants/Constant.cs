@@ -3,7 +3,7 @@
 /// <summary>
 /// Constants of magic numbers
 /// </summary>
-public class MagicNumber
+public class Constant
 {
     /// <summary>
     /// Constant for 10
@@ -19,4 +19,9 @@ public class MagicNumber
     /// Constant for 2
     /// </summary>
     public const int Two = 2;
+
+    /// <summary>
+    /// Image format constant
+    /// </summary>
+    public const string ImageFormat = "image/png";
 }
