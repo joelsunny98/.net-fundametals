@@ -4,6 +4,7 @@ using RetailStore.Model;
 using RetailStore.Persistence;
 using RetailStore.Helpers;
 using RetailStore.Constants;
+using Microsoft.EntityFrameworkCore;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -35,6 +36,7 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
     /// Injects RetailDbContext Class
     /// </summary>
     /// <param name="dbContext"></param>
+    /// <param name="logger"></param>
     public UpdateOrderByIdCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateOrderByIdCommand> logger)
     {
         _dbContext = dbContext;
@@ -51,7 +53,7 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
     /// <exception cref="KeyNotFoundException"></exception>
     public async Task<int> Handle(UpdateOrderByIdCommand command, CancellationToken cancellationToken)
     {
-        var order = _dbContext.Orders.FirstOrDefault(e => e.Id == command.Id);
+        var order = await _dbContext.Orders.FirstOrDefaultAsync(e => e.Id == command.Id);
 
         if (order == null)
         {
@@ -62,9 +64,14 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
         order.CustomerId = command.OrderRequest.CustomerId;
         order.UpdatedOn = DateTime.UtcNow;
 
+        var productIds = command.OrderRequest.Details.Select(e => e.ProductId).ToList();
+
+        var products = await _dbContext.Products.Where(e => productIds.Contains(e.Id)).ToListAsync(cancellationToken);
+
         var details = command.OrderRequest.Details.Select(d =>
         {
-            var product = _dbContext.Products.FirstOrDefault(p => p.Id == d.ProductId);
+            var product = products.FirstOrDefault(e => e.Id == d.ProductId);
+            
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,

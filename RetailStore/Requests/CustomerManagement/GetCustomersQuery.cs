@@ -47,7 +47,7 @@ public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<C
                     CustomerName = x.Name,
                     PhoneNumber = (long)x.PhoneNumber
                 })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             _logger.LogInformation(LogMessage.GetAllItems, result.Count);
 

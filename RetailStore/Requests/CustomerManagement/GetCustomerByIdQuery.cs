@@ -18,6 +18,9 @@ public class GetCustomerByIdQuery : IRequest<CustomerDto>
     public long? CustomerId { get; set; }
 }
 
+/// <summary>
+/// Handler for Get Customer By Id command
+/// </summary>
 public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDto>
 {
     private readonly RetailStoreDbContext _dbContext;

@@ -1,4 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
+using RetailStore.Persistence;
 using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;
@@ -15,6 +18,8 @@ namespace RetailStore.Requests.CustomerManagement
             _customerRepository = customerRepository;
 
             RuleFor(command => command.CustomerId)
+                .GreaterThan(0).WithMessage(ValidationMessage.CustomerIDGreaterThanZero)
+                .MustAsync(BeExistingCustomerId).WithMessage(e => string.Format(ValidationMessage.CustomerIdDoesNotExist, e.CustomerId));
                 .GreaterThan(0).WithMessage((command => string.Format(ValidationMessage.Valid, "CustomerId")))
                 .MustAsync(NotExists).WithMessage(ValidationMessage.NotExist);
         }

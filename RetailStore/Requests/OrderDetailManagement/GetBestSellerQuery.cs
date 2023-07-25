@@ -44,7 +44,7 @@ public class GetBestSellerQueryHandler : IRequestHandler<GetBestSellerQuery, Bes
             ProductName = g.First().Product.Name,
             Price = g.First().Product.Price,
             TotalRevenue = g.First().Product.Price.TotalRevenue(g.Sum(od => od.Quantity))
-        }).FirstOrDefaultAsync();
+        }).FirstOrDefaultAsync(cancellationToken);
 
         return bestSeller;
     }

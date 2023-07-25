@@ -26,6 +26,7 @@ namespace RetailStore.Requests.ProductManagement
         /// Injects RetailStoreDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public UpdateProductCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateProductCommand> logger)
         {
             _dbContext = dbContext;

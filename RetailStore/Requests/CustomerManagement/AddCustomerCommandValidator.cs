@@ -19,21 +19,31 @@ public class AddCustomerCommandValidator : AbstractValidator<AddCustomerCommand>
         _dbContext = dbContext;
 
         RuleFor(command => command.CustomerName)
-            .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "CustomerName"))
-            .MaximumLength(25).WithMessage(command => string.Format(ValidationMessage.Length, "CustomerName"));
+            .NotNull().NotEmpty().WithMessage(ValidationMessage.CustomerNameRequired)
+            .MaximumLength(25).WithMessage(ValidationMessage.CustomerNameLength);
 
         RuleFor(command => command.PhoneNumber)
-            .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "Phone Number"))
-            .Must(BeValidPhoneNumber).WithMessage(command => string.Format(ValidationMessage.PhoneNumberLength, "Phone Number"))
-            .Must(BeUniquePhoneNumber).WithMessage(command => string.Format(ValidationMessage.Unique, "Phone Number"));
+            .NotNull().NotEmpty().WithMessage(ValidationMessage.PhoneNumberRequired)
+            .Must(BeValidPhoneNumber).WithMessage(ValidationMessage.PhoneNumberValid)
+            .Must(BeUniquePhoneNumber).WithMessage(ValidationMessage.PhoneNumverUnique);
     }
 
+    /// <summary>
+    /// Method to check valid Phonenumber
+    /// </summary>
+    /// <param name="phoneNumber"></param>
+    /// <returns></returns>
     private bool BeValidPhoneNumber(long phoneNumber)
     {
         var phoneNumberString = phoneNumber.ToString();
         return phoneNumberString.Length == 10;
     }
-
+    
+    /// <summary>
+    /// Method to check unique Phonenumber
+    /// </summary>
+    /// <param name="phoneNumber"></param>
+    /// <returns></returns>
     private bool BeUniquePhoneNumber(long phoneNumber)
     {
         var exists = _dbContext.Customers.Any(c => c.PhoneNumber == phoneNumber);

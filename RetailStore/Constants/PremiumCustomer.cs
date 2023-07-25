@@ -5,7 +5,7 @@ namespace RetailStore.Constants;
 /// <summary>
 /// Constansts for premiumcustomer
 /// </summary>
-public class premiumcustom
+public class PremiumCustomer
 {
 
     /// <summary>

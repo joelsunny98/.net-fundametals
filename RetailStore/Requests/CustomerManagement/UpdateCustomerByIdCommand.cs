@@ -34,14 +34,24 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
     private readonly RetailStoreDbContext _dbContext;
     private readonly ILogger<UpdateCustomerCommandHandler> _logger;
 
-
+    /// <summary>
+    /// Injects Dependencies
+    /// </summary>
+    /// <param name="dbContext"></param>
+    /// <param name="logger"></param>
     public UpdateCustomerCommandHandler(RetailStoreDbContext dbContext, ILogger<UpdateCustomerCommandHandler> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
     }
 
-
+    /// <summary>
+    /// Updates Customer with Id
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
     public async Task<int> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
     {
        var validator = new UpdateCustomerCommandValidator(_dbContext);

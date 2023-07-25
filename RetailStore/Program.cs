@@ -5,7 +5,9 @@ using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using RetailStore.Contracts;
+using Twilio.Rest.Api.V2010.Account;
 using RetailStore.Services;
+using Twilio.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,8 @@ void ConfigureServices(IServiceCollection services)
     services.AddScoped<IProductBarCodeService, ProductBarCodeService>();
     services.AddScoped<IPremiumCodeService, PremiumCodeService>();
     services.AddControllers();
+    services.AddHttpClient<ITwilioRestClient, TwilioClient>();
+    services.AddScoped<ITwilioRestClient, TwilioClient>();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen(c =>
     {

@@ -19,15 +19,15 @@ namespace RetailStore.Requests.ProductManagement
             _dbContext = dbContext;
 
             RuleFor(command => command.Id)
-                .GreaterThan(0).WithMessage(ValidationMessage.Invalid);
+                .GreaterThan(0).WithMessage(ValidationMessage.ProductIdGreaterThanZero);
 
             RuleFor(command => command.ProductName)
-                .NotNull().NotEmpty().WithMessage(command => string.Format(ValidationMessage.Required, "Product Name"))
-                .MaximumLength(50).WithMessage(command => string.Format(ValidationMessage.Length, command.ProductName))
-                .Must(IsUniqueProduct).WithMessage(command => string.Format(ValidationMessage.Unique, command.ProductName));
+                .NotNull().NotEmpty().WithMessage(ValidationMessage.ProductNameRequired)
+                .MaximumLength(50).WithMessage(ValidationMessage.ProductNameLength)
+                .Must(IsUniqueProduct).WithMessage(ValidationMessage.ProductNameUnique);
 
             RuleFor(command => command.ProductPrice)
-                .NotEqual(0).WithMessage(ValidationMessage.GreaterThanZero);
+                .NotEqual(0).WithMessage(ValidationMessage.PriceGreaterThanZero);
         }
 
         private bool IsUniqueProduct(string productName)

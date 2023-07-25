@@ -27,6 +27,7 @@ namespace RetailStore.Requests.ProductManagement
         /// Injects RetailStoreDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public DeleteProductCommandHandler(RetailStoreDbContext dbContext, ILogger<DeleteProductCommand> logger)
         {
             _dbContext = dbContext;
