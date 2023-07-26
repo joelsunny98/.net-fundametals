@@ -34,6 +34,17 @@ public class ValidationMessage
     /// "Customer Id is required"
     /// </summary>
     public const string CustomerIdRequried = "Customer Id is required";
+
+    /// <summary>
+    /// "Customer Id not exist"
+    /// </summary>
+    public const string CustomerDoesNotExist = "Customer with Id {0} does not exist.";
+
+    /// <summary>
+    /// "Customer Id must be exists and deleted"
+    /// </summary>
+    public const string CustomerDeletedSuccessfully = "Customer with Id {0} is deleted successfully.";
+
     /// <summary>
     /// "Product Id is required"
     /// </summary>
