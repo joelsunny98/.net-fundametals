@@ -2,13 +2,14 @@
 using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;
+using Twilio.TwiML.Messaging;
 
 namespace RetailStore.Requests.CustomerManagement;
 
 /// <summary>
 /// Command to Delete Customer by Id
 /// </summary>
-public class DeleteCustomerCommand : IRequest<Customer>
+public class DeleteCustomerCommand : IRequest<string>
 {
     public int CustomerId { get; set; }
 }
@@ -16,7 +17,7 @@ public class DeleteCustomerCommand : IRequest<Customer>
 /// <summary>
 /// Handler for Delete Customer by Id command
 /// </summary>
-public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Customer>
+public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, string>
 {
     private readonly IRepository<Customer> _customerRepository;
     private readonly ILogger<DeleteCustomerCommandHandler> _logger;
@@ -36,13 +37,21 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
     /// </summary>
     /// <param name="command"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>Customer</returns>
-    /// <exception cref="KeyNotFoundException"></exception>
-    public async Task<Customer> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
+    /// <returns>Response message</returns>
+    /// <exception cref="ValidationException"></exception>
+    public async Task<string> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
     {
-        var deletedCustomer = await _customerRepository.Delete(command.CustomerId);
-        _logger.LogInformation(LogMessage.DeleteItem, deletedCustomer.Id);
+        var customer = await _customerRepository.GetById(command.CustomerId);
 
-        return deletedCustomer;
+        if (customer == null)
+        {
+            return string.Format(ValidationMessage.CustomerDoesNotExist, command.CustomerId);
+        }
+
+        var deletedCustomer = await _customerRepository.Delete(command.CustomerId);
+
+        _logger.LogInformation(LogMessage.DeleteItem, deletedCustomer.Id);
+        return string.Format(ValidationMessage.CustomerDeletedSuccessfully, command.CustomerId);
     }
+
 }
