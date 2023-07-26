@@ -2,6 +2,9 @@
 
 namespace RetailStore.Contracts;
 
+/// <summary>
+/// Interface for Product Barcode Service
+/// </summary>
 public interface IProductBarCodeService
 {
     /// <summary>
