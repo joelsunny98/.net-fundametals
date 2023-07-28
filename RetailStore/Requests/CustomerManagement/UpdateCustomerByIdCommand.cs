@@ -74,5 +74,4 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
 
         return customer.Id;
     }
-
 }
