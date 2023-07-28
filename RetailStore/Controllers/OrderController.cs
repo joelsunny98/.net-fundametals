@@ -16,12 +16,7 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 public class OrderController : BaseController
-{
-    private readonly ITwilioRestClient _client;
-    public OrderController(ITwilioRestClient client)
-    {
-        _client = client;
-    }
+{ 
     /// <summary>
     /// Endpoint to fetch details of orders of retail store.
     /// </summary>
