@@ -15,7 +15,6 @@ public class Order: DomainAudit
     /// Gets and sets Unique Identification number of the customer entity
     /// </summary>
     /// <example> 1 </example> 
-
     public int CustomerId { get; set; }
 
     /// <summary>
@@ -39,5 +38,4 @@ public class Order: DomainAudit
     /// Gets and sets the details of order.
     /// </summary>
     public List<OrderDetail> Details { get; set;}
-
 }

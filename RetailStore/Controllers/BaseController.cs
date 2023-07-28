@@ -16,5 +16,4 @@ public class BaseController: ControllerBase
     /// Mediator Instance
     /// </summary>
     protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
-
 }
