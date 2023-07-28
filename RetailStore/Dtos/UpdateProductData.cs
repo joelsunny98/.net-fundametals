@@ -8,11 +8,13 @@ public class UpdateProductData
     /// <summary>
     /// Gets or sets the product ID.
     /// </summary>
+    /// <example> 10.50 </example>
     public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the product name.
     /// </summary>
+    /// <example> "Biscut" </example>
     public string? ProductName { get; set; }
 
     /// <summary>

@@ -8,6 +8,7 @@ public class CustomerDto
     /// <summary>
     /// Gets or sets the customer's name.
     /// </summary>
+    /// <example> "Rahul" </example>
     public string? CustomerName { get; set; }
 
     /// <summary>
