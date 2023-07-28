@@ -1,14 +1,17 @@
 ﻿namespace RetailStore.Dtos;
 
+/// <summary>
+/// Data Transfer Object for storing customer information.
+/// </summary>
 public class CustomerDto
 {
     /// <summary>
-    /// Gets and sets the Customer Name
+    /// Gets or sets the customer's name.
     /// </summary>
-    public string CustomerName { get; set; }
+    public string? CustomerName { get; set; }
 
     /// <summary>
-    /// Gets and sets the Phone Number of the Customer
+    /// Gets or sets the phone number of the customer.
     /// </summary>
     public long PhoneNumber { get; set; }
 }

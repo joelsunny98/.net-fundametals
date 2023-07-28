@@ -25,6 +25,7 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<OrderD
     /// Injects the RetailStoreDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
+    /// <param name="logger">The logger instance.</param>
     public GetOrdersQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetOrdersQuery> logger)
     {
         _dbContext = dbContext;

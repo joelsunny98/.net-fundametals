@@ -65,15 +65,11 @@ public class CustomerController : BaseController
     }
 
     /// <summary>
-    /// Endpoint to update customer record
+    /// Updates a customer with the given ID.
     /// </summary>
-    /// <param name="id">
-    /// <param name="customerRequestBody">
-    /// customer contains the updated customers's data
-    /// </param>
-    /// <returns> 
-    /// Customer id of updated record 
-    /// </returns>
+    /// <param name="id">The ID of the customer to update.</param>
+    /// <param name="customerRequestBody">The updated customer information.</param>
+    /// <returns>The updated customer.</returns>
     [HttpPut("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateCustomer([FromRoute] int id, [FromBody] CustomerDto customerRequestBody)
