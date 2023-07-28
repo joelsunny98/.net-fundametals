@@ -53,5 +53,4 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
         _logger.LogInformation(LogMessage.DeleteItem, deletedCustomer.Id);
         return string.Format(ValidationMessage.CustomerDeletedSuccessfully, command.CustomerId);
     }
-
 }
