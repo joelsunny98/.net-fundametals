@@ -45,6 +45,10 @@ public class RetailStoreDbContext: DbContext, IRetailStoreDbContext
         base.OnModelCreating(modelBuilder);
     }
 
+    /// <summary>
+    /// Runs pending database migrations asynchronously.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task RunMigrations()
     {
         await Database.MigrateAsync();

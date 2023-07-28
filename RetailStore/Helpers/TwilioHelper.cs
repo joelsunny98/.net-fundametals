@@ -1,6 +1,4 @@
-﻿using Twilio.Types;
-
-namespace RetailStore.Helpers
+﻿namespace RetailStore.Helpers
 {
     /// <summary>
     /// Helper class for Twilio related operations.

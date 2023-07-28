@@ -18,7 +18,7 @@ public class UpdateCustomerCommand : IRequest<int>
     /// <summary>
     /// Gets and sets Customer name
     /// </summary>
-    public string CustomerName { get; set; }
+    public string? CustomerName { get; set; }
 
     /// <summary>
     /// Gets and sets PhoneNumber

@@ -5,7 +5,7 @@ public class ProductDto
     /// <summary>
     /// Gets and sets Product Name
     /// </summary>
-    public string ProductName { get; set; }
+    public string? ProductName { get; set; }
 
     /// <summary>
     /// Gets and sets Product Price
