@@ -21,7 +21,6 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
     private readonly IRetailStoreDbContext _dbContext;
     private readonly ILogger<AddCustomerCommandHandler> _logger;
 
-
     /// <summary>
     /// Injects RetailStoreDbContext class
     /// </summary>
@@ -52,11 +51,7 @@ public class AddCustomerCommandHandler : IRequestHandler<AddCustomerCommand, int
         _dbContext.Customers.Add(customer);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-
         _logger.LogInformation(LogMessage.NewItem, customer.Id);
         return customer.Id;
     }
-
-
-
 }

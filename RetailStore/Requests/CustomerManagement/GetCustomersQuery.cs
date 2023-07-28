@@ -60,5 +60,4 @@ public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<C
             throw;
         }
     }
-
 }

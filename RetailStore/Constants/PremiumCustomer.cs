@@ -17,5 +17,4 @@ public class PremiumCustomer
     /// constants length of code for premium customers
     /// </summary>
     public const int Size = 8;
-
 }

@@ -5,60 +5,57 @@ using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Model;
 
-namespace RetailStore.Requests.ProductManagement
+namespace RetailStore.Requests.ProductManagement;
+
+/// <summary>
+/// Command to add a new Product
+/// </summary>
+public class AddProductCommand : ProductDto, IRequest<int>
 {
+}
+
+/// <summary>
+/// Handler for the add product command
+/// </summary>
+public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
+{
+    private readonly IRetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
+
     /// <summary>
-    /// Command to add a new Product
+    /// Inject Dependency classes
     /// </summary>
-    public class AddProductCommand : ProductDto, IRequest<int>
+    /// <param name="dbContext"></param>
+    /// <param name="logger"></param>
+    public AddProductCommandHandler(IRetailStoreDbContext dbContext, ILogger<AddProductCommandHandler> logger)
     {
+        _dbContext = dbContext;
+        _logger = logger;
     }
 
     /// <summary>
-    /// Handler for the add product command
+    /// Adds a new product to database
     /// </summary>
-    public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Product Id</returns>
+    public async Task<int> Handle(AddProductCommand request, CancellationToken cancellationToken)
     {
-        private readonly IRetailStoreDbContext _dbContext;
-        private readonly ILogger _logger;
+        var validator = new AddProductCommandValidator(_dbContext);
+        await validator.ValidateAndThrowAsync(request, cancellationToken);
 
-        /// <summary>
-        /// Inject Dependency classes
-        /// </summary>
-        /// <param name="dbContext"></param>
-        /// <param name="logger"></param>
-        public AddProductCommandHandler(IRetailStoreDbContext dbContext, ILogger<AddProductCommandHandler> logger)
+        var product = new Product
         {
-            _dbContext = dbContext;
-            _logger = logger;
-        }
+            Name = request.ProductName,
+            Price = request.ProductPrice,
+            CreatedOn = DateTime.UtcNow,
+            UpdatedOn = DateTime.UtcNow
+        };
 
-        /// <summary>
-        /// Adds a new product to database
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>Product Id</returns>
-        public async Task<int> Handle(AddProductCommand request, CancellationToken cancellationToken)
-        {
-            var validator = new AddProductCommandValidator(_dbContext);
-            await validator.ValidateAndThrowAsync(request, cancellationToken);
+        _dbContext.Products.Add(product);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
-            var product = new Product
-            {
-                Name = request.ProductName,
-                Price = request.ProductPrice,
-                CreatedOn = DateTime.UtcNow,
-                UpdatedOn = DateTime.UtcNow
-            };
-
-            _dbContext.Products.Add(product);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            _logger.LogInformation(LogMessage.NewItem, product.Id);
-            return product.Id;
-        }
+        _logger.LogInformation(LogMessage.NewItem, product.Id);
+        return product.Id;
     }
-
-
 }

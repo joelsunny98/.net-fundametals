@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailStore.Persistence;
-using RetailStore.Repository;
 using System.Linq.Expressions;
+
+namespace RetailStore.Repository;
 
 /// <summary>
 /// Context of Repository

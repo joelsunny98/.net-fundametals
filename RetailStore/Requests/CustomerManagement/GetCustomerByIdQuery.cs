@@ -70,6 +70,4 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
             throw;
         }
     }
-
 }
-

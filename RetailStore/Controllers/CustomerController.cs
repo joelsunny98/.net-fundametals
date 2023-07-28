@@ -2,7 +2,6 @@
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
-using RetailStore.Requests.OrderDetailManagement;
 
 namespace RetailStore.Controllers;
 

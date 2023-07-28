@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Extentions;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderDetailManagement;
 
@@ -48,6 +47,5 @@ public class GetBestSellerQueryHandler : IRequestHandler<GetBestSellerQuery, Bes
         }).FirstOrDefaultAsync(cancellationToken);
 
         return bestSeller;
-    }
-    
+    }  
 }

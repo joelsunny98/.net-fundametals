@@ -2,27 +2,26 @@
 using System.Numerics;
 using Twilio.Types;
 
-namespace RetailStore.Extensions
+namespace RetailStore.Extensions;
+
+/// <summary>
+/// Extension methods for SMS related operations.
+/// </summary>
+public static class SmsExtension
 {
     /// <summary>
-    /// Extension methods for SMS related operations.
+    /// Converts a phone number to a string format with the "+91" prefix.
     /// </summary>
-    public static class SmsExtension
+    /// <param name="phoneNumber">The phone number to be converted.</param>
+    /// <returns>The formatted phone number string.</returns>
+    public static string ConvertPhoneNumToString(this long? phoneNumber)
     {
-        /// <summary>
-        /// Converts a phone number to a string format with the "+91" prefix.
-        /// </summary>
-        /// <param name="phoneNumber">The phone number to be converted.</param>
-        /// <returns>The formatted phone number string.</returns>
-        public static string ConvertPhoneNumToString(this long? phoneNumber)
+        if (phoneNumber.HasValue)
         {
-            if (phoneNumber.HasValue)
-            {
-                string phoneNum = "+91" + phoneNumber.Value.ToString();
-                return phoneNum;
-            }
-
-            return string.Empty;
+            string phoneNum = "+91" + phoneNumber.Value.ToString();
+            return phoneNum;
         }
+
+        return string.Empty;
     }
 }

@@ -4,52 +4,49 @@ using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Dtos;
 
-namespace RetailStore.Requests.ProductManagement
+namespace RetailStore.Requests.ProductManagement;
+
+/// <summary>
+/// Query to get all products
+/// </summary>
+public class GetAllProductsQuery : IRequest<List<ProductDto>>
 {
+}
+
+/// <summary>
+/// Handler for Get all Product query
+/// </summary>
+public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, List<ProductDto>>
+{
+    private readonly IRetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
+
     /// <summary>
-    /// Query to get all products
+    /// Injects RetailDbContextClass
     /// </summary>
-    public class GetAllProductsQuery : IRequest<List<ProductDto>>
+    /// <param name="dbContext"></param>
+    /// <param name="logger"></param>
+    public GetAllProductsQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetAllProductsQuery> logger)
     {
+        _dbContext = dbContext;
+        _logger = logger;
     }
 
     /// <summary>
-    /// Handler for Get all Product query
+    /// Fetches all products from the database
     /// </summary>
-    public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, List<ProductDto>>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>List of Products</returns>
+    public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
-        private readonly IRetailStoreDbContext _dbContext;
-        private readonly ILogger _logger;
-
-        /// <summary>
-        /// Injects RetailDbContextClass
-        /// </summary>
-        /// <param name="dbContext"></param>
-        /// <param name="logger"></param>
-        public GetAllProductsQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetAllProductsQuery> logger)
+        var products = await _dbContext.Products.Select(e => new ProductDto
         {
-            _dbContext = dbContext;
-            _logger = logger;
-        }
+            ProductName = e.Name,
+            ProductPrice = e.Price
+        }).ToListAsync(cancellationToken);
 
-        /// <summary>
-        /// Fetches all products from the database
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>List of Products</returns>
-        public async Task<List<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
-        {
-            var products = await _dbContext.Products.Select(e => new ProductDto
-            {
-                ProductName = e.Name,
-                ProductPrice = e.Price
-            }).ToListAsync(cancellationToken);
-
-            _logger.LogInformation(LogMessage.GetAllItems, products.Count);
-            return products;
-        }
+        _logger.LogInformation(LogMessage.GetAllItems, products.Count);
+        return products;
     }
-
-
 }

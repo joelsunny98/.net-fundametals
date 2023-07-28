@@ -25,7 +25,6 @@ public class ProductController : BaseController
         return Ok(products);
     }
 
-
     /// <summary>
     /// Adding product data to the database
     /// </summary>
@@ -65,7 +64,6 @@ public class ProductController : BaseController
         var result = await Mediator.Send(new GetProductByIdQuery { Id = id });
         return Ok(result);
     }
-
 
     /// <summary>
     /// Endpoint to update product record
