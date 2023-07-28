@@ -14,7 +14,6 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
     /// </summary>
     public CreateOrderCommandValidator()
     {
-        //Rules for required fields
         RuleFor(x => x.CustomerId).NotNull().NotEmpty().WithMessage(ValidationMessage.CustomerIdRequried);
         RuleForEach(x => x.Details).ChildRules(p =>
         {

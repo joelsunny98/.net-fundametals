@@ -11,6 +11,9 @@ namespace RetailStore.Requests.CustomerManagement;
 /// </summary>
 public class DeleteCustomerCommand : IRequest<string>
 {
+    /// <summary>
+    /// Gets and sets Id
+    /// </summary>
     public int CustomerId { get; set; }
 }
 
@@ -26,6 +29,7 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
     /// Injects IRepository class
     /// </summary>
     /// <param name="customerRepository"></param>
+    /// <param name="logger">The logger instance.</param>
     public DeleteCustomerCommandHandler(IRepository<Customer> customerRepository, ILogger<DeleteCustomerCommandHandler> logger)
     {
         _customerRepository = customerRepository;
@@ -53,5 +57,4 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
         _logger.LogInformation(LogMessage.DeleteItem, deletedCustomer.Id);
         return string.Format(ValidationMessage.CustomerDeletedSuccessfully, command.CustomerId);
     }
-
 }

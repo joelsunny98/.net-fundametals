@@ -3,7 +3,7 @@
 namespace RetailStore.Contracts;
 
 /// <summary>
-/// Interface for Product Barcode Service
+/// Service for generating barcodes for products.
 /// </summary>
 public interface IProductBarCodeService
 {

@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailStore.Persistence;
-using RetailStore.Repository;
 using System.Linq.Expressions;
+
+namespace RetailStore.Repository;
 
 /// <summary>
 /// Context of Repository
@@ -41,6 +42,11 @@ public class Repository<T> : IRepository<T> where T : class
         return await dbSet.FindAsync(id); ;
     }
 
+    /// <summary>
+    /// Method to create
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <returns></returns>
     public async Task<T> Create(T entity)
     {
         dbSet.AddAsync(entity);

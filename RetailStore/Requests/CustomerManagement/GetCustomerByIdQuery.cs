@@ -40,7 +40,7 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
     /// <summary>
     /// Fetches customer by Id
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="query"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Customer</returns>
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)
@@ -70,6 +70,4 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
             throw;
         }
     }
-
 }
-

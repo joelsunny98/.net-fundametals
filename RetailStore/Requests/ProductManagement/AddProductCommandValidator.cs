@@ -30,6 +30,11 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
             .GreaterThan(0).WithMessage(ValidationMessage.PriceGreaterThanZero);
     }
 
+    /// <summary>
+    /// Method to check unique Product
+    /// </summary>
+    /// <param name="productName"></param>
+    /// <returns></returns>
     private bool IsUniqueProduct(string productName)
     {
         var product = _dbContext.Products.Any(e => e.Name == productName);

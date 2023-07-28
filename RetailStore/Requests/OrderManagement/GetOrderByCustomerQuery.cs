@@ -4,51 +4,50 @@ using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Dtos;
 
-namespace RetailStore.Requests.OrderManagement
+namespace RetailStore.Requests.OrderManagement;
+
+/// <summary>
+/// Query to get Customers by order
+/// </summary>
+public class GetOrderByCustomerQuery : IRequest<List<CustomerByOrderDto>>
 {
+}
+
+/// <summary>
+/// Handles Get Order by customer query
+/// </summary>
+public class GetOrderByCustomerQueryHandler : IRequestHandler<GetOrderByCustomerQuery, List<CustomerByOrderDto>>
+{
+    private readonly IRetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
+
     /// <summary>
-    /// Query to get Customers by order
+    /// Injects RetailDbContext and Logger
     /// </summary>
-    public class GetOrderByCustomerQuery : IRequest<List<CustomerByOrderDto>>
+    /// <param name="dbContext"></param>
+    /// <param name="logger"></param>
+    public GetOrderByCustomerQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetOrderByCustomerQuery> logger)
     {
+        _dbContext = dbContext;
+        _logger = logger;
+
     }
 
     /// <summary>
-    /// Handles Get Order by customer query
+    /// Fetches list of customer by order
     /// </summary>
-    public class GetOrderByCustomerQueryHandler : IRequestHandler<GetOrderByCustomerQuery, List<CustomerByOrderDto>>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Customer by Order</returns>
+    public async Task<List<CustomerByOrderDto>> Handle(GetOrderByCustomerQuery request, CancellationToken cancellationToken)
     {
-        private readonly IRetailStoreDbContext _dbContext;
-        private readonly ILogger _logger;
-
-        /// <summary>
-        /// Injects RetailDbContext and Logger
-        /// </summary>
-        /// <param name="dbContext"></param>
-        /// <param name="logger"></param>
-        public GetOrderByCustomerQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetOrderByCustomerQuery> logger)
+        var result = await _dbContext.Orders.Include(t => t.Customer).GroupBy(c => c.CustomerId).Select(g => new CustomerByOrderDto
         {
-            _dbContext = dbContext;
-            _logger = logger;
+            CustomerName = g.FirstOrDefault().Customer.Name,
+            TotalOrders = g.Count()
+        }).ToListAsync(cancellationToken);
 
-        }
-
-        /// <summary>
-        /// Fetches list of customer by order
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>Customer by Order</returns>
-        public async Task<List<CustomerByOrderDto>> Handle(GetOrderByCustomerQuery request, CancellationToken cancellationToken)
-        {
-            var result = await _dbContext.Orders.Include(t => t.Customer).GroupBy(c => c.CustomerId).Select(g => new CustomerByOrderDto
-            {
-                CustomerName = g.FirstOrDefault().Customer.Name,
-                TotalOrders = g.Count()
-            }).ToListAsync(cancellationToken);
-
-            _logger.LogInformation(LogMessage.GetAllItems, result.Count);
-            return result;
-        }
+        _logger.LogInformation(LogMessage.GetAllItems, result.Count);
+        return result;
     }
 }

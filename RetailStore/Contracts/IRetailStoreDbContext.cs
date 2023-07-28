@@ -4,7 +4,7 @@ using RetailStore.Model;
 namespace RetailStore.Contracts;
 
 /// <summary>
-/// Interface for RetailStoreDbContext
+/// Interface for access to the data store for managing products and related entities in the retail store.
 /// </summary>
 public interface IRetailStoreDbContext
 {
