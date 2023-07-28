@@ -31,12 +31,22 @@ public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCo
               .Must(BeUniquePhoneNumber).WithMessage(ValidationMessage.PhoneNumverUnique);
     }
 
+    /// <summary>
+    /// Method to check valid Phonenumber
+    /// </summary>
+    /// <param name="phoneNumber"></param>
+    /// <returns></returns>
     private bool BeValidPhoneNumber(long phoneNumber)
     {
         var phoneNumberString = phoneNumber.ToString();
         return phoneNumberString.Length == 10;
     }
 
+    /// <summary>
+    /// Method to check unique Phonenumber
+    /// </summary>
+    /// <param name="phoneNumber"></param>
+    /// <returns></returns>
     private bool BeUniquePhoneNumber(long phoneNumber)
     {
         var exists = _dbContext.Customers.Any(c => c.PhoneNumber == phoneNumber);

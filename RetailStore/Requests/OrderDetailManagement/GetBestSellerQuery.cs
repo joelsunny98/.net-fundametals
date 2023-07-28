@@ -24,7 +24,7 @@ public class GetBestSellerQueryHandler : IRequestHandler<GetBestSellerQuery, Bes
     /// Injects RetailDbContext cladd
     /// </summary>
     /// <param name="dbContext"></param>
-    public GetBestSellerQueryHandler(IRetailStoreDbContext dbContext) 
+    public GetBestSellerQueryHandler(IRetailStoreDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -35,7 +35,7 @@ public class GetBestSellerQueryHandler : IRequestHandler<GetBestSellerQuery, Bes
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<BestSellerDto> Handle(GetBestSellerQuery request, CancellationToken cancellationToken) 
+    public async Task<BestSellerDto> Handle(GetBestSellerQuery request, CancellationToken cancellationToken)
     {
         var bestSeller = await _dbContext.OrderDetails.Include(t => t.Product).GroupBy(c => c.ProductId).OrderByDescending(g => g.Sum(q => q.Quantity)).Select(g => new BestSellerDto
         {
@@ -45,7 +45,6 @@ public class GetBestSellerQueryHandler : IRequestHandler<GetBestSellerQuery, Bes
             Price = g.First().Product.Price,
             TotalRevenue = g.First().Product.Price.TotalRevenue(g.Sum(od => od.Quantity))
         }).FirstOrDefaultAsync(cancellationToken);
-
         return bestSeller;
-    }  
+    }
 }
