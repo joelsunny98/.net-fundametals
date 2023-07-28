@@ -53,6 +53,11 @@ namespace RetailStore.Requests.ProductManagement
                 })
                 .ToListAsync(cancellationToken);
 
+            if (result.Count == 0)
+            {
+                throw new KeyNotFoundException();
+            }
+
             _logger.LogInformation(LogMessage.GetItemById, request.Id);
             return result;
         }

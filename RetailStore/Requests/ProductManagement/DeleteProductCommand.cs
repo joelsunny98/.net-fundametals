@@ -7,7 +7,7 @@ namespace RetailStore.Requests.ProductManagement
     /// <summary>
     /// Delete a product by Id
     /// </summary>
-    public class DeleteProductCommand : IRequest<int>
+    public class DeleteProductCommand : IRequest<bool>
     {
         /// <summary>
         /// Gets and sets ProductId
@@ -18,7 +18,7 @@ namespace RetailStore.Requests.ProductManagement
     /// <summary>
     /// Handler for the Delete Product Command
     /// </summary>
-    public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, int>
+    public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, bool>
     {
         private readonly IRetailStoreDbContext _dbContext;
         private readonly ILogger _logger;
@@ -40,20 +40,20 @@ namespace RetailStore.Requests.ProductManagement
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<int> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
             var deletedProduct = await _dbContext.Products.FindAsync(request.ProductId);
             if (deletedProduct == null)
             {
                 _logger.LogError(LogMessage.SearchFail, request.ProductId);
-                throw new KeyNotFoundException();
+                return false;
             }
 
             _dbContext.Products.Remove(deletedProduct);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation(LogMessage.DeleteItem, request.ProductId);
-            return deletedProduct.Id;
+            return true;
         }
     }
 }

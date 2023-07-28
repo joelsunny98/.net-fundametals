@@ -69,11 +69,6 @@ public class ProductController : BaseController
     {
         var result = await Mediator.Send(new GetProductByIdQuery { Id = id });
 
-        if (result.Count == 0)
-        {
-            return NotFound();
-        }
-
         return Ok(result);
     }
 
@@ -92,11 +87,6 @@ public class ProductController : BaseController
     public async Task<IActionResult> UpdateProduct( UpdateProductCommand command)
     {
         var updatedProductId = await Mediator.Send(command );
-
-        if (updatedProductId == 0)
-        {
-            return NotFound();
-        }
 
         return Ok(updatedProductId);
     }
