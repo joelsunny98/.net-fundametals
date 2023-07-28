@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Contracts;
 using RetailStore.Extensions;
+using RetailStore.Helpers;
 using Twilio.Clients;
 using Twilio.Types;
 
@@ -55,7 +56,7 @@ namespace RetailStore.Requests.OrderManagement
             var twilioClient = new TwilioRestClient(accountSid, authToken);
 
             var twilioMessage = Twilio.Rest.Api.V2010.Account.MessageResource.Create(
-                to: new PhoneNumber(customer.PhoneNumber.ConvertPhoneNumToString()),
+                to: new PhoneNumber(TwilioHelper.FormatPhoneNumber(customer.PhoneNumber)),
                 from: new PhoneNumber(Constants.SmsServiceConstants.FromPhoneNumber),
                 body: "Hai " + customer.Name + " your total order amount is " + totalPurchase,
                 client: twilioClient

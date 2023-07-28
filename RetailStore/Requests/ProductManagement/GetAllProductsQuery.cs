@@ -44,7 +44,7 @@ namespace RetailStore.Requests.ProductManagement
             {
                 ProductName = e.Name,
                 ProductPrice = e.Price
-            }).ToListAsync();
+            }).ToListAsync(cancellationToken);
 
             _logger.LogInformation(LogMessage.GetAllItems, products.Count);
             return products;

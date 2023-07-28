@@ -28,6 +28,7 @@ public class DeleteOrderByIdCommandHandler : IRequestHandler<DeleteOrderByIdComm
     /// Injects IRpository class
     /// </summary>
     /// <param name="orderRepository"></param>
+    /// <param name="logger">The logger instance.</param>
     public DeleteOrderByIdCommandHandler(IRepository<Order> orderRepository, ILogger<DeleteOrderByIdCommand> logger)
     {
         _orderRepository = orderRepository;
