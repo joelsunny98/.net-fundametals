@@ -22,7 +22,6 @@ public class ProductController : BaseController
     public async Task<IActionResult> GetProducts()
     {
         var products = await Mediator.Send(new GetAllProductsQuery());
-
         return Ok(products);
     }
 
@@ -38,10 +37,8 @@ public class ProductController : BaseController
     [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
     public async Task<IActionResult> AddProduct(AddProductCommand product)
     {
-
         var result = await Mediator.Send(product);
         return Ok(result);
-
     }
 
 
@@ -53,9 +50,7 @@ public class ProductController : BaseController
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> DeleteProduct(int id)
     {
-        var command = new DeleteProductCommand { ProductId = id };
-        var deletedProductId = await Mediator.Send(command);
-
+        var deletedProductId = await Mediator.Send(new DeleteProductCommand { ProductId = id });
         return Ok(deletedProductId);
     }
 
@@ -68,7 +63,6 @@ public class ProductController : BaseController
     public async Task<IActionResult> GetProductById(int id)
     {
         var result = await Mediator.Send(new GetProductByIdQuery { Id = id });
-
         return Ok(result);
     }
 
@@ -84,10 +78,9 @@ public class ProductController : BaseController
     /// </returns>
     [HttpPut("product")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateProduct( UpdateProductCommand command)
+    public async Task<IActionResult> UpdateProduct(UpdateProductCommand command)
     {
-        var updatedProductId = await Mediator.Send(command );
-
+        var updatedProductId = await Mediator.Send(command);
         return Ok(updatedProductId);
     }
 

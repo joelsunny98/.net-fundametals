@@ -11,6 +11,9 @@ namespace RetailStore.Requests.CustomerManagement;
 /// </summary>
 public class DeleteCustomerCommand : IRequest<string>
 {
+    /// <summary>
+    /// Gets and sets Id
+    /// </summary>
     public int CustomerId { get; set; }
 }
 
