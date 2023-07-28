@@ -29,6 +29,7 @@ public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerComman
     /// Injects IRepository class
     /// </summary>
     /// <param name="customerRepository"></param>
+    /// <param name="logger">The logger instance.</param>
     public DeleteCustomerCommandHandler(IRepository<Customer> customerRepository, ILogger<DeleteCustomerCommandHandler> logger)
     {
         _customerRepository = customerRepository;
