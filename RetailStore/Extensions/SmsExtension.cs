@@ -21,7 +21,6 @@ public static class SmsExtension
             string phoneNum = "+91" + phoneNumber.Value.ToString();
             return phoneNum;
         }
-
         return string.Empty;
     }
 }

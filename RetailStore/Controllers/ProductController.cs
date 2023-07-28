@@ -40,7 +40,6 @@ public class ProductController : BaseController
         return Ok(result);
     }
 
-
     /// <summary>
     /// Endpoint to delete a product by ID.
     /// </summary>

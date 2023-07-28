@@ -48,12 +48,17 @@ public class OrderController : BaseController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Endpoint to send an SMS based on the provided ID.
+    /// </summary>
+    /// <param name="id">The ID of the SMS recipient</param>
+    /// <returns>
+    /// An IActionResult indicating the success or failure of the SMS sending process
+    /// </returns>
     [HttpGet("sms/{id}")]
     public async Task<IActionResult> SendSms(long id)
-    {
-        
+    {      
         return Ok(await Mediator.Send(new SendSmsQuery{ Id = id}));
-
     }
 
     /// <summary>

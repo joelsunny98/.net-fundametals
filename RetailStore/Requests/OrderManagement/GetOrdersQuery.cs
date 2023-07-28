@@ -30,7 +30,6 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<OrderD
     {
         _dbContext = dbContext;
         _logger = logger;
-
     }
 
     /// <summary>

@@ -41,7 +41,6 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
     {
         _dbContext = dbContext;
         _logger = logger;
-
     }
 
     /// <summary>
