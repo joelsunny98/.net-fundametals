@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
-using RetailStore.Requests.OrderManagement;
 using RetailStore.Model;
+using RetailStore.Requests.OrderManagement;
 using System.Net;
-using Twilio.Clients;
-using Twilio.Rest.Chat.V1.Service.Channel;
-using Twilio.Types;
-using Twilio.TwiML.Messaging;
-using Twilio.Rest.Api.V2010.Account;
 
 namespace RetailStore.Controllers;
 
@@ -16,7 +11,7 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 public class OrderController : BaseController
-{ 
+{
     /// <summary>
     /// Endpoint to fetch details of orders of retail store.
     /// </summary>
@@ -37,7 +32,7 @@ public class OrderController : BaseController
     /// </returns> 
     [HttpPost("orders")]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> AddOrders([FromBody]CreateOrderCommand request)
+    public async Task<IActionResult> AddOrders([FromBody] CreateOrderCommand request)
     {
         var result = await Mediator.Send(request);
         return Ok(result);
@@ -51,9 +46,9 @@ public class OrderController : BaseController
     /// An IActionResult indicating the success or failure of the SMS sending process
     /// </returns>
     [HttpGet("sms/{id}")]
-    public async Task<IActionResult> SendSms(long id)
-    {      
-        return Ok(await Mediator.Send(new SendSmsQuery{ Id = id}));
+    public async Task<IActionResult> SendSms([FromRoute] long id)
+    {
+        return Ok(await Mediator.Send(new SendSmsQuery { Id = id }));
     }
 
     /// <summary>
@@ -62,7 +57,7 @@ public class OrderController : BaseController
     /// <param name="id">order's Id to fetch order's data</param>
     [HttpDelete("orders/{id}")]
     [ProducesResponseType(typeof(Order), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> DeleteOrders([FromRoute]int id)
+    public async Task<IActionResult> DeleteOrders([FromRoute] int id)
     {
         var deletedOrder = await Mediator.Send(new DeleteOrderByIdCommand { Id = id });
         return Ok(deletedOrder);
@@ -75,7 +70,7 @@ public class OrderController : BaseController
     /// <param name="orderRequestBody"></param>
     [HttpPut("orders/{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateOrder([FromRoute]int id, [FromBody]OrderRequestDto orderRequestBody)
+    public async Task<IActionResult> UpdateOrder([FromRoute] int id, [FromBody] OrderRequestDto orderRequestBody)
     {
         var result = await Mediator.Send(new UpdateOrderByIdCommand
         {
