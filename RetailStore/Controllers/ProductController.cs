@@ -34,7 +34,7 @@ public class ProductController : BaseController
     /// </returns>    
     [HttpPost("products")]
     [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddProduct(AddProductCommand product)
+    public async Task<IActionResult> AddProduct([FromBody] AddProductCommand product)
     {
         var result = await Mediator.Send(product);
         return Ok(result);
@@ -46,7 +46,7 @@ public class ProductController : BaseController
     /// <param name="id">product's Id to fetch product's data</param>
     [HttpDelete("products/{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    public async Task<IActionResult> DeleteProduct(int id)
+    public async Task<IActionResult> DeleteProduct([FromRoute] int id)
     {
         var deletedProductId = await Mediator.Send(new DeleteProductCommand { ProductId = id });
         return Ok(deletedProductId);
@@ -58,7 +58,7 @@ public class ProductController : BaseController
     /// <param name="id">Product's Id to fetch product's data</param>
     [HttpGet("products/{id}")]
     [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProductById(int id)
+    public async Task<IActionResult> GetProductById([FromRoute] int id)
     {
         var result = await Mediator.Send(new GetProductByIdQuery { Id = id });
         return Ok(result);
@@ -75,7 +75,7 @@ public class ProductController : BaseController
     /// </returns>
     [HttpPut("product")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateProduct(UpdateProductCommand command)
+    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommand command)
     {
         var updatedProductId = await Mediator.Send(command);
         return Ok(updatedProductId);

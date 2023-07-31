@@ -30,7 +30,7 @@ public class CustomerController : BaseController
     /// <returns>Id of customer inserted to the record</returns> 
     [HttpPost("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddCustomers(AddCustomerCommand request)
+    public async Task<IActionResult> AddCustomers([FromBody] AddCustomerCommand request)
     {
         var result = await Mediator.Send(request);
         return Ok(result);
