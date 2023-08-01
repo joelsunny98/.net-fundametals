@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RetailStore.Dtos;
-using RetailStore.Extentions;
-using RetailStore.Model;
-using RetailStore.Persistence;
 using RetailStore.Requests.OrderDetailManagement;
 
 namespace RetailStore.Controllers;
@@ -32,7 +27,7 @@ public class OrderDetailController : BaseController
     /// <param name="orderId"></param>
     /// <returns></returns>
     [HttpGet("order-details/{orderId}/order-size")]
-    public async Task<IActionResult> GetOrderSize([FromRoute]int orderId) 
+    public async Task<IActionResult> GetOrderSize([FromRoute] int orderId)
     {
         var result = await Mediator.Send(new GetOrderSizeQuery { OrderId = orderId });
         return Ok(result);

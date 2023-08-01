@@ -15,15 +15,15 @@ public static class OrderSizeHelper
     /// <returns></returns>
     public static string CalculateOrderSize(int count)
     {
-        if (count >= Constants.Constant.Ten)
+        if (count >= Constant.Ten)
         {
             return Enums.OrderSize.Large.ToString();
         }
-        else if (count >= Constants.Constant.Five)
+        else if (count >= Constant.Five)
         {
             return Enums.OrderSize.Medium.ToString();
         }
-        else if (count >= Constants.Constant.Two)
+        else if (count >= Constant.Two)
         {
             return Enums.OrderSize.Small.ToString();
         }

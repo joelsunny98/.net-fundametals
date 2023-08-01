@@ -30,7 +30,7 @@ public class CustomerController : BaseController
     /// <returns>Id of customer inserted to the record</returns> 
     [HttpPost("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddCustomers(AddCustomerCommand request)
+    public async Task<IActionResult> AddCustomers([FromBody] AddCustomerCommand request)
     {
         var result = await Mediator.Send(request);
         return Ok(result);
@@ -86,7 +86,7 @@ public class CustomerController : BaseController
     /// Endpoint to fetch details of a premium customer.
     /// </summary>
     /// <returns>It returns best purchasing customer details</returns>
-    [HttpGet("premium")]
+    [HttpGet("customers/premium")]
     public async Task<IActionResult> GetPremiumCustomers()
     {
         var premiumCustomers = await Mediator.Send(new GetPremiumCustomersQuery());
