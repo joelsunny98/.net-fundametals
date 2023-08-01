@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Numerics;
-using Twilio.Types;
+﻿using RetailStore.Constants;
 
 namespace RetailStore.Extensions;
 
@@ -18,7 +16,7 @@ public static class SmsExtension
     {
         if (phoneNumber.HasValue)
         {
-            string phoneNum = "+91" + phoneNumber.Value.ToString();
+            string phoneNum = Constant.IndiaPhoneCode + phoneNumber.Value.ToString();
             return phoneNum;
         }
         return string.Empty;

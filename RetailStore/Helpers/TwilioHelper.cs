@@ -1,4 +1,6 @@
-﻿namespace RetailStore.Helpers;
+﻿using RetailStore.Constants;
+
+namespace RetailStore.Helpers;
 
 /// <summary>
 /// Helper class for Twilio related operations.
@@ -14,7 +16,7 @@ public static class TwilioHelper
     {
         if (phoneNumber.HasValue)
         {
-            string phoneNum = "+91" + phoneNumber.Value.ToString();
+            string phoneNum = Constant.IndiaPhoneCode + phoneNumber.Value.ToString();
             return phoneNum;
         }
         return string.Empty;

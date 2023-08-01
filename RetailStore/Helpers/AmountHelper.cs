@@ -1,4 +1,5 @@
-﻿using RetailStore.Dtos;
+﻿using RetailStore.Constants;
+using RetailStore.Dtos;
 
 namespace RetailStore.Helpers;
 
@@ -19,21 +20,21 @@ public static class AmountHelper
 
         decimal discountValue = 0;
 
-        if (totalAmount >= 1000 && totalAmount < 2000)
+        if (totalAmount >= Constant.Thousand && totalAmount < Constant.TwoThousand)
         {
-            discountValue = totalAmount / 10;
+            discountValue = totalAmount / Constant.Ten;
         }
-        else if (totalAmount >= 2000 && totalAmount < 3000)
+        else if (totalAmount >= Constant.TwoThousand && totalAmount < Constant.ThreeThousand)
         {
-            discountValue = totalAmount / 20;
+            discountValue = totalAmount / Constant.Twenty;
         }
-        else if (totalAmount >= 3000 && totalAmount < 4000)
+        else if (totalAmount >= Constant.ThreeThousand && totalAmount < Constant.FourThousand)
         {
-            discountValue = totalAmount / 30;
+            discountValue = totalAmount / Constant.Thirty;
         }
-        else if (totalAmount >= 4000)
+        else if (totalAmount >= Constant.FourThousand)
         {
-            discountValue = totalAmount / 40;
+            discountValue = totalAmount / Constant.Forty;
         }
 
         var discountedAmount = totalAmount - discountValue;
