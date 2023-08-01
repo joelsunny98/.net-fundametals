@@ -1,5 +1,8 @@
 ﻿namespace RetailStore.Model;
 
+/// <summary>
+/// Entity for Order
+/// </summary>
 public class Order: DomainAudit
 {
     /// <summary>
@@ -12,7 +15,6 @@ public class Order: DomainAudit
     /// Gets and sets Unique Identification number of the customer entity
     /// </summary>
     /// <example> 1 </example> 
-
     public int CustomerId { get; set; }
 
     /// <summary>
@@ -27,11 +29,13 @@ public class Order: DomainAudit
     /// <example> 110.5 </example> 
     public decimal Discount { get; set; }
 
+    /// <summary>
+    /// Gets and sets Customer
+    /// </summary>
     public virtual Customer Customer { get; set; }
 
     /// <summary>
     /// Gets and sets the details of order.
     /// </summary>
     public List<OrderDetail> Details { get; set;}
-
 }

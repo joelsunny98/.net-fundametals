@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RetailStore.Persistence;
+using RetailStore.Constants;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.OrderManagement
 {
@@ -16,15 +17,19 @@ namespace RetailStore.Requests.OrderManagement
     /// </summary>
     public class GetCollectionByDayQueryHandler : IRequestHandler<GetCollectionByDayQuery, string>
     {
-        private readonly RetailStoreDbContext _dbContext;
+        private readonly IRetailStoreDbContext _dbContext;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Inject RetailDbContext class
         /// </summary>
         /// <param name="dbContext"></param>
-        public GetCollectionByDayQueryHandler(RetailStoreDbContext dbContext)
+        /// <param name="logger"></param>
+        public GetCollectionByDayQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetCollectionByDayQuery> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
+
         }
 
         /// <summary>
@@ -35,8 +40,9 @@ namespace RetailStore.Requests.OrderManagement
         /// <returns>Total Collection</returns>
         public async Task<string> Handle(GetCollectionByDayQuery request, CancellationToken cancellationToken)
         {
-            var totalCollection = await _dbContext.Orders.Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).SumAsync(e => e.TotalAmount);
+            var totalCollection = await _dbContext.Orders.Where(e => e.CreatedOn.Date == DateTime.UtcNow.Date).SumAsync(e => e.TotalAmount, cancellationToken);
 
+            _logger.LogInformation(LogMessage.DayCollection);
             return totalCollection.ConvertToCurrencyString();
         }
     }

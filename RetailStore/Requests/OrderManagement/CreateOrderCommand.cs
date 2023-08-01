@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
-using RetailStore.Extensions;
+using RetailStore.Helpers;
 using RetailStore.Model;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -18,19 +20,22 @@ public class CreateOrderCommand : OrderRequestDto, IRequest<string>
 /// </summary>
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, string>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects RetailStoreDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
-    public CreateOrderCommandHandler(RetailStoreDbContext dbContext)
+    /// <param name="logger"></param>
+    public CreateOrderCommandHandler(IRetailStoreDbContext dbContext, ILogger<CreateOrderCommand> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     /// <summary>
-    /// Adds new order to the database
+    /// Adds a new order to the database
     /// </summary>
     /// <param name="command"></param>
     /// <param name="cancellationToken"></param>
@@ -47,9 +52,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
         };
         _dbContext.Orders.Add(createdOrder);
 
+        var productIds = command.Details.Select(e => e.ProductId).ToList();
+        var products = await _dbContext.Products.Where(e => productIds.Contains(e.Id)).ToListAsync(cancellationToken);
+
         var details = command.Details.Select(d =>
         {
-            var product = _dbContext.Products.Where(x => x.Id == d.ProductId).FirstOrDefault();
+            var product = products.FirstOrDefault(e => e.Id == d.ProductId);
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,
@@ -59,16 +67,20 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
 
             if (product != null)
             {
-                var Amount = createdOrder.TotalAmount.TotalValue(product.Price, d.Quantity);
-                createdOrder.TotalAmount = Amount.DiscountedAmount;
-                createdOrder.Discount = Amount.DiscountValue;
+                var amountDto = AmountHelper.CalculateTotalValue(product.Price, d.Quantity);
+                createdOrder.TotalAmount = amountDto.DiscountedAmount;
+                createdOrder.Discount = amountDto.DiscountValue;
             }
+
             return orderDetail;
         }).ToList();
+
         _dbContext.OrderDetails.AddRange(details);
 
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
         var result = createdOrder.TotalAmount.ConvertToCurrencyString();
+
+        _logger.LogInformation(LogMessage.NewItem, createdOrder.Id);
 
         return result;
     }

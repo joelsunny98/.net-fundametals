@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RetailStore.Dtos;
-using RetailStore.Features.CustomerManagement;
 using RetailStore.Model;
-using RetailStore.Repository;
+using RetailStore.Requests.CustomerManagement;
 
 namespace RetailStore.Controllers;
 
@@ -29,17 +27,14 @@ public class CustomerController : BaseController
     /// <summary>
     /// Adding data of customer to the database
     /// </summary>
-    /// <returns>
-    /// Id of customer inserted to the record
-    /// </returns> 
+    /// <returns>Id of customer inserted to the record</returns> 
     [HttpPost("customers")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddCustomers(AddCustomerCommand request)
+    public async Task<IActionResult> AddCustomers([FromBody] AddCustomerCommand request)
     {
         var result = await Mediator.Send(request);
         return Ok(result);
     }
-
 
     /// <summary>
     /// Delete a customer by ID.
@@ -53,34 +48,30 @@ public class CustomerController : BaseController
         return Ok(deleteCustomer);
     }
 
-
     /// <summary>
     /// Endpoint to fetch details of an customer with given id.
     /// </summary>
     /// <param name="id">Customers's Id to fetch customer's data</param>
     [HttpGet("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCustomerById([FromRoute]int id)
+    public async Task<IActionResult> GetCustomerById([FromRoute] int id)
     {
         var result = await Mediator.Send(new GetCustomerByIdQuery
         {
             CustomerId = id
-        }) ;
+        });
         return Ok(result);
     }
 
     /// <summary>
-    /// Endpoint to update customer record
+    /// Updates a customer with the given ID.
     /// </summary>
-    /// <param name="customer">
-    /// customer contains the updated customers's data
-    /// </param>
-    /// <returns> 
-    /// Customer id of updated record 
-    /// </returns>
+    /// <param name="id">The ID of the customer to update.</param>
+    /// <param name="customerRequestBody">The updated customer information.</param>
+    /// <returns>The updated customer.</returns>
     [HttpPut("customers/{id}")]
     [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateCustomer([FromRoute]int id, [FromBody]CustomerDto customerRequestBody)
+    public async Task<IActionResult> UpdateCustomer([FromRoute] int id, [FromBody] CustomerDto customerRequestBody)
     {
         var result = await Mediator.Send(new UpdateCustomerCommand
         {
@@ -90,11 +81,15 @@ public class CustomerController : BaseController
         });
         return Ok(result);
     }
+
+    /// <summary>
+    /// Endpoint to fetch details of a premium customer.
+    /// </summary>
+    /// <returns>It returns best purchasing customer details</returns>
+    [HttpGet("customers/premium")]
+    public async Task<IActionResult> GetPremiumCustomers()
+    {
+        var premiumCustomers = await Mediator.Send(new GetPremiumCustomersQuery());
+        return Ok(premiumCustomers);
+    }
 }
-
-
-
-
-
-
-

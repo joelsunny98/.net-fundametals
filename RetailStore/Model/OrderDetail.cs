@@ -1,5 +1,8 @@
 ﻿namespace RetailStore.Model;
 
+/// <summary>
+/// Entity for OrderDetail
+/// </summary>
 public class OrderDetail: DomainAudit
 {
 

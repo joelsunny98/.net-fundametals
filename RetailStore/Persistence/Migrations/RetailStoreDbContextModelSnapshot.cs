@@ -46,7 +46,7 @@ namespace RetailStore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("RetailStore.Model.Order", b =>
@@ -76,7 +76,7 @@ namespace RetailStore.Persistence.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("RetailStore.Model.OrderDetail", b =>
@@ -108,7 +108,7 @@ namespace RetailStore.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("RetailStore.Model.Product", b =>
@@ -135,7 +135,7 @@ namespace RetailStore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("RetailStore.Model.Order", b =>

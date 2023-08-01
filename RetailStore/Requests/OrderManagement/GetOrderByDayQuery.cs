@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -17,15 +18,19 @@ public class GetOrderByDayQuery : IRequest<List<OrderDto>>
 /// </summary>
 public class GetOrderByDayQueryHandler : IRequestHandler<GetOrderByDayQuery, List<OrderDto>>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects RetailDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
-    public GetOrderByDayQueryHandler(RetailStoreDbContext dbContext)
+    /// <param name="logger"></param>
+    public GetOrderByDayQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetOrderByDayQuery> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
+
     }
 
     /// <summary>
@@ -47,8 +52,9 @@ public class GetOrderByDayQueryHandler : IRequestHandler<GetOrderByDayQuery, Lis
                 ProductName = d.Product.Name,
                 Quantity = d.Quantity
             }).ToList()
-        }).ToListAsync();
+        }).ToListAsync(cancellationToken);
 
+        _logger.LogInformation(LogMessage.OrderForTheDay, result.Count);
         return result;
     }
 }

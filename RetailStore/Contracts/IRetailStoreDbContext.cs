@@ -3,6 +3,9 @@ using RetailStore.Model;
 
 namespace RetailStore.Contracts;
 
+/// <summary>
+/// Interface for access to the data store for managing products and related entities in the retail store.
+/// </summary>
 public interface IRetailStoreDbContext
 {
     /// <summary>
@@ -25,6 +28,15 @@ public interface IRetailStoreDbContext
     /// </summary>
     DbSet<Customer> Customers { get; set; }
 
-    //Task RunMigrations();
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    /// <summary>
+    /// Method to run Migration
+    /// </summary>
+    Task RunMigrations();
+
+    /// <summary>
+    /// Method to Save db changes
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

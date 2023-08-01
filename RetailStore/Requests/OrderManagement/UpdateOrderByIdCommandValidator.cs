@@ -14,11 +14,11 @@ public class UpdateOrderByIdCommandValidator : AbstractValidator<UpdateOrderById
     public UpdateOrderByIdCommandValidator()
     {
         //Rules for required fields
-        RuleFor(x => x.OrderRequest.CustomerId).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+        RuleFor(x => x.OrderRequest.CustomerId).NotNull().NotEmpty().WithMessage(ValidationMessage.CustomerIdRequried);
         RuleForEach(x => x.OrderRequest.Details).ChildRules(p =>
         {
-            p.RuleFor(x => x.ProductId).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
-            p.RuleFor(x => x.Quantity).NotNull().NotEmpty().WithMessage(ValidationMessage.Required);
+            p.RuleFor(x => x.ProductId).NotNull().NotEmpty().WithMessage(ValidationMessage.ProductIdRequired);
+            p.RuleFor(x => x.Quantity).NotNull().NotEmpty().WithMessage(ValidationMessage.QuantityRequired);
         });
     }
 }

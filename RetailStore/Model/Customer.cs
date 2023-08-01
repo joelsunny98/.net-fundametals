@@ -2,6 +2,9 @@
 
 namespace RetailStore.Model;
 
+/// <summary>
+/// Entity for customers
+/// </summary>
 public class Customer: DomainAudit
 {
 
@@ -22,5 +25,5 @@ public class Customer: DomainAudit
     /// </summary>
     /// <example> 9878767567 </example> 
     [Required]
-    public long? PhoneNumber { get; set; }
+    public long PhoneNumber { get; set; }
 }

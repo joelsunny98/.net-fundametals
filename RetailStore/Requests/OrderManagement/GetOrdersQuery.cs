@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -17,15 +18,18 @@ public class GetOrdersQuery : IRequest<List<OrderDto>>
 /// </summary>
 public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<OrderDto>>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects the RetailStoreDbContext class
     /// </summary>
     /// <param name="dbContext"></param>
-    public GetOrdersQueryHandler(RetailStoreDbContext dbContext)
+    /// <param name="logger">The logger instance.</param>
+    public GetOrdersQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetOrdersQuery> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     /// <summary>
@@ -50,6 +54,7 @@ public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<OrderD
                 }).ToList()
             }).ToListAsync();
 
+        _logger.LogInformation(LogMessage.GetAllItems, result.Count);
         return result;
     }
 }

@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RetailStore.Constants;
+using RetailStore.Contracts;
 using RetailStore.Dtos;
-using RetailStore.Extensions;
+using RetailStore.Helpers;
 using RetailStore.Model;
-using RetailStore.Persistence;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -27,15 +29,18 @@ public class UpdateOrderByIdCommand : IRequest<int>
 /// </summary>
 public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdCommand, int>
 {
-    private readonly RetailStoreDbContext _dbContext;
+    private readonly IRetailStoreDbContext _dbContext;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects RetailDbContext Class
     /// </summary>
     /// <param name="dbContext"></param>
-    public UpdateOrderByIdCommandHandler(RetailStoreDbContext dbContext)
+    /// <param name="logger"></param>
+    public UpdateOrderByIdCommandHandler(IRetailStoreDbContext dbContext, ILogger<UpdateOrderByIdCommand> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     /// <summary>
@@ -47,19 +52,24 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
     /// <exception cref="KeyNotFoundException"></exception>
     public async Task<int> Handle(UpdateOrderByIdCommand command, CancellationToken cancellationToken)
     {
-        var order = _dbContext.Orders.FirstOrDefault(e => e.Id == command.Id);
+        var order = await _dbContext.Orders.FirstOrDefaultAsync(e => e.Id == command.Id);
 
         if (order == null)
         {
+            _logger.LogError(LogMessage.SearchFail, command.Id);
             throw new KeyNotFoundException();
         }
 
         order.CustomerId = command.OrderRequest.CustomerId;
         order.UpdatedOn = DateTime.UtcNow;
 
+        var productIds = command.OrderRequest.Details.Select(e => e.ProductId).ToList();
+        var products = await _dbContext.Products.Where(e => productIds.Contains(e.Id)).ToListAsync(cancellationToken);
+
         var details = command.OrderRequest.Details.Select(d =>
         {
-            var product = _dbContext.Products.FirstOrDefault(p => p.Id == d.ProductId);
+            var product = products.FirstOrDefault(e => e.Id == d.ProductId);
+
             var orderDetail = new OrderDetail
             {
                 ProductId = d.ProductId,
@@ -69,16 +79,18 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
 
             if (product != null)
             {
-                var Amount = order.TotalAmount.TotalValue(product.Price, d.Quantity);
-                order.TotalAmount = Amount.DiscountedAmount;
-                order.Discount = Amount.DiscountValue;
+                var amountDto = AmountHelper.CalculateTotalValue(product.Price, d.Quantity);
+                order.TotalAmount = amountDto.DiscountedAmount;
+                order.Discount = amountDto.DiscountValue;
             }
+
             return orderDetail;
         }).ToList();
 
         _dbContext.OrderDetails.AddRange(details);
         await _dbContext.SaveChangesAsync();
 
+        _logger.LogInformation(LogMessage.UpdatedItem, command.Id);
         return order.Id;
     }
 }

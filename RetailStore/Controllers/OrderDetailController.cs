@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RetailStore.Dtos;
-using RetailStore.Extentions;
-using RetailStore.Persistence;
-using System.Reflection.Metadata.Ecma335;
+using RetailStore.Requests.OrderDetailManagement;
 
 namespace RetailStore.Controllers;
 
@@ -12,15 +8,8 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 [Route("api")]
-public class OrderDetailController: ControllerBase
+public class OrderDetailController : BaseController
 {
-    private readonly RetailStoreDbContext _dbContext;
-
-    public OrderDetailController(RetailStoreDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     /// <summary>
     /// Endpoint to fetch details of a best selling product.
     /// </summary>
@@ -28,15 +17,19 @@ public class OrderDetailController: ControllerBase
     [HttpGet("order-details/best-seller")]
     public async Task<IActionResult> GetBestSeller()
     {
-        var bestSeller = await _dbContext.OrderDetails.Include(t => t.Product).GroupBy(c => c.ProductId).OrderByDescending(g => g.Sum(q => q.Quantity)).Select(g => new BestSellerDto
-        {
-            ProductId = g.Key,
-            Quantity = g.Sum(od => od.Quantity),
-            ProductName = g.First().Product.Name,
-            Price = g.First().Product.Price,
-            TotalRevenue = g.First().Product.Price.TotalRevenue(g.Sum(od => od.Quantity))
-        }).FirstOrDefaultAsync();
+        var result = await Mediator.Send(new GetBestSellerQuery());
+        return Ok(result);
+    }
 
-        return Ok(bestSeller);
+    /// <summary>
+    /// Endpoint to fetch the OrderSize by order Id
+    /// </summary>
+    /// <param name="orderId"></param>
+    /// <returns></returns>
+    [HttpGet("order-details/{orderId}/order-size")]
+    public async Task<IActionResult> GetOrderSize([FromRoute] int orderId)
+    {
+        var result = await Mediator.Send(new GetOrderSizeQuery { OrderId = orderId });
+        return Ok(result);
     }
 }

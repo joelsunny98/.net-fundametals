@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
-using RetailStore.Requests.OrderManagement;
 using RetailStore.Model;
+using RetailStore.Requests.OrderManagement;
 using System.Net;
 
 namespace RetailStore.Controllers;
@@ -32,10 +32,23 @@ public class OrderController : BaseController
     /// </returns> 
     [HttpPost("orders")]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> AddOrders([FromBody]CreateOrderCommand request)
+    public async Task<IActionResult> AddOrders([FromBody] CreateOrderCommand request)
     {
         var result = await Mediator.Send(request);
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Endpoint to send an SMS based on the provided ID.
+    /// </summary>
+    /// <param name="id">The ID of the SMS recipient</param>
+    /// <returns>
+    /// An IActionResult indicating the success or failure of the SMS sending process
+    /// </returns>
+    [HttpGet("sms/{id}")]
+    public async Task<IActionResult> SendSms([FromRoute] long id)
+    {
+        return Ok(await Mediator.Send(new SendSmsQuery { Id = id }));
     }
 
     /// <summary>
@@ -44,7 +57,7 @@ public class OrderController : BaseController
     /// <param name="id">order's Id to fetch order's data</param>
     [HttpDelete("orders/{id}")]
     [ProducesResponseType(typeof(Order), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> DeleteOrders([FromRoute]int id)
+    public async Task<IActionResult> DeleteOrders([FromRoute] int id)
     {
         var deletedOrder = await Mediator.Send(new DeleteOrderByIdCommand { Id = id });
         return Ok(deletedOrder);
@@ -54,9 +67,10 @@ public class OrderController : BaseController
     /// Endpoint to fetch details of an order with given id.
     /// </summary>
     /// <param name="id">Order's Id to fetch order's data</param>
+    /// <param name="orderRequestBody"></param>
     [HttpPut("orders/{id}")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    public async Task<IActionResult> UpdateOrder([FromRoute]int id, [FromBody]OrderRequestDto orderRequestBody)
+    public async Task<IActionResult> UpdateOrder([FromRoute] int id, [FromBody] OrderRequestDto orderRequestBody)
     {
         var result = await Mediator.Send(new UpdateOrderByIdCommand
         {
