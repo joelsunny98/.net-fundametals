@@ -8,12 +8,16 @@ namespace RetailStore.Controllers;
 /// </summary>
 [ApiController]
 [Route("api")]
-public class BaseController: ControllerBase
+public class BaseController : ControllerBase
 {
     private IMediator _mediator;
 
     /// <summary>
-    /// Mediator Instance
+    /// Gets the Mediator instance for handling commands and queries.
     /// </summary>
+    /// <remarks>
+    /// The Mediator is a central messaging component that supports the implementation of the Mediator design pattern.
+    /// It acts as a communication hub between different components and handles the execution of commands and queries.
+    /// </remarks>
     protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 }
