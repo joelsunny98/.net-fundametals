@@ -86,7 +86,7 @@ public class CustomerController : BaseController
     /// Endpoint to fetch details of a premium customer.
     /// </summary>
     /// <returns>It returns best purchasing customer details</returns>
-    [HttpGet("premium")]
+    [HttpGet("customers/premium")]
     public async Task<IActionResult> GetPremiumCustomers()
     {
         var premiumCustomers = await Mediator.Send(new GetPremiumCustomersQuery());
