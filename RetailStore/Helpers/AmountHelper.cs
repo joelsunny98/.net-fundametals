@@ -20,21 +20,21 @@ public static class AmountHelper
 
         decimal discountValue = 0;
 
-        if (totalAmount >= Constant.Thousand && totalAmount < Constant.TwoThousand)
+        if (totalAmount >= Constant.TenPercentDiscountMinValue && totalAmount < Constant.TenPercentDiscountMaxValue)
         {
-            discountValue = totalAmount / Constant.Ten;
+            discountValue = totalAmount / Constant.TenPercent;
         }
-        else if (totalAmount >= Constant.TwoThousand && totalAmount < Constant.ThreeThousand)
+        else if (totalAmount >= Constant.TenPercentDiscountMaxValue && totalAmount < Constant.TwentyPercentDiscountMaxValue)
         {
-            discountValue = totalAmount / Constant.Twenty;
+            discountValue = totalAmount / Constant.TwentyPercent;
         }
-        else if (totalAmount >= Constant.ThreeThousand && totalAmount < Constant.FourThousand)
+        else if (totalAmount >= Constant.TwentyPercentDiscountMaxValue && totalAmount < Constant.ThirtyPercentDiscountMaxValue)
         {
-            discountValue = totalAmount / Constant.Thirty;
+            discountValue = totalAmount / Constant.ThirtyPercent;
         }
-        else if (totalAmount >= Constant.FourThousand)
+        else if (totalAmount >= Constant.ThirtyPercentDiscountMaxValue)
         {
-            discountValue = totalAmount / Constant.Forty;
+            discountValue = totalAmount / Constant.FortyPercent;
         }
 
         var discountedAmount = totalAmount - discountValue;
