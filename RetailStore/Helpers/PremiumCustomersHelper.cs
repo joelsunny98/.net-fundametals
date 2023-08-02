@@ -16,7 +16,7 @@ public static class PremiumCustomerHelper
     /// <returns>A List of PremiumCustomerDto containing the premium customers</returns>
     public static List<PremiumCustomerDto> GetPremiumCustomers(List<PremiumCustomerDto> customers)
     {
-        var premiumCustomers = customers.Where(customer => customer.TotalPurchaseAmount > Constant.FiveThousand).ToList();
+        var premiumCustomers = customers.Where(customer => customer.TotalPurchaseAmount > Constant.PremiumCustomerMinValue).ToList();
         return premiumCustomers;
     }
 }
