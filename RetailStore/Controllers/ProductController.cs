@@ -73,7 +73,7 @@ public class ProductController : BaseController
     /// <returns> 
     /// Product id of updated record 
     /// </returns>
-    [HttpPut("product")]
+    [HttpPut("products")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommand command)
     {
