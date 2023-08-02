@@ -45,7 +45,7 @@ public class OrderController : BaseController
     /// <returns>
     /// An IActionResult indicating the success or failure of the SMS sending process
     /// </returns>
-    [HttpGet("sms/{id}")]
+    [HttpGet("orders/{id}/sms")]
     public async Task<IActionResult> SendSms([FromRoute] long id)
     {
         return Ok(await Mediator.Send(new SendSmsQuery { Id = id }));
