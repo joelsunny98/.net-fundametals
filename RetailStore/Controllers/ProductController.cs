@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.ProductManagement;
@@ -73,7 +73,7 @@ public class ProductController : BaseController
     /// <returns> 
     /// Product id of updated record 
     /// </returns>
-    [HttpPut("product/{id}")]
+    [HttpPut("products")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommand command)
     {
