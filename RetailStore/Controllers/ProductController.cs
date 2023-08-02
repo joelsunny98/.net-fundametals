@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.ProductManagement;
