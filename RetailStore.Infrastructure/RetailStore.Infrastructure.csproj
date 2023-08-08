@@ -15,4 +15,9 @@
     <PackageReference Include="Twilio" Version="6.10.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\EntityTypeConfiguration\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
