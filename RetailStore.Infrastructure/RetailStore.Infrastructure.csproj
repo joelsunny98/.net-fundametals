@@ -16,8 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\EntityTypeConfiguration\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\RetailStore.Application\RetailStore.Application.csproj" />
   </ItemGroup>
 
 </Project>

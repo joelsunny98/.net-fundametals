@@ -33,7 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tests\CustomerManagement\Queries\" />
+    <ProjectReference Include="..\RetailStore.Application\RetailStore.Application.csproj" />
+    <ProjectReference Include="..\RetailStore.Infrastructure\RetailStore.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

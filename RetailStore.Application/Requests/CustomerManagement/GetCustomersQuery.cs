@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Dtos;
@@ -50,7 +51,7 @@ public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<C
                 })
                 .ToListAsync(cancellationToken);
 
-            _logger.LogInformation(LogMessage.GetAllItems, result.Count);
+            _logger.LogInformation(LogMessage.GetAllItems, result.Count());
 
             return result;
         }
