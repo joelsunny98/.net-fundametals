@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;

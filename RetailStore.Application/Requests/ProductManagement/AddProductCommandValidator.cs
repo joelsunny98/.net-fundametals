@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RetailStore.Constants;
 using RetailStore.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace RetailStore.Requests.ProductManagement;
 

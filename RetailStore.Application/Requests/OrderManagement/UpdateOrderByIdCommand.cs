@@ -5,6 +5,7 @@ using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Helpers;
 using RetailStore.Model;
+using Microsoft.Extensions.Logging;
 
 namespace RetailStore.Requests.OrderManagement;
 

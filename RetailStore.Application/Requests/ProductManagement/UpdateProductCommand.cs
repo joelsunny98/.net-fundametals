@@ -3,6 +3,7 @@ using MediatR;
 using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Dtos;
+using Microsoft.Extensions.Logging;
 
 namespace RetailStore.Requests.ProductManagement;
 

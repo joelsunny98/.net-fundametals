@@ -2,6 +2,7 @@
 using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;
+using Microsoft.Extensions.Logging;
 
 namespace RetailStore.Requests.OrderManagement;
 

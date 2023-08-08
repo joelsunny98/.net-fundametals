@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Dtos;

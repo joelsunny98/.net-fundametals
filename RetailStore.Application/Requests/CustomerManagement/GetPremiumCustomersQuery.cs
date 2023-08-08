@@ -4,6 +4,7 @@ using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Helpers;
 using RetailStore.Services;
+using Microsoft.Extensions.Logging;
 
 namespace RetailStore.Requests.CustomerManagement;
 
