@@ -1,5 +1,7 @@
-﻿using RetailStore.Constants;
+﻿using NanoidDotNet;
+using RetailStore.Constants;
 using RetailStore.Contracts;
+
 
 namespace RetailStore.Services;
 
@@ -22,7 +24,7 @@ public class PremiumCodeService : IPremiumCodeService
         {
             do
             {
-                premiumCode = Nanoid.Nanoid.Generate(PremiumCustomer.AllowedChars, PremiumCustomer.Size);
+                premiumCode = Nanoid.Generate(PremiumCustomer.AllowedChars, PremiumCustomer.Size);
             } while (_generatedCodes.Contains(premiumCode));
 
             _generatedCodes.Add(premiumCode);

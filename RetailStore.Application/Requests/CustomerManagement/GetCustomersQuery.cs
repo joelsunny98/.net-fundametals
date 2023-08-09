@@ -51,7 +51,7 @@ public class GetCustomerQueryHandler : IRequestHandler<GetCustomersQuery, List<C
                 })
                 .ToListAsync(cancellationToken);
 
-            _logger.LogInformation(LogMessage.GetAllItems, result.Count());
+            _logger.LogInformation(LogMessage.GetAllItems, result.Count);
 
             return result;
         }

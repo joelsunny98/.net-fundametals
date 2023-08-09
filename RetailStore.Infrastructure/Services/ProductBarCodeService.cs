@@ -1,5 +1,6 @@
 ﻿using IronBarCode;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RetailStore.Constants;
 using RetailStore.Contracts;
 

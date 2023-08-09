@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.ProductManagement;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RetailStore.Controllers;
 
