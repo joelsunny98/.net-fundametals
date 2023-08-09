@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Dtos;
-using Microsoft.Extensions.Logging;
 
 namespace RetailStore.Requests.ProductManagement;
 
@@ -41,9 +41,6 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
     /// <returns></returns>
     public async Task<int> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var validator = new UpdateProductCommandValidator(_dbContext);
-        await validator.ValidateAndThrowAsync(request, cancellationToken);
-
         var product = await _dbContext.Products.FindAsync(request.Id);
         if (product == null)
         {
