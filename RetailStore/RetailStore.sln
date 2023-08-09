@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailSore.Api", "RetailSore.Api.csproj", "{B5EE0FE0-659F-4ECE-B432-43E5504D7A71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailStore.Api", "RetailStore.Api.csproj", "{B5EE0FE0-659F-4ECE-B432-43E5504D7A71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailStore.Application", "..\RetailStore.Application\RetailStore.Application.csproj", "{1A856E30-B468-45EB-91E5-20239792779F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailStore.Domain", "..\RetailStore.Domain\RetailStore.Domain.csproj", "{0A5802B9-C930-4FAF-A745-1F8FFDFFBC43}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailStore.Infrastructure", "..\RetailStore.Infrastructure\RetailStore.Infrastructure.csproj", "{917BC42C-6CE7-4998-929E-51D3CF9D8BAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{50A2240B-6798-4748-B1F1-14F492F914F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailStore.Application.Tests", "..\RetailStore.Application.Tests\RetailStore.Application.Tests.csproj", "{57EBBD00-C295-4227-8811-F1B118B52696}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{917BC42C-6CE7-4998-929E-51D3CF9D8BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{917BC42C-6CE7-4998-929E-51D3CF9D8BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{917BC42C-6CE7-4998-929E-51D3CF9D8BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57EBBD00-C295-4227-8811-F1B118B52696}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57EBBD00-C295-4227-8811-F1B118B52696}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57EBBD00-C295-4227-8811-F1B118B52696}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57EBBD00-C295-4227-8811-F1B118B52696}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{57EBBD00-C295-4227-8811-F1B118B52696} = {50A2240B-6798-4748-B1F1-14F492F914F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3135471E-20BB-4D70-9E56-0A119B9C267E}

@@ -15,4 +15,8 @@
     <PackageReference Include="Twilio" Version="6.10.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RetailStore.Application\RetailStore.Application.csproj" />
+  </ItemGroup>
+
 </Project>

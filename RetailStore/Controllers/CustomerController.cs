@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
+using RetailStore.Dtos;
 
 namespace RetailStore.Controllers;
 
