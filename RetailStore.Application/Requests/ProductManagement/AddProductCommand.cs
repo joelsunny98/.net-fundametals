@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Model;
-using Microsoft.Extensions.Logging;
 
 namespace RetailStore.Requests.ProductManagement;
 
@@ -28,10 +28,8 @@ public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public AddProductCommandHandler(IRetailStoreDbContext dbContext, ILogger<AddProductCommandHandler> logger)
+    public AddProductCommandHandler(IRetailStoreDbContext dbContext)
     {
-        _dbContext = dbContext;
-        _logger = logger;
     }
 
     /// <summary>
@@ -42,8 +40,6 @@ public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
     /// <returns>Product Id</returns>
     public async Task<int> Handle(AddProductCommand request, CancellationToken cancellationToken)
     {
-        var validator = new AddProductCommandValidator(_dbContext);
-        await validator.ValidateAndThrowAsync(request, cancellationToken);
 
         var product = new Product
         {
@@ -56,7 +52,6 @@ public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
         _dbContext.Products.Add(product);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation(LogMessage.NewItem, product.Id);
         return product.Id;
     }
 }
