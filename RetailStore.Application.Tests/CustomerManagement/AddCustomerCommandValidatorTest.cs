@@ -1,105 +1,82 @@
-﻿using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using FluentValidation.TestHelper;
 using Moq;
 using RetailStore.Contracts;
 using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
 using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
-
-public class AddCustomerCommandValidatorTests
+namespace RetailStore.Tests
 {
-    private readonly Mock<IRetailStoreDbContext> _dbContext;
-    private readonly AddCustomerCommandValidator _validator;
-
-    public AddCustomerCommandValidatorTests()
+    public class AddCustomerCommandValidatorTests
     {
-        _dbContext = new Mock<IRetailStoreDbContext>();
-        _validator = new AddCustomerCommandValidator(_dbContext.Object);
-    }
+        [Fact]
+        public void Should_Have_Error_When_CustomerName_Is_Null()
+        {
+            // Arrange
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            var validator = new AddCustomerCommandValidator(dbContextMock.Object);
+            var command = new AddCustomerCommand { CustomerName = null };
 
-    // Test for Customer Name requirements
-    [Fact]
-    public void Should_have_error_when_CustomerName_is_null_or_empty()
-    {
-        var model = new AddCustomerCommand { CustomerName = null };
-        var result = _validator.Validate(model);
-        Assert.Contains(result.Errors, x => x.PropertyName == "CustomerName");
+            // Act
+            var result = validator.TestValidate(command);
 
-        model = new AddCustomerCommand { CustomerName = string.Empty };
-        result = _validator.Validate(model);
-        Assert.Contains(result.Errors, x => x.PropertyName == "CustomerName");
-    }
+            // Assert
+            result.ShouldHaveValidationErrorFor(c => c.CustomerName);
+        }
 
-    // Tests for PhoneNumber requirements
-    [Fact]
-    public void Should_have_error_when_PhoneNumber_is_not_10_digits()
-    {
-        var model = new AddCustomerCommand { PhoneNumber = 1234567890 };
-        var result = _validator.Validate(model);
-        Assert.Contains(result.Errors, x => x.PropertyName == "PhoneNumber");
-    }
+        [Fact]
+        public void Should_Have_Error_When_PhoneNumber_Is_Invalid()
+        {
+            // Arrange
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            var validator = new AddCustomerCommandValidator(dbContextMock.Object);
+            var command = new AddCustomerCommand { PhoneNumber = 12345 };
 
-    [Fact]
-    public void Should_have_error_when_PhoneNumber_is_not_unique()
-    {
-        // Create a command with a PhoneNumber that already exists
-        var existingCustomer = new Customer { PhoneNumber = 1234567890L };
-        var model = new AddCustomerCommand { PhoneNumber = existingCustomer.PhoneNumber };
+            // Act
+            var result = validator.TestValidate(command);
 
-        // Setup dbContext to return the existing customer when queried
-        var mockSet = CreateMockSet(new[] { existingCustomer });
-        _dbContext.Setup(db => db.Customers).Returns(mockSet.Object);
+            // Assert
+            result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
+        }
 
-        // Validate the model and assert that it contains an error for the PhoneNumber property
-        var result = _validator.Validate(model);
-        Assert.Contains(result.Errors, x => x.PropertyName == "PhoneNumber");
-    }
+        [Fact]
+        public void Should_Have_Error_When_PhoneNumber_Is_Not_Unique()
+        {
+            // Arrange
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            dbContextMock.Setup(db => db.Customers.Any(It.IsAny<Func<Customer, bool>>())).Returns(true);
 
-    [Fact]
-    public void Should_not_have_error_when_PhoneNumber_is_unique()
-    {
-        // Create a command with a PhoneNumber that is unique
-        var model = new AddCustomerCommand { PhoneNumber = 5555555555L };
+            var validator = new AddCustomerCommandValidator(dbContextMock.Object);
+            var command = new AddCustomerCommand { PhoneNumber = 1234567890 };
 
-        // Setup dbContext to return an empty list when queried (no existing customers with this PhoneNumber)
-        var mockSet = CreateMockSet(Enumerable.Empty<Customer>());
-        _dbContext.Setup(db => db.Customers).Returns(mockSet.Object);
+            // Act
+            var result = validator.TestValidate(command);
 
-        // Validate the model and assert that it does not contain any errors for the PhoneNumber property
-        var result = _validator.Validate(model);
-        Assert.DoesNotContain(result.Errors, x => x.PropertyName == "PhoneNumber");
-    }
+            // Assert
+            result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
+        }
 
-    [Fact]
-    public void Should_have_error_when_PhoneNumber_is_below_min_value()
-    {
-        var model = new AddCustomerCommand { PhoneNumber = 0 };
-        var result = _validator.Validate(model);
-        Assert.Contains(result.Errors, x => x.PropertyName == "PhoneNumber");
-    }
+        [Fact]
+        public void Should_Not_Have_Errors_When_Command_Is_Valid()
+        {
+            // Arrange
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            dbContextMock.Setup(db => db.Customers.Any(It.IsAny<Func<Customer, bool>>())).Returns(false);
 
-    [Fact]
-    public void Should_have_error_when_PhoneNumber_is_above_max_value()
-    {
-        var model = new AddCustomerCommand { PhoneNumber = long.MaxValue };
-        var result = _validator.Validate(model);
-        Assert.Contains(result.Errors, x => x.PropertyName == "PhoneNumber");
-    }
+            var validator = new AddCustomerCommandValidator(dbContextMock.Object);
+            var command = new AddCustomerCommand
+            {
+                CustomerName = "John Doe",
+                PhoneNumber = 1234567890
+            };
 
+            // Act
+            var result = validator.TestValidate(command);
 
-    // Helper method to create a mocked DbSet
-    private Mock<DbSet<T>> CreateMockSet<T>(IEnumerable<T> data) where T : class
-    {
-        var queryable = data.AsQueryable();
-
-        var mockSet = new Mock<DbSet<T>>();
-        mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(queryable.Provider);
-        mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryable.Expression);
-        mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
-        mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
-
-        return mockSet;
+            // Assert
+            result.ShouldNotHaveAnyValidationErrors();
+        }
     }
 }

@@ -1,73 +1,85 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using RetailStore.Contracts;
-using Xunit;
-using RetailStore.Requests.CustomerManagement;
+using RetailStore.Dtos;
 using RetailStore.Model;
+using RetailStore.Requests.CustomerManagement;
+using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
-
-public class UpdateCustomerCommandHandlerTests
+namespace RetailStore.Tests
 {
-private readonly Mock<IRetailStoreDbContext> _dbContextMock;
-private readonly Mock<ILogger<UpdateCustomerCommandHandler>> _loggerMock;
-private readonly UpdateCustomerCommandHandler _handler;
-private readonly Customer existingCustomer;
-
-public UpdateCustomerCommandHandlerTests()
-{
-    _dbContextMock = new Mock<IRetailStoreDbContext>();
-    _loggerMock = new Mock<ILogger<UpdateCustomerCommandHandler>>();
-    _handler = new UpdateCustomerCommandHandler(_dbContextMock.Object, _loggerMock.Object);
-
-    existingCustomer = new Customer
+    public class UpdateCustomerCommandHandlerTests
     {
-        Id = 1,
-        Name = "John",
-        PhoneNumber = 1234567890,
-        UpdatedOn = DateTime.UtcNow
-    };
+        [Fact]
+        public async Task Handle_ValidCommand_ShouldUpdateCustomer()
+        {
+            // Arrange
+            var customer = new Customer
+            {
+                Id = 1,
+                Name = "Old Name",
+                PhoneNumber = 1234567890,
+                UpdatedOn = DateTime.UtcNow
+            };
 
-    _dbContextMock.Setup(x => x.Customers.FindAsync(It.IsAny<int>())).ReturnsAsync(existingCustomer);
-}
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            dbContextMock.Setup(db => db.Customers.FindAsync(1)).ReturnsAsync(customer);
+            dbContextMock.Setup(db => db.SaveChangesAsync(CancellationToken.None)).ReturnsAsync(1); // Number of changes saved
 
-[Fact]
-public async Task Handle_ShouldUpdateCustomer()
-{
-    // Arrange
-    var updateCustomerCommand = new UpdateCustomerCommand
-    {
-        CustomerId = 1,
-        CustomerName = "Jane",
-        PhoneNumber = 0987654321
-    };
+            var loggerMock = new Mock<ILogger<UpdateCustomerCommandHandler>>();
 
-    // Act
-    var result = await _handler.Handle(updateCustomerCommand, default);
+            var handler = new UpdateCustomerCommandHandler(dbContextMock.Object, loggerMock.Object);
+            var command = new UpdateCustomerCommand
+            {
+                CustomerId = 1,
+                CustomerName = "New Name",
+                PhoneNumber = 9876543210
+            };
 
-    // Assert
-    Assert.Equal(updateCustomerCommand.CustomerId, result);
-    Assert.Equal(updateCustomerCommand.CustomerName, existingCustomer.Name);
-    Assert.Equal(updateCustomerCommand.PhoneNumber, existingCustomer.PhoneNumber);
-}
+            // Act
+            var result = await handler.Handle(command, CancellationToken.None);
 
-[Fact]
-public async Task Handle_ShouldThrowKeyNotFoundException_WhenCustomerDoesNotExist()
-{
-    // Arrange
-    _dbContextMock.Setup(x => x.Customers.FindAsync(It.IsAny<int>())).ReturnsAsync((Customer)null);
-    var updateCustomerCommand = new UpdateCustomerCommand
-    {
-        CustomerId = 2,
-        CustomerName = "Jane",
-        PhoneNumber = 0987654321
-    };
+            // Assert
+            Assert.Equal(1, result); // Customer Id returned
+            Assert.Equal("New Name", customer.Name);
+            Assert.Equal(9876543210, customer.PhoneNumber);
+            Assert.True(DateTime.UtcNow - customer.UpdatedOn < TimeSpan.FromSeconds(1)); // Verify updated timestamp
 
-    // Act
-    Exception ex = await Assert.ThrowsAsync<KeyNotFoundException>(() => _handler.Handle(updateCustomerCommand, default));
+            loggerMock.Verify(
+                x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+                Times.Once()
+            );
+        }
 
-    // Assert
-    Assert.IsType<KeyNotFoundException>(ex);
-}
+        [Fact]
+        public async Task Handle_InvalidCustomerId_ShouldThrowKeyNotFoundException()
+        {
+            // Arrange
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            dbContextMock.Setup(db => db.Customers.FindAsync(1)).ReturnsAsync((Customer)null);
+
+            var loggerMock = new Mock<ILogger<UpdateCustomerCommandHandler>>();
+
+            var handler = new UpdateCustomerCommandHandler(dbContextMock.Object, loggerMock.Object);
+            var command = new UpdateCustomerCommand
+            {
+                CustomerId = 1,
+                CustomerName = "New Name",
+                PhoneNumber = 9876543210
+            };
+
+            // Act & Assert
+            await Assert.ThrowsAsync<KeyNotFoundException>(() => handler.Handle(command, CancellationToken.None));
+
+            loggerMock.Verify(
+                x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+                Times.Once()
+            );
+        }
+
+    }
 }

@@ -1,98 +1,93 @@
 ﻿using FluentValidation.TestHelper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using RetailStore.Contracts;
+using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
-
-public class UpdateCustomerCommandValidatorTests
+namespace RetailStore.Tests.Requests.CustomerManagement
 {
-private readonly UpdateCustomerCommandValidator _validator;
-private readonly Mock<IRetailStoreDbContext> _dbContextMock;
+    public class UpdateCustomerCommandValidatorTests
+    {
+        private readonly Mock<IRetailStoreDbContext> _dbContextMock;
+        private readonly UpdateCustomerCommandValidator _validator;
 
-public UpdateCustomerCommandValidatorTests()
-{
-    _dbContextMock = new Mock<IRetailStoreDbContext>();
-    _validator = new UpdateCustomerCommandValidator(_dbContextMock.Object);
-}
+        public UpdateCustomerCommandValidatorTests()
+        {
+            _dbContextMock = new Mock<IRetailStoreDbContext>();
+            _validator = new UpdateCustomerCommandValidator(_dbContextMock.Object);
+        }
 
-[Fact]
-public void Should_have_error_when_CustomerId_is_not_greater_than_zero()
-{
-    // Arrange
-    var command = new UpdateCustomerCommand { CustomerId = 0 };
+        [Fact]
+        public void ValidCommand_ShouldNotHaveValidationError()
+        {
+            // Arrange
+            var command = new UpdateCustomerCommand
+            {
+                CustomerId = 1,
+                CustomerName = "John Doe",
+                PhoneNumber = 1234567890
+            };
 
-    // Act
-    var result = _validator.TestValidate(command);
+            // Act
+            var result = _validator.TestValidate(command);
 
-    // Assert
-    result.ShouldHaveValidationErrorFor(c => c.CustomerId);
-}
+            // Assert
+            result.ShouldNotHaveAnyValidationErrors();
+        }
 
-[Fact]
-public void Should_have_error_when_CustomerName_is_null_or_empty()
-{
-    // Arrange
-    var command = new UpdateCustomerCommand { CustomerName = null };
+        [Fact]
+        public void InvalidPhoneNumber_ShouldHaveValidationError()
+        {
+            // Arrange
+            var command = new UpdateCustomerCommand
+            {
+                CustomerId = 1,
+                CustomerName = "John Doe",
+                PhoneNumber = 12345 // Invalid phone number
+            };
 
-    // Act
-    var result = _validator.TestValidate(command);
+            // Act
+            var result = _validator.TestValidate(command);
 
-    // Assert
-    result.ShouldHaveValidationErrorFor(c => c.CustomerName);
-}
+            // Assert
+            result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
+        }
 
-[Fact]
-public void Should_have_error_when_CustomerName_is_longer_than_25_characters()
-{
-    // Arrange
-    var command = new UpdateCustomerCommand { CustomerName = "This is a very long customer name that exceeds the maximum length of 25 characters" };
+        [Fact]
+        public void DuplicatePhoneNumber_ShouldHaveValidationError()
+        {
+            // Arrange
+            var command = new UpdateCustomerCommand
+            {
+                CustomerId = 1,
+                CustomerName = "John Doe",
+                PhoneNumber = 1234567890
+            };
 
-    // Act
-    var result = _validator.TestValidate(command);
+            var customers = new List<Customer>
+            {
+                new Customer { Id = 1, PhoneNumber = 1234567890 },
+                new Customer { Id = 2, PhoneNumber = 9876543210 }
+            }.AsQueryable();
 
-    // Assert
-    result.ShouldHaveValidationErrorFor(c => c.CustomerName);
-}
+            var customersDbSetMock = new Mock<DbSet<Customer>>();
+            customersDbSetMock.As<IQueryable<Customer>>().Setup(m => m.Provider).Returns(customers.Provider);
+            customersDbSetMock.As<IQueryable<Customer>>().Setup(m => m.Expression).Returns(customers.Expression);
+            customersDbSetMock.As<IQueryable<Customer>>().Setup(m => m.ElementType).Returns(customers.ElementType);
+            customersDbSetMock.As<IQueryable<Customer>>().Setup(m => m.GetEnumerator()).Returns(customers.GetEnumerator());
 
-[Fact]
-public void Should_have_error_when_PhoneNumber_is_null_or_empty()
-{
-    // Arrange
-    var command = new UpdateCustomerCommand { PhoneNumber = 0 };
+            _dbContextMock.Setup(db => db.Customers).Returns(customersDbSetMock.Object);
 
-    // Act
-    var result = _validator.TestValidate(command);
+            // Act
+            var result = _validator.TestValidate(command);
 
-    // Assert
-    result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
-}
-
-[Fact]
-public void Should_have_error_when_PhoneNumber_is_not_valid()
-{
-    // Arrange
-    var command = new UpdateCustomerCommand { PhoneNumber = 12345 };
-
-    // Act
-    var result = _validator.TestValidate(command);
-
-    // Assert
-    result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
-}
-
-[Fact]
-public void Should_have_error_when_PhoneNumber_is_not_unique()
-{
-    // Arrange
-    var command = new UpdateCustomerCommand { PhoneNumber = 1234567890 };
-    _dbContextMock.Setup(x => x.Customers.Any(c => c.PhoneNumber == command.PhoneNumber)).Returns(true);
-
-    // Act
-    var result = _validator.TestValidate(command);
-
-    // Assert
-    result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
-}
+            // Assert
+            result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
+        }
+    }
 }

@@ -1,65 +1,78 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
-using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;
 using RetailStore.Requests.CustomerManagement;
 using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
-
-public class DeleteCustomerCommandHandlerTests
+namespace RetailStore.Tests
 {
-    [Fact]
-    public async Task Handle_DeletesExistingCustomer_ReturnsSuccessMessage()
+    public class DeleteCustomerCommandHandlerTests
     {
-        // Arrange
-        var customerId = 1;
-        var customerToDelete = new Customer { Id = customerId, Name = "Test Customer" };
+        [Fact]
+        public async Task Handle_Should_Delete_Customer_And_Return_Success_Message()
+        {
+            // Arrange
+            var customerId = 1;
+            var deletedCustomer = new Customer { Id = customerId, Name = "John Doe", PhoneNumber = 1234567890 };
 
-        var customerRepositoryMock = new Mock<IRepository<Customer>>();
-        customerRepositoryMock.Setup(repo => repo.GetById(customerId)).ReturnsAsync(customerToDelete);
-        customerRepositoryMock.Setup(repo => repo.Delete(customerId)).ReturnsAsync(customerToDelete);
+            var customerRepositoryMock = new Mock<IRepository<Customer>>();
+            customerRepositoryMock.Setup(repo => repo.GetById(customerId)).ReturnsAsync(deletedCustomer);
+            customerRepositoryMock.Setup(repo => repo.Delete(customerId)).ReturnsAsync(deletedCustomer);
 
-        var loggerMock = new Mock<ILogger<DeleteCustomerCommandHandler>>();
+            var loggerMock = new Mock<ILogger<DeleteCustomerCommandHandler>>();
 
-        var command = new DeleteCustomerCommand { CustomerId = customerId };
-        var handler = new DeleteCustomerCommandHandler(customerRepositoryMock.Object, loggerMock.Object);
+            var handler = new DeleteCustomerCommandHandler(customerRepositoryMock.Object, loggerMock.Object);
+            var command = new DeleteCustomerCommand { CustomerId = customerId };
 
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
+            // Act
+            var result = await handler.Handle(command, CancellationToken.None);
 
-        // Assert
-        Assert.Equal(string.Format(ValidationMessage.CustomerDeletedSuccessfully, customerId), result);
-        customerRepositoryMock.Verify(repo => repo.GetById(customerId), Times.Once);
-        customerRepositoryMock.Verify(repo => repo.Delete(customerId), Times.Once);
-        loggerMock.Verify(logger => logger.LogInformation(LogMessage.DeleteItem, customerId), Times.Once);
-    }
+            // Assert
+            Assert.Equal(string.Format(ValidationMessage.CustomerDeletedSuccessfully, customerId), result);
 
-    [Fact]
-    public async Task Handle_CustomerDoesNotExist_ReturnsErrorMessage()
-    {
-        // Arrange
-        var customerId = 1;
+            loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(),
+                    It.IsAny<Exception>(),
+                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()
+                ),
+                Times.Once()
+            );
+        }
 
-        var customerRepositoryMock = new Mock<IRepository<Customer>>();
-        customerRepositoryMock.Setup(repo => repo.GetById(customerId)).ReturnsAsync((Customer)null);
+        [Fact]
+        public async Task Handle_Should_Return_Not_Found_Message_When_Customer_Does_Not_Exist()
+        {
+            // Arrange
+            var customerRepositoryMock = new Mock<IRepository<Customer>>();
+            customerRepositoryMock.Setup(repo => repo.GetById(It.IsAny<int>())).ReturnsAsync((Customer)null);
 
-        var loggerMock = new Mock<ILogger<DeleteCustomerCommandHandler>>();
+            var loggerMock = new Mock<ILogger<DeleteCustomerCommandHandler>>();
 
-        var command = new DeleteCustomerCommand { CustomerId = customerId };
-        var handler = new DeleteCustomerCommandHandler(customerRepositoryMock.Object, loggerMock.Object);
+            var handler = new DeleteCustomerCommandHandler(customerRepositoryMock.Object, loggerMock.Object);
+            var command = new DeleteCustomerCommand { CustomerId = 1 };
 
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
+            // Act
+            var result = await handler.Handle(command, CancellationToken.None);
 
-        // Assert
-        Assert.Equal(string.Format(ValidationMessage.CustomerDoesNotExist, customerId), result);
-        customerRepositoryMock.Verify(repo => repo.GetById(customerId), Times.Once);
-        customerRepositoryMock.Verify(repo => repo.Delete(It.IsAny<int>()), Times.Never);
-        loggerMock.Verify(logger => logger.LogInformation(It.IsAny<string>(), It.IsAny<int>()), Times.Never);
+            // Assert
+            Assert.Equal(string.Format(ValidationMessage.CustomerDoesNotExist, command.CustomerId), result);
+
+            loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Information,
+                    It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(),
+                    It.IsAny<Exception>(),
+                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()
+                ),
+                Times.Never()
+            );
+        }
     }
 }

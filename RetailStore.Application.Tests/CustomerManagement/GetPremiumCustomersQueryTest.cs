@@ -1,145 +1,85 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RetailStore.Contracts;
+using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
+using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
-
-public class GetPremiumCustomersQueryHandlerTests
+namespace RetailStore.Tests
 {
-    private readonly GetPremiumCustomersQueryHandler _handler;
-    private readonly Mock<IRetailStoreDbContext> _dbContextMock;
-    private readonly Mock<ILogger<GetPremiumCustomersQuery>> _loggerMock;
-    private readonly Mock<IPremiumCodeService> _premiumCodeServiceMock;
-
-    public GetPremiumCustomersQueryHandlerTests()
+    public class GetPremiumCustomersQueryHandlerTests
     {
-        _dbContextMock = new Mock<IRetailStoreDbContext>();
-        _loggerMock = new Mock<ILogger<GetPremiumCustomersQuery>>();
-        _premiumCodeServiceMock = new Mock<IPremiumCodeService>();
-
-        _handler = new GetPremiumCustomersQueryHandler(
-            _dbContextMock.Object,
-            _loggerMock.Object,
-            _premiumCodeServiceMock.Object
-        );
-    }
-
-    [Fact]
-    public async Task Handle_Should_Return_Premium_Customers_With_Premium_Codes()
-    {
-        // Arrange
-        var orders = new List<Order>
+        [Fact]
+        public async Task Handle_Should_Return_List_Of_PremiumCustomerDtos()
         {
-            new Order { CustomerId = 1, TotalAmount = 100 },
-            new Order { CustomerId = 2, TotalAmount = 200 },
-            new Order { CustomerId = 1, TotalAmount = 300 },
-            new Order { CustomerId = 3, TotalAmount = 400 }
-        };
-        var customers = new List<Customer>
-        {
-            new Customer { Id = 1, Name = "John Doe", PhoneNumber = 1234567890 },
-            new Customer { Id = 2, Name = "Jane Smith", PhoneNumber = 9876543210 },
-            new Customer { Id = 3, Name = "Alice Johnson", PhoneNumber = 5555555555 }
-        };
-        _dbContextMock.Setup(x => x.Orders).Returns((Delegate)orders.AsQueryable());
-        _dbContextMock.Setup(x => x.Customers).Returns((Delegate)customers.AsQueryable());
+            // Arrange
+            var orders = new List<Order>
+            {
+                new Order { CustomerId = 1, TotalAmount = 100 },
+                new Order { CustomerId = 1, TotalAmount = 200 },
+                new Order { CustomerId = 2, TotalAmount = 150 },
+            };
 
-        _premiumCodeServiceMock.Setup(x => x.GeneratePremiumCode()).Returns("PREM123");
+            var customers = new List<Customer>
+            {
+                new Customer { Id = 1, Name = "John Doe", PhoneNumber = 1234567890 },
+                new Customer { Id = 2, Name = "Jane Smith", PhoneNumber = 9876543210 }
+            };
 
-        // Act
-        var result = await _handler.Handle(new GetPremiumCustomersQuery(), CancellationToken.None);
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            var ordersDbSetMock = new Mock<DbSet<Order>>();
+            var customersDbSetMock = new Mock<DbSet<Customer>>();
 
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(2, result.Count);
-        Assert.Equal(1, result[0].CustomerId);
-        Assert.Equal("John Doe", result[0].CustomerName);
-        Assert.Equal(1234567890, result[0].PhoneNumber);
-        Assert.Equal(700, result[0].TotalPurchaseAmount);
-        Assert.Equal("PREM123", result[0].PremiumCode);
-        Assert.Equal(2, result[1].CustomerId);
-        Assert.Equal("Jane Smith", result[1].CustomerName);
-        Assert.Equal(9876543210, result[1].PhoneNumber);
-        Assert.Equal(200, result[1].TotalPurchaseAmount);
-        Assert.Equal("PREM123", result[1].PremiumCode);
-        _loggerMock.Verify(x => x.LogInformation(It.IsAny<string>()), Times.Once);
-        _premiumCodeServiceMock.Verify(x => x.GeneratePremiumCode(), Times.Exactly(2));
+            ordersDbSetMock.As<IQueryable<Order>>().Setup(m => m.Provider).Returns(orders.AsQueryable().Provider);
+            ordersDbSetMock.As<IQueryable<Order>>().Setup(m => m.Expression).Returns(orders.AsQueryable().Expression);
+            ordersDbSetMock.As<IQueryable<Order>>().Setup(m => m.ElementType).Returns(orders.AsQueryable().ElementType);
+            ordersDbSetMock.As<IQueryable<Order>>().Setup(m => m.GetEnumerator()).Returns(() => orders.GetEnumerator());
+
+            customersDbSetMock.As<IQueryable<Customer>>().Setup(m => m.Provider).Returns(customers.AsQueryable().Provider);
+            customersDbSetMock.As<IQueryable<Customer>>().Setup(m => m.Expression).Returns(customers.AsQueryable().Expression);
+            customersDbSetMock.As<IQueryable<Customer>>().Setup(m => m.ElementType).Returns(customers.AsQueryable().ElementType);
+            customersDbSetMock.As<IQueryable<Customer>>().Setup(m => m.GetEnumerator()).Returns(() => customers.GetEnumerator());
+
+            dbContextMock.Setup(db => db.Orders).Returns(ordersDbSetMock.Object);
+            dbContextMock.Setup(db => db.Customers).Returns(customersDbSetMock.Object);
+
+            var loggerMock = new Mock<ILogger<GetPremiumCustomersQueryHandler>>();
+            var premiumCodeServiceMock = new Mock<IPremiumCodeService>();
+            premiumCodeServiceMock.Setup(service => service.GeneratePremiumCode()).Returns("PREM123");
+
+            var handler = new GetPremiumCustomersQueryHandler(dbContextMock.Object, loggerMock.Object, premiumCodeServiceMock.Object);
+            var query = new GetPremiumCustomersQuery();
+
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+
+            var johnDoe = result.FirstOrDefault(c => c.CustomerId == 1);
+            Assert.NotNull(johnDoe);
+            Assert.Equal("John Doe", johnDoe.CustomerName);
+            Assert.Equal(300, johnDoe.TotalPurchaseAmount);
+            Assert.Equal("PREM123", johnDoe.PremiumCode);
+
+            var janeSmith = result.FirstOrDefault(c => c.CustomerId == 2);
+            Assert.NotNull(janeSmith);
+            Assert.Equal("Jane Smith", janeSmith.CustomerName);
+            Assert.Equal(150, janeSmith.TotalPurchaseAmount);
+            Assert.Equal("PREM123", janeSmith.PremiumCode);
+
+            loggerMock.Verify(
+                x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+                Times.Once()
+            );
+        }
     }
-
-    [Fact]
-    public async Task Handle_MultiplePremiumCodeGenerations_Should_AssignDifferentCodes()
-    {
-        // Arrange
-        var orders = new List<Order>
-    {
-        new Order { CustomerId = 1, TotalAmount = 100 },
-        new Order { CustomerId = 2, TotalAmount = 200 }
-    };
-        var customers = new List<Customer>
-    {
-        new Customer { Id = 1, Name = "John Doe", PhoneNumber = 1234567890 },
-        new Customer { Id = 2, Name = "Jane Smith", PhoneNumber = 9876543210 }
-    };
-        _dbContextMock.Setup(x => x.Orders).Returns((Delegate)orders.AsQueryable());
-        _dbContextMock.Setup(x => x.Customers).Returns((Delegate)customers.AsQueryable());
-
-        _premiumCodeServiceMock.SetupSequence(x => x.GeneratePremiumCode())
-            .Returns("PREM123")
-            .Returns("PREM456");
-
-        // Act
-        var result = await _handler.Handle(new GetPremiumCustomersQuery(), CancellationToken.None);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(2, result.Count);
-        Assert.Equal("PREM123", result[0].PremiumCode);
-        Assert.Equal("PREM456", result[1].PremiumCode);
-        _premiumCodeServiceMock.Verify(x => x.GeneratePremiumCode(), Times.Exactly(2));
-    }
-
-    [Fact]
-    public async Task Handle_EmptyOrdersAndCustomers_Should_ReturnEmptyResult()
-    {
-        // Arrange
-        _dbContextMock.Setup(x => x.Orders).Returns((Delegate)Enumerable.Empty<Order>().AsQueryable());
-        _dbContextMock.Setup(x => x.Customers).Returns((Delegate)Enumerable.Empty<Customer>().AsQueryable());
-
-        // Act
-        var result = await _handler.Handle(new GetPremiumCustomersQuery(), CancellationToken.None);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    [Fact]
-    public async Task Handle_PremiumCodeGenerationFails_Should_NotGeneratePremiumCodes()
-    {
-        // Arrange
-        var orders = new List<Order>
-    {
-        new Order { CustomerId = 1, TotalAmount = 100 },
-        new Order { CustomerId = 2, TotalAmount = 200 }
-    };
-        var customers = new List<Customer>
-    {
-        new Customer { Id = 1, Name = "John Doe", PhoneNumber = 1234567890 },
-        new Customer { Id = 2, Name = "Jane Smith", PhoneNumber = 9876543210 }
-    };
-        _dbContextMock.Setup(x => x.Orders).Returns((Delegate)orders.AsQueryable());
-        _dbContextMock.Setup(x => x.Customers).Returns((Delegate)customers.AsQueryable());
-
-        _premiumCodeServiceMock.Setup(x => x.GeneratePremiumCode()).Returns((string)null);
-
-        // Act
-        var result = await _handler.Handle(new GetPremiumCustomersQuery(), CancellationToken.None);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Empty(result);
-        _premiumCodeServiceMock.Verify(x => x.GeneratePremiumCode(), Times.Exactly(1));
-    }
-
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -11,50 +10,53 @@ using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
 using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
-
-public class GetCustomerByIdQueryHandlerTests
+namespace RetailStore.Tests
 {
-private readonly GetCustomerByIdQueryHandler _handler;
-private readonly Mock<IRetailStoreDbContext> _dbContextMock;
-private readonly Mock<ILogger<GetCustomerByIdQueryHandler>> _loggerMock;
+    public class GetCustomerByIdQueryHandlerTests
+    {
+        [Fact]
+        public async Task Handle_Should_Return_CustomerDto_When_Customer_Exists()
+        {
+            // Arrange
+            var customerId = 1;
+            var customerName = "John Doe";
+            var phoneNumber = 1234567890;
 
-public GetCustomerByIdQueryHandlerTests()
-{
-    _dbContextMock = new Mock<IRetailStoreDbContext>();
-    _loggerMock = new Mock<ILogger<GetCustomerByIdQueryHandler>>();
-    _handler = new GetCustomerByIdQueryHandler(_dbContextMock.Object, _loggerMock.Object);
-}
+            var customer = new Customer { Id = customerId, Name = customerName, PhoneNumber = phoneNumber };
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            dbContextMock.Setup(db => db.Customers).ReturnsDbSet(new[] { customer });
 
-[Fact]
-public async Task Handle_Should_Return_CustomerDto_When_Customer_Exists()
-{
-    // Arrange
-    var customerId = 1;
-    var query = new GetCustomerByIdQuery { CustomerId = customerId };
-    var customer = new Customer { Id = customerId, Name = "John Doe", PhoneNumber = 1234567890 };
-    _dbContextMock.Setup(x => x.Customers.FirstOrDefaultAsync(It.IsAny<Expression<Func<Customer, bool>>>(), default)).ReturnsAsync(customer);
+            var loggerMock = new Mock<ILogger<GetCustomerByIdQueryHandler>>();
+            var handler = new GetCustomerByIdQueryHandler(dbContextMock.Object, loggerMock.Object);
+            var query = new GetCustomerByIdQuery { CustomerId = customerId };
 
-    // Act
-    var result = await _handler.Handle(query, CancellationToken.None);
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
 
-    // Assert
-    Assert.NotNull(result);
-    Assert.Equal(customer.Name, result.CustomerName);
-    Assert.Equal(customer.PhoneNumber, result.PhoneNumber);
-    _loggerMock.Verify(x => x.LogInformation(It.IsAny<string>(), customerId), Times.Once);
-}
+            // Assert
+            Assert.Equal(customerName, result.CustomerName);
+            Assert.Equal(phoneNumber, result.PhoneNumber);
 
-[Fact]
-public async Task Handle_Should_Throw_KeyNotFoundException_When_Customer_Does_Not_Exist()
-{
-    // Arrange
-    var customerId = 1;
-    var query = new GetCustomerByIdQuery { CustomerId = customerId };
-    _dbContextMock.Setup(x => x.Customers.FirstOrDefaultAsync(It.IsAny<Expression<Func<Customer, bool>>>(), default)).ReturnsAsync((Customer)null);
+            loggerMock.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once());
+        }
 
-    // Act & Assert
-    await Assert.ThrowsAsync<KeyNotFoundException>(() => _handler.Handle(query, CancellationToken.None));
-    _loggerMock.Verify(x => x.LogError(It.IsAny<Exception>(), It.IsAny<string>(), customerId), Times.Once);
-}
+        [Fact]
+        public async Task Handle_Should_Throw_KeyNotFoundException_When_Customer_Does_Not_Exist()
+        {
+            // Arrange
+            var customerId = 1;
+
+            var dbContextMock = new Mock<IRetailStoreDbContext>();
+            dbContextMock.Setup(db => db.Customers).ReturnsDbSet(Array.Empty<Customer>());
+
+            var loggerMock = new Mock<ILogger<GetCustomerByIdQueryHandler>>();
+            var handler = new GetCustomerByIdQueryHandler(dbContextMock.Object, loggerMock.Object);
+            var query = new GetCustomerByIdQuery { CustomerId = customerId };
+
+            // Act & Assert
+            await Assert.ThrowsAsync<KeyNotFoundException>(() => handler.Handle(query, CancellationToken.None));
+
+            loggerMock.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once());
+        }
+    }
 }
