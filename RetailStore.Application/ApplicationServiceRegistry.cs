@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
-namespace RetailStore.Application
+namespace RetailStore.Application;
+
+public static class ApplicationServiceRegistry
 {
-    internal class ApplicationServiceRegistry
+    public static void AddApplicationServices(this IServiceCollection services) 
     {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }
