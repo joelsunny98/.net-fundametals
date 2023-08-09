@@ -1,7 +1,9 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Application;
 using RetailStore.Contracts;
+using RetailStore.Infrastructure;
 using RetailStore.Persistence;
 using RetailStore.Repository;
 using RetailStore.Services;
@@ -58,4 +60,6 @@ void ConfigureServices(IServiceCollection services, ConfigurationManager configu
     services.AddMediatR(configure => configure.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     services.AddFluentValidationAutoValidation();
     services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+    services.AddApplicationServices();
+    services.AddInfrastructureServices(configuration);
 }
