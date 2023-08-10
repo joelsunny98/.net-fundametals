@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MockQueryable.Moq;
 using Moq;
 using RetailStore.Contracts;
-using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
-using FluentAssertions;
-using Xunit;
-using MockQueryable.Moq;
 
 namespace RetailStore.Tests.Requests.CustomerManagement
 {

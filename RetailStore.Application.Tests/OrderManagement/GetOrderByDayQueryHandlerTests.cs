@@ -2,15 +2,8 @@
 using MockQueryable.Moq;
 using Moq;
 using RetailStore.Contracts;
-using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.OrderManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace RetailStore.Application.Tests.OrderManagement;
 

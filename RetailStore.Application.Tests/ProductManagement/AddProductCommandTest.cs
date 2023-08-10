@@ -1,11 +1,6 @@
 ﻿using Moq;
 using RetailStore.Contracts;
 using RetailStore.Requests.ProductManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RetailStore.Tests.ProductManagement;
 

@@ -4,7 +4,6 @@ using Moq;
 using RetailStore.Contracts;
 using RetailStore.Model;
 using RetailStore.Requests.OrderManagement;
-using RetailStore.Requests.ProductManagement;
 
 namespace RetailStore.Application.Tests.OrderManagement;
 
