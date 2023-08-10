@@ -7,7 +7,7 @@ using RetailStore.Contracts;
 using RetailStore.Model;
 
 namespace RetailStore.Requests.CustomerManagement;
-/*
+
 public class GetPremiumCustomersQueryTest
 {
     private readonly Mock<IRetailStoreDbContext> _dbContextMock;
@@ -78,4 +78,3 @@ public class GetPremiumCustomersQueryTest
         }.AsQueryable().BuildMockDbSet().Object);
     }
 }
-*/
