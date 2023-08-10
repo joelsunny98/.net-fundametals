@@ -39,19 +39,6 @@ public class OrderController : BaseController
     }
 
     /// <summary>
-    /// Endpoint to send an SMS based on the provided ID.
-    /// </summary>
-    /// <param name="id">The ID of the SMS recipient</param>
-    /// <returns>
-    /// An IActionResult indicating the success or failure of the SMS sending process
-    /// </returns>
-    [HttpGet("orders/{id}/sms")]
-    public async Task<IActionResult> SendSms([FromRoute] long id)
-    {
-        return Ok(await Mediator.Send(new SendSmsQuery { Id = id }));
-    }
-
-    /// <summary>
     /// Endpoint to delete a order by ID.
     /// </summary>
     /// <param name="id">order's Id to fetch order's data</param>
