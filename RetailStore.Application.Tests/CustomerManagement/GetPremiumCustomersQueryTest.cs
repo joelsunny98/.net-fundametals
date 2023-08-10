@@ -10,33 +10,41 @@ using RetailStore.Contracts;
 using RetailStore.Dtos;
 using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
+using FluentAssertions;
 using Xunit;
 
-namespace RetailStore.Application.Tests.CustomerManagement
+namespace RetailStore.Tests.Requests.CustomerManagement
 {
     public class GetPremiumCustomersQueryTest
     {
-        [Theory]
-        [InlineData(1, "Customer 1", 1234567890, 2, "Customer 2", 9876543210)]
-        public async Task Handle_Should_Return_PremiumCustomersDtoList(int customerId1, string customerName1, int phoneNumber1, int customerId2, string customerName2, int phoneNumber2)
+        [Fact]
+        public async Task Handle_Should_Return_PremiumCustomersDtoList()
         {
             // Arrange
+            var customerId1 = 1;
+            var customerName1 = "Customer 1";
+            var phoneNumber1 = 1234567890;
+
+            var customerId2 = 2;
+            var customerName2 = "Customer 2";
+            var phoneNumber2 = 9876543210;
+
             var customers = new List<Customer>
-    {
-        new Customer { Id = customerId1, Name = customerName1, PhoneNumber = phoneNumber1 },
-        new Customer { Id = customerId2, Name = customerName2, PhoneNumber = phoneNumber2 }
-    };
+            {
+                new Customer { Id = customerId1, Name = customerName1, PhoneNumber = phoneNumber1 },
+                new Customer { Id = customerId2, Name = customerName2, PhoneNumber = phoneNumber2 }
+            };
 
             var orders = new List<Order>
-    {
-        new Order { CustomerId = customerId1, TotalAmount = 100 },
-        new Order { CustomerId = customerId2, TotalAmount = 200 },
-        new Order { CustomerId = customerId1, TotalAmount = 50 }
-    };
+            {
+                new Order { CustomerId = customerId1, TotalAmount = 100 },
+                new Order { CustomerId = customerId2, TotalAmount = 200 },
+                new Order { CustomerId = customerId1, TotalAmount = 50 }
+            };
 
             var dbContextMock = new Mock<IRetailStoreDbContext>();
-            dbContextMock.Setup(db => db.Customers).Returns(DbSetMock(customers));
-            dbContextMock.Setup(db => db.Orders).Returns(DbSetMock(orders));
+            dbContextMock.Setup(db => db.Customers).Returns(DbSetMock(customers.AsQueryable()));
+            dbContextMock.Setup(db => db.Orders).Returns(DbSetMock(orders.AsQueryable()));
 
             var loggerMock = new Mock<ILogger<GetPremiumCustomersQuery>>();
             var premiumCodeServiceMock = new Mock<IPremiumCodeService>();
@@ -48,8 +56,8 @@ namespace RetailStore.Application.Tests.CustomerManagement
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
+            result.Should().NotBeNull();
+            result.Should().NotBeEmpty();
 
             loggerMock.Verify(
                 x => x.Log(
@@ -62,14 +70,13 @@ namespace RetailStore.Application.Tests.CustomerManagement
             );
         }
 
-        private DbSet<T> DbSetMock<T>(List<T> data) where T : class
+        private DbSet<T> DbSetMock<T>(IQueryable<T> data) where T : class
         {
-            var queryable = data.AsQueryable();
             var dbSetMock = new Mock<DbSet<T>>();
-            dbSetMock.As<IQueryable<T>>().Setup(m => m.Provider).Returns(queryable.Provider);
-            dbSetMock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryable.Expression);
-            dbSetMock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
-            dbSetMock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
+            dbSetMock.As<IQueryable<T>>().Setup(m => m.Provider).Returns(data.Provider);
+            dbSetMock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(data.Expression);
+            dbSetMock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            dbSetMock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
             return dbSetMock.Object;
         }
     }
