@@ -33,24 +33,21 @@ public class UpdateCustomerCommand : IRequest<int>
 public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, int>
 {
     private readonly IRetailStoreDbContext _dbContext;
-    private readonly ILogger<UpdateCustomerCommandHandler> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateCustomerCommandHandler"/> class.
     /// </summary>
     /// <param name="dbContext">The retail store database context.</param>
-    /// <param name="logger">The logger instance used for logging.</param>
-    public UpdateCustomerCommandHandler(IRetailStoreDbContext dbContext, ILogger<UpdateCustomerCommandHandler> logger)
+    public UpdateCustomerCommandHandler(IRetailStoreDbContext dbContext)
     {
         _dbContext = dbContext;
-        _logger = logger;
     }
 
     /// <summary>
     /// Updates the customer with the provided Id.
     /// </summary>
     /// <param name="command">The update customer command containing the new customer data.</param>
-    /// <param name="cancellationToken">The cancellation token to cancel the async operation.</param>
+    /// <param name="cancellationToken">The cancellation token to cdefancel the async operation.</param>
     /// <returns>Returns the Id of the updated customer.</returns>
     /// <exception cref="KeyNotFoundException">Thrown when the customer with the specified Id is not found.</exception>
     public async Task<int> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
@@ -64,7 +61,7 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation(LogMessage.UpdatedItem, customer.Id);
+        //_logger.LogInformation(LogMessage.UpdatedItem, customer.Id);
 
         return customer.Id;
     }

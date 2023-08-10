@@ -1,14 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using RetailStore.Constants;
 using RetailStore.Model;
 using RetailStore.Repository;
-using RetailStore.Requests.CustomerManagement;
-using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 public class DeleteCustomerCommandHandlerTests
 {

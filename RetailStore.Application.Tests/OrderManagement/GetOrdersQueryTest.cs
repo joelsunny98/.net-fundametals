@@ -7,12 +7,12 @@ using RetailStore.Requests.OrderManagement;
 
 namespace RetailStore.Application.Tests.OrderManagement;
 
-public class GetOrdersQueryHandlerTests
+public class GetOrdersQueryTest
 {
     private readonly Mock<IRetailStoreDbContext> _mockDbContext;
     private readonly Mock<ILogger<GetOrdersQuery>> _logger;
 
-    public GetOrdersQueryHandlerTests()
+    public GetOrdersQueryTest()
     {
         _mockDbContext = new Mock<IRetailStoreDbContext>();
         _logger = new Mock<ILogger<GetOrdersQuery>>();

@@ -2,9 +2,8 @@
 using Moq;
 using RetailStore.Contracts;
 using RetailStore.Model;
-using RetailStore.Requests.CustomerManagement;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 public class AddCustomerCommandHandlerTests
 {
