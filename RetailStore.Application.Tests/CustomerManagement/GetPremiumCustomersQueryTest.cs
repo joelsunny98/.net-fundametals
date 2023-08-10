@@ -16,28 +16,29 @@ namespace RetailStore.Application.Tests.CustomerManagement
 {
     public class GetPremiumCustomersQueryTest
     {
-        [Fact]
-        public async Task Handle_Should_Return_PremiumCustomersDtoList()
+        [Theory]
+        [InlineData(1, "Customer 1", 1234567890, 2, "Customer 2", 9876543210)]
+        public async Task Handle_Should_Return_PremiumCustomersDtoList(int customerId1, string customerName1, int phoneNumber1, int customerId2, string customerName2, int phoneNumber2)
         {
             // Arrange
             var customers = new List<Customer>
-            {
-                new Customer { Id = 1, Name = "Customer 1", PhoneNumber = 1234567890 },
-                new Customer { Id = 2, Name = "Customer 2", PhoneNumber = 9876543210 }
-            };
+    {
+        new Customer { Id = customerId1, Name = customerName1, PhoneNumber = phoneNumber1 },
+        new Customer { Id = customerId2, Name = customerName2, PhoneNumber = phoneNumber2 }
+    };
 
             var orders = new List<Order>
-            {
-                new Order { CustomerId = 1, TotalAmount = 100 },
-                new Order { CustomerId = 2, TotalAmount = 200 },
-                new Order { CustomerId = 1, TotalAmount = 50 }
-            };
+    {
+        new Order { CustomerId = customerId1, TotalAmount = 100 },
+        new Order { CustomerId = customerId2, TotalAmount = 200 },
+        new Order { CustomerId = customerId1, TotalAmount = 50 }
+    };
 
             var dbContextMock = new Mock<IRetailStoreDbContext>();
             dbContextMock.Setup(db => db.Customers).Returns(DbSetMock(customers));
             dbContextMock.Setup(db => db.Orders).Returns(DbSetMock(orders));
 
-            var loggerMock = new Mock<ILogger<GetPremiumCustomersQueryHandler>>();
+            var loggerMock = new Mock<ILogger<GetPremiumCustomersQuery>>();
             var premiumCodeServiceMock = new Mock<IPremiumCodeService>();
 
             var handler = new GetPremiumCustomersQueryHandler(dbContextMock.Object, loggerMock.Object, premiumCodeServiceMock.Object);
@@ -61,7 +62,6 @@ namespace RetailStore.Application.Tests.CustomerManagement
             );
         }
 
-        // Helper method to create a mock DbSet from a list of entities
         private DbSet<T> DbSetMock<T>(List<T> data) where T : class
         {
             var queryable = data.AsQueryable();

@@ -21,16 +21,16 @@ namespace RetailStore.Tests.Requests.CustomerManagement
             _dbContextMock = new Mock<IRetailStoreDbContext>();
             _validator = new UpdateCustomerCommandValidator(_dbContextMock.Object);
         }
-
-        [Fact]
-        public void ValidCommand_ShouldNotHaveValidationError()
+        [Theory]
+        [InlineData(1, "John Doe", 1234567890)]
+        public void ValidCommand_ShouldNotHaveValidationError(int customerId, string customerName, int phoneNumber)
         {
             // Arrange
             var command = new UpdateCustomerCommand
             {
-                CustomerId = 1,
-                CustomerName = "John Doe",
-                PhoneNumber = 1234567890
+                CustomerId = customerId,
+                CustomerName = customerName,
+                PhoneNumber = phoneNumber
             };
 
             // Act
@@ -40,15 +40,16 @@ namespace RetailStore.Tests.Requests.CustomerManagement
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-        [Fact]
-        public void InvalidPhoneNumber_ShouldHaveValidationError()
+        [Theory]
+        [InlineData(1, "John Doe", 12345)] 
+        public void InvalidPhoneNumber_ShouldHaveValidationError(int customerId, string customerName, int phoneNumber)
         {
             // Arrange
             var command = new UpdateCustomerCommand
             {
-                CustomerId = 1,
-                CustomerName = "John Doe",
-                PhoneNumber = 12345 // Invalid phone number
+                CustomerId = customerId,
+                CustomerName = customerName,
+                PhoneNumber = phoneNumber
             };
 
             // Act
@@ -57,6 +58,7 @@ namespace RetailStore.Tests.Requests.CustomerManagement
             // Assert
             result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
         }
+
 
         [Fact]
         public void DuplicatePhoneNumber_ShouldHaveValidationError()

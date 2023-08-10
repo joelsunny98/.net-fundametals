@@ -16,16 +16,16 @@ namespace RetailStore.Tests
 {
     public class GetCustomerByIdQueryHandlerTests
     {
-        [Fact]
-        public async Task Handle_Should_Return_CustomerDto()
+        [Theory]
+        [InlineData(1, "John Doe", 1234567890)]
+        public async Task Handle_Should_Return_CustomerDto(int customerId, string customerName, int phoneNumber)
         {
             // Arrange
-            var customerId = 1;
             var customer = new Customer
             {
                 Id = customerId,
-                Name = "John Doe",
-                PhoneNumber = 1234567890
+                Name = customerName,
+                PhoneNumber = phoneNumber
             };
 
             var customers = new List<Customer> { customer };
@@ -62,5 +62,6 @@ namespace RetailStore.Tests
                 Times.Once()
             );
         }
+
     }
 }
