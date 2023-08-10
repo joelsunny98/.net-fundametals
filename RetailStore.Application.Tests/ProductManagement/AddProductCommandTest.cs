@@ -14,10 +14,7 @@ public class AddProductCommandTest
     [Fact]
     public async Task Handle_ValidData_ProductAddedToDatabase()
     {
-        // Arrange
         var mockDbContext = new Mock<IRetailStoreDbContext>();
-        //var mockLogger = new Mock<ILogger<AddProductCommand>>();
-
         var command = new AddProductCommand
         {
             ProductName = "NewProduct",
@@ -26,13 +23,10 @@ public class AddProductCommandTest
 
         var handler = new AddProductCommandHandler(mockDbContext.Object);
 
-        // Act
         var productId = await handler.Handle(command, CancellationToken.None);
 
-        // Assert
-        //mockDbContext.Verify(x => x.Products.Add(It.IsAny<Product>()), Times.Once);
-        //mockDbContext.Verify(x => x.SaveChangesAsync(CancellationToken.None), Times.Once);
+        mockDbContext.Verify(x => x.SaveChangesAsync(CancellationToken.None), Times.Once);
 
-        Assert.NotEqual(0, productId); // Check that a valid product ID was returned
+        Assert.NotEqual(0, productId); 
     }
 }

@@ -81,7 +81,5 @@ namespace RetailStore.Tests.ProductManagement
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.ProductName);
         }
-
-        // Add more test cases to cover other validation rules...
     }
 }
