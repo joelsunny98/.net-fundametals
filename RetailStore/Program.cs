@@ -1,7 +1,9 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Application;
 using RetailStore.Contracts;
+using RetailStore.Infrastructure;
 using RetailStore.Persistence;
 using RetailStore.Repository;
 using RetailStore.Services;
@@ -38,8 +40,8 @@ app.Run();
 
 void ConfigureServices(IServiceCollection services, ConfigurationManager configuration)
 {
-    services.AddDbContext<RetailStoreDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DbConnection")));
-    services.AddScoped<IRetailStoreDbContext>(provider => provider.GetService<RetailStoreDbContext>());
+    services.AddApplicationServices();
+    services.AddInfrastructureServices(configuration);
 
     services.AddScoped<IProductBarCodeService, ProductBarCodeService>();
     services.AddScoped<IPremiumCodeService, PremiumCodeService>();
