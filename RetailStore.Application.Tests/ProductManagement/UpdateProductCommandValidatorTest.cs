@@ -81,5 +81,6 @@ namespace RetailStore.Tests.ProductManagement
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.ProductName);
         }
+
     }
 }
