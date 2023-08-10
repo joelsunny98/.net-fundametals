@@ -40,8 +40,8 @@ app.Run();
 
 void ConfigureServices(IServiceCollection services, ConfigurationManager configuration)
 {
-    services.AddDbContext<RetailStoreDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DbConnection")));
-    services.AddScoped<IRetailStoreDbContext>(provider => provider.GetService<RetailStoreDbContext>());
+    services.AddApplicationServices();
+    services.AddInfrastructureServices(configuration);
 
     services.AddScoped<IProductBarCodeService, ProductBarCodeService>();
     services.AddScoped<IPremiumCodeService, PremiumCodeService>();
@@ -60,6 +60,4 @@ void ConfigureServices(IServiceCollection services, ConfigurationManager configu
     services.AddMediatR(configure => configure.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     services.AddFluentValidationAutoValidation();
     services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-    services.AddApplicationServices();
-    services.AddInfrastructureServices(configuration);
 }
