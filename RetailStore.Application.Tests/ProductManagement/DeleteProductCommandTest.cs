@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using RetailStore.Contracts;
 using RetailStore.Model;
 using RetailStore.Requests.ProductManagement;
-using Xunit;
 
 namespace RetailStore.Tests.ProductManagement;
 

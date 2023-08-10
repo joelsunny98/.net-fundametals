@@ -1,18 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
-using System.Threading;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
-using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Model;
-using RetailStore.Requests.CustomerManagement;
-using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 public class AddCustomerCommandHandlerTests
 {

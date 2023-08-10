@@ -1,13 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
-using RetailStore.Constants;
 using RetailStore.Contracts;
 using RetailStore.Model;
 using RetailStore.Requests.ProductManagement;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace RetailStore.Tests.ProductManagement
 {

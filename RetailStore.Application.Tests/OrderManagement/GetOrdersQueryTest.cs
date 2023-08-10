@@ -4,16 +4,15 @@ using Moq;
 using RetailStore.Contracts;
 using RetailStore.Model;
 using RetailStore.Requests.OrderManagement;
-using RetailStore.Requests.ProductManagement;
 
 namespace RetailStore.Application.Tests.OrderManagement;
 
-public class GetOrdersQueryHandlerTests
+public class GetOrdersQueryTest
 {
     private readonly Mock<IRetailStoreDbContext> _mockDbContext;
     private readonly Mock<ILogger<GetOrdersQuery>> _logger;
 
-    public GetOrdersQueryHandlerTests()
+    public GetOrdersQueryTest()
     {
         _mockDbContext = new Mock<IRetailStoreDbContext>();
         _logger = new Mock<ILogger<GetOrdersQuery>>();

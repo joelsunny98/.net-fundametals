@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MockQueryable.Moq;
 using Moq;
 using RetailStore.Contracts;
-using RetailStore.Dtos;
 using RetailStore.Model;
-using RetailStore.Requests.CustomerManagement;
-using Xunit;
 
-namespace RetailStore.Tests.Requests.CustomerManagement;
+namespace RetailStore.Requests.CustomerManagement;
 
 public class GetCustomerQueryTest
 {
