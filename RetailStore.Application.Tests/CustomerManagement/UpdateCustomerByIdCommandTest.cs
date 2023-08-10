@@ -23,7 +23,7 @@ public class UpdateCustomerByIdCommandTest
         var updateCommand = new UpdateCustomerCommand
         {
             CustomerId = 1,
-          //  CustomerName = "Josmy",
+            CustomerName = "Josmy",
             PhoneNumber = 9876543210
         };
         var _handler = new UpdateCustomerCommandHandler(_mockDbContext.Object);
@@ -44,8 +44,7 @@ public class UpdateCustomerByIdCommandTest
                Name = "Test",
                PhoneNumber = 1234567890,
                CreatedOn= DateTime.Now,
-               UpdatedOn = DateTime.Now,
-               
+               UpdatedOn = DateTime.Now
             }
         }.AsQueryable().BuildMockDbSet().Object);
     }
