@@ -28,7 +28,8 @@ public class UpdateCustomerByIdCommandTest
         {
             CustomerId = 1,
             CustomerName = "Josmy",
-            PhoneNumber = 9876543210
+            PhoneNumber = 9876543210,
+            
         };
 
         var response = await _handler.Handle(updateCommand, CancellationToken.None);
