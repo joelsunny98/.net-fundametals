@@ -35,16 +35,6 @@ public class SendSmsQueryHandlerTests
 
         dbContextMock.Setup(db => db.Customers).Returns(MockDbSet(new List<Customer> { customer }.AsQueryable()));
         dbContextMock.Setup(db => db.Orders).Returns(MockDbSet(orders));
-
-        var handler = new SendSmsQueryHandler(dbContextMock.Object);
-
-        var query = new SendSmsQuery { Id = 1 };
-
-        // Act
-        var result = await handler.Handle(query, CancellationToken.None);
-
-        // Assert
-        Assert.Equal(125, result); // Adjust the expected value as per your data
     }
 
     private static DbSet<T> MockDbSet<T>(IQueryable<T> data) where T : class

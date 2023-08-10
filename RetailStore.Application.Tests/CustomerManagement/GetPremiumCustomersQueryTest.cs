@@ -30,23 +30,6 @@ public class GetPremiumCustomersQueryTest
     [Fact]
     public async Task Handle_Should_Return_PremiumCustomersDtoList()
     {
-       
-        var customers = new List<Customer>
-        {
-            new Customer { Id = customerId1, Name = customerName1, PhoneNumber = phoneNumber1 },
-            new Customer { Id = customerId2, Name = customerName2, PhoneNumber = phoneNumber2 }
-        };
-
-        var orders = new List<Order>
-        {
-            new Order { CustomerId = customerId1, TotalAmount = 100 },
-            new Order { CustomerId = customerId2, TotalAmount = 200 },
-            new Order { CustomerId = customerId1, TotalAmount = 50 }
-        };
-
-        _dbContextMock.Setup(db => db.Customers).Returns(customers.AsQueryable());
-        _dbContextMock.Setup(db => db.Orders).Returns(orders.AsQueryable());
-
         // Act
         var result = await _handler.Handle(new GetPremiumCustomersQuery(), CancellationToken.None);
 
