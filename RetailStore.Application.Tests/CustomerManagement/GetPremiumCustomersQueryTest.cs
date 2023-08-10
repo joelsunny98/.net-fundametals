@@ -12,23 +12,36 @@ using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
 using FluentAssertions;
 using Xunit;
+using MockQueryable.Moq;
 
 namespace RetailStore.Tests.Requests.CustomerManagement
 {
     public class GetPremiumCustomersQueryTest
     {
-        [Fact]
-        public async Task Handle_Should_Return_PremiumCustomersDtoList()
+        private readonly Mock<IRetailStoreDbContext> _dbContextMock;
+        private readonly Mock<ILogger<GetPremiumCustomersQuery>> _loggerMock;
+        private readonly Mock<IPremiumCodeService> _premiumCodeServiceMock;
+        private readonly GetPremiumCustomersQueryHandler _handler;
+
+        public GetPremiumCustomersQueryTest()
+        {
+            _dbContextMock = new Mock<IRetailStoreDbContext>();
+            _loggerMock = new Mock<ILogger<GetPremiumCustomersQuery>>();
+            _premiumCodeServiceMock = new Mock<IPremiumCodeService>();
+
+            _handler = new GetPremiumCustomersQueryHandler(
+                _dbContextMock.Object, _loggerMock.Object, _premiumCodeServiceMock.Object);
+
+            MockCustomerdata();
+        }
+
+        [Theory]
+        [InlineData(1, "Customer 1", 1234567890, 2, "Customer 2", 9876543210)]
+        public async Task Handle_Should_Return_PremiumCustomersDtoList(
+            int customerId1, string customerName1, int phoneNumber1,
+            int customerId2, string customerName2, int phoneNumber2)
         {
             // Arrange
-            var customerId1 = 1;
-            var customerName1 = "Customer 1";
-            var phoneNumber1 = 1234567890;
-
-            var customerId2 = 2;
-            var customerName2 = "Customer 2";
-            var phoneNumber2 = 9876543210;
-
             var customers = new List<Customer>
             {
                 new Customer { Id = customerId1, Name = customerName1, PhoneNumber = phoneNumber1 },
@@ -42,24 +55,17 @@ namespace RetailStore.Tests.Requests.CustomerManagement
                 new Order { CustomerId = customerId1, TotalAmount = 50 }
             };
 
-            var dbContextMock = new Mock<IRetailStoreDbContext>();
-            dbContextMock.Setup(db => db.Customers).Returns(DbSetMock(customers.AsQueryable()));
-            dbContextMock.Setup(db => db.Orders).Returns(DbSetMock(orders.AsQueryable()));
-
-            var loggerMock = new Mock<ILogger<GetPremiumCustomersQuery>>();
-            var premiumCodeServiceMock = new Mock<IPremiumCodeService>();
-
-            var handler = new GetPremiumCustomersQueryHandler(dbContextMock.Object, loggerMock.Object, premiumCodeServiceMock.Object);
-            var query = new GetPremiumCustomersQuery();
+            _dbContextMock.Setup(db => db.Customers).Returns(DbSetMock(customers.AsQueryable()));
+            _dbContextMock.Setup(db => db.Orders).Returns(DbSetMock(orders.AsQueryable()));
 
             // Act
-            var result = await handler.Handle(query, CancellationToken.None);
+            var result = await _handler.Handle(new GetPremiumCustomersQuery(), CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
             result.Should().NotBeEmpty();
 
-            loggerMock.Verify(
+            _loggerMock.Verify(
                 x => x.Log(
                     LogLevel.Information,
                     It.IsAny<EventId>(),
@@ -78,6 +84,14 @@ namespace RetailStore.Tests.Requests.CustomerManagement
             dbSetMock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(data.ElementType);
             dbSetMock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
             return dbSetMock.Object;
+        }
+
+        private void MockCustomerdata()
+        {
+            _dbContextMock.Setup(x => x.Customers).Returns(new List<Customer>
+            {
+                new Customer { Id = 1, Name = "Austin", PhoneNumber = 9947003224 }
+            }.AsQueryable().BuildMockDbSet().Object);
         }
     }
 }
