@@ -55,15 +55,8 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
     /// <exception cref="KeyNotFoundException">Thrown when the customer with the specified Id is not found.</exception>
     public async Task<int> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
     {
-        var validator = new UpdateCustomerCommandValidator(_dbContext);
-        await validator.ValidateAndThrowAsync(command, cancellationToken);
 
         var customer = await _dbContext.Customers.FindAsync(command.CustomerId);
-
-        if (customer == null)
-        {
-            throw new KeyNotFoundException();
-        }
 
         customer.Name = command.CustomerName;
         customer.PhoneNumber = command.PhoneNumber;

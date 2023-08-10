@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BarCode" Version="2023.8.4" />
+    <PackageReference Include="FluentAssertions" Version="6.11.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Nanoid" Version="3.0.0" />
