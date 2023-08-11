@@ -20,7 +20,6 @@ public class GetPremiumCustomersQuery : IRequest<List<PremiumCustomerDto>>
 public class GetPremiumCustomersQueryHandler : IRequestHandler<GetPremiumCustomersQuery, List<PremiumCustomerDto>>
 {
     private readonly IRetailStoreDbContext _dbContext;
-    private readonly ILogger _logger;
     private readonly IPremiumCodeService _premiumCodeService;
 
     /// <summary>
@@ -28,10 +27,9 @@ public class GetPremiumCustomersQueryHandler : IRequestHandler<GetPremiumCustome
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public GetPremiumCustomersQueryHandler(IRetailStoreDbContext dbContext, ILogger<GetPremiumCustomersQuery> logger, IPremiumCodeService premiumCodeService)
+    public GetPremiumCustomersQueryHandler(IRetailStoreDbContext dbContext, IPremiumCodeService premiumCodeService)
     {
         _dbContext = dbContext;
-        _logger = logger;
         _premiumCodeService = premiumCodeService;
     }
 
@@ -61,7 +59,6 @@ public class GetPremiumCustomersQueryHandler : IRequestHandler<GetPremiumCustome
             premiumCustomer.PremiumCode = _premiumCodeService.GeneratePremiumCode();
         }
 
-        _logger.LogInformation(LogMessage.GeneratePremiumCustomer);
         return premiumCustomers;
     }
 }

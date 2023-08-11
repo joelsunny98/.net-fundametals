@@ -31,18 +31,8 @@ public class AddCustomerCommandValidatorTests
 
     [Theory]
     [InlineData(12345)]
-    public void Should_Have_Error_When_PhoneNumber_Is_Invalid(long phoneNumber)
-    {
-        var command = new AddCustomerCommand { PhoneNumber = phoneNumber };
-
-        var result = _validator.TestValidate(command);
-
-        result.ShouldHaveValidationErrorFor(c => c.PhoneNumber);
-    }
-
-    [Theory]
     [InlineData(9947003224)]
-    public void Should_Have_Error_When_PhoneNumber_Is_Not_Unique(long phoneNumber)
+    public void Should_Have_Error_When_PhoneNumber_Is_Invalid(long phoneNumber)
     {
         var command = new AddCustomerCommand { PhoneNumber = phoneNumber };
 
