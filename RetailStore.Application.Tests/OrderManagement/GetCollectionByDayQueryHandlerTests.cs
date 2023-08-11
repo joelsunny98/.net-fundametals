@@ -37,20 +37,20 @@ public class GetCollectionByDayQueryHandlerTests
     private void MockOrderData()
     {
         _mockDbContext.Setup(x => x.Orders).Returns(new List<Order>
-    {
-        new Order
         {
-            Id = 1,
-            CustomerId = 1,
-            TotalAmount = 100,
-            Discount = 10,
-            Customer = new Customer { Id = 1, Name = "Austin" },
-            Details = new List<OrderDetail>
+            new Order
             {
-                new OrderDetail { Product = new Product { Id = 1, Name = "Product A",CreatedOn = DateTime.UtcNow }, Quantity = 2 },
-                new OrderDetail { Product = new Product { Id = 2, Name = "Product B", CreatedOn = DateTime.UtcNow.AddDays(-1) },  }
-            }
-        },
-    }.AsQueryable().BuildMockDbSet().Object);
+                Id = 1,
+                CustomerId = 1,
+                TotalAmount = 100,
+                Discount = 10,
+                Customer = new Customer { Id = 1, Name = "Austin" },
+                Details = new List<OrderDetail>
+                {
+                    new OrderDetail { Product = new Product { Id = 1, Name = "Product A",CreatedOn = DateTime.UtcNow }, Quantity = 2 },
+                    new OrderDetail { Product = new Product { Id = 2, Name = "Product B", CreatedOn = DateTime.UtcNow.AddDays(-1) },  }
+                }
+            },
+        }.AsQueryable().BuildMockDbSet().Object);
     }
 }

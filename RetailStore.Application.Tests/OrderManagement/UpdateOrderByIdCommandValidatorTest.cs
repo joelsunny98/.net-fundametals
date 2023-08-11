@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RetailStore.Application.Tests.OrderDetailManagement;
+namespace RetailStore.Application.Tests.OrderManagement;
 
 public class UpdateOrderByIdCommandValidatorTest
 {
@@ -34,7 +34,7 @@ public class UpdateOrderByIdCommandValidatorTest
             Id = 1,
             OrderRequest = new OrderRequestDto
             {
-                CustomerId = default(int),
+                CustomerId = default,
                 Details = new List<OrderDetailRequestDto>
                 {
                     new OrderDetailRequestDto {ProductId = 1, Quantity = 100}
@@ -44,7 +44,7 @@ public class UpdateOrderByIdCommandValidatorTest
 
         var result = _validator.TestValidate(updateCommand);
 
-        result.ShouldHaveValidationErrorFor(c =>c.OrderRequest.CustomerId);
+        result.ShouldHaveValidationErrorFor(c => c.OrderRequest.CustomerId);
     }
 
     private void MockOrderData()

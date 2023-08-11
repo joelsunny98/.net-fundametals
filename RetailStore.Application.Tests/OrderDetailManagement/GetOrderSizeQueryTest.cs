@@ -12,7 +12,7 @@ public class GetOrderSizeQueryTest
     public GetOrderSizeQueryTest()
     {
         _dbContextMock = new Mock<IRetailStoreDbContext>();
-        orderDetailsMock();
+        OrderDetailsMock();
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class GetOrderSizeQueryTest
     /// <summary>
     /// Initializes Mock database with mocked object
     /// </summary>
-    private void orderDetailsMock()
+    private void OrderDetailsMock()
     {
         _dbContextMock.Setup(x => x.OrderDetails).Returns(new List<OrderDetail>{
             new OrderDetail()
