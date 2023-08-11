@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using MockQueryable.Moq;
+﻿using MockQueryable.Moq;
 using Moq;
 using RetailStore.Contracts;
 using RetailStore.Model;
@@ -43,8 +42,7 @@ public class UpdateCustomerByIdCommandTest
                Id = 1,
                Name = "Test",
                PhoneNumber = 1234567890,
-               CreatedOn= DateTime.Now,
-               UpdatedOn = DateTime.Now
+               UpdatedOn= DateTime.Now
             }
         }.AsQueryable().BuildMockDbSet().Object);
     }
