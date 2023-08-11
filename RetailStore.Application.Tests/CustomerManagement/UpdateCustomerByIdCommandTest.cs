@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using MockQueryable.Moq;
+﻿using MockQueryable.Moq;
 using Moq;
 using RetailStore.Contracts;
 using RetailStore.Model;

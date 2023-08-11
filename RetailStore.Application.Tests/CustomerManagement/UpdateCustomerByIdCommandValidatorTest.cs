@@ -1,14 +1,9 @@
 ﻿using FluentValidation.TestHelper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
 using MockQueryable.Moq;
 using Moq;
 using RetailStore.Contracts;
 using RetailStore.Model;
 using RetailStore.Requests.CustomerManagement;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 
 namespace RetailStore.Tests.Requests.CustomerManagement;
 

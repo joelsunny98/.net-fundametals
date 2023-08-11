@@ -1,9 +1,6 @@
-﻿using FluentValidation;
-using MediatR;
-using RetailStore.Constants;
-using RetailStore.Contracts;
-using Microsoft.Extensions.Logging;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.CustomerManagement;
 
