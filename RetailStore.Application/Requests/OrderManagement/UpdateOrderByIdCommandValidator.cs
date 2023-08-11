@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using RetailStore.Constants;
+using RetailStore.Contracts;
 
 namespace RetailStore.Requests.OrderManagement;
 
@@ -11,7 +12,7 @@ public class UpdateOrderByIdCommandValidator : AbstractValidator<UpdateOrderById
     /// <summary>
     /// Validator for defining specific rules for properties
     /// </summary>
-    public UpdateOrderByIdCommandValidator()
+    public UpdateOrderByIdCommandValidator(IRetailStoreDbContext dbContext)
     {
         //Rules for required fields
         RuleFor(x => x.OrderRequest.CustomerId).NotNull().NotEmpty().WithMessage(ValidationMessage.CustomerIdRequried);
