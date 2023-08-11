@@ -31,17 +31,15 @@ public class UpdateOrderByIdCommand : IRequest<int>
 public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdCommand, int>
 {
     private readonly IRetailStoreDbContext _dbContext;
-    private readonly ILogger _logger;
 
     /// <summary>
     /// Injects RetailDbContext Class
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public UpdateOrderByIdCommandHandler(IRetailStoreDbContext dbContext, ILogger<UpdateOrderByIdCommand> logger)
+    public UpdateOrderByIdCommandHandler(IRetailStoreDbContext dbContext)
     {
         _dbContext = dbContext;
-        _logger = logger;
     }
 
     /// <summary>
@@ -55,12 +53,7 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
     {
         var order = await _dbContext.Orders.FirstOrDefaultAsync(e => e.Id == command.Id);
 
-        if (order == null)
-        {
-            _logger.LogError(LogMessage.SearchFail, command.Id);
-            throw new KeyNotFoundException();
-        }
-
+     
         order.CustomerId = command.OrderRequest.CustomerId;
         order.UpdatedOn = DateTime.UtcNow;
 
@@ -91,7 +84,6 @@ public class UpdateOrderByIdCommandHandler : IRequestHandler<UpdateOrderByIdComm
         _dbContext.OrderDetails.AddRange(details);
         await _dbContext.SaveChangesAsync();
 
-        _logger.LogInformation(LogMessage.UpdatedItem, command.Id);
         return order.Id;
     }
 }
