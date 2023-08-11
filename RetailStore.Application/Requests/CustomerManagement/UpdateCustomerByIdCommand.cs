@@ -3,6 +3,7 @@ using MediatR;
 using RetailStore.Constants;
 using RetailStore.Contracts;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace RetailStore.Requests.CustomerManagement;
 
@@ -53,7 +54,7 @@ public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerComman
     public async Task<int> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
     {
 
-        var customer = await _dbContext.Customers.FindAsync(command.CustomerId);
+        var customer = await _dbContext.Customers.FirstOrDefaultAsync(c => c.Id == command.CustomerId);
 
         customer.Name = command.CustomerName;
         customer.PhoneNumber = command.PhoneNumber;

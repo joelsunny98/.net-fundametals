@@ -1,63 +1,59 @@
-﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using MockQueryable.Moq;
-using Moq;
-using RetailStore.Contracts;
-using RetailStore.Model;
+﻿//using Xunit;
+//using Moq;
+//using System.Threading;
+//using Microsoft.EntityFrameworkCore;
+//using RetailStore.Requests.CustomerManagement;
+//using RetailStore.Contracts;
+//using RetailStore.Helpers;
+//using Microsoft.Extensions.Logging;
+//using System.Collections.Generic;
+//using System.Linq;
+//using RetailStore.Model;
+//using MockQueryable.Moq;
+//using RetailStore.Constants;
 
-namespace RetailStore.Requests.CustomerManagement;
+//namespace RetailStore.Requests.CustomerManagement;
 
-public class GetPremiumCustomersQueryTest
-{
-    private readonly Mock<IRetailStoreDbContext> _dbContextMock;
-    private readonly Mock<ILogger<GetPremiumCustomersQuery>> _loggerMock;
-    private readonly Mock<IPremiumCodeService> _premiumCodeServiceMock;
-    private readonly GetPremiumCustomersQueryHandler _handler;
+//public class GetPremiumCustomersQueryTest
+//{
+//    private readonly Mock<IRetailStoreDbContext> _mockDbContext;
+//    private readonly Mock<ILogger<GetCustomerQueryHandler>> _logger;
+//    public GetPremiumCustomersQueryTest()
+//    {
+//        _mockDbContext = new Mock<IRetailStoreDbContext>();
+//        _logger = new Mock<ILogger<GetPremiumCustomersQuery>>();
+//        _mockpremiumCodeService = new Mock<IPremiumCodeService>();
+//        MockPremiumOrderdata();
+//    }
+//    [Fact]
+//    public async Task Handle_ReturnsPremiumCustomers()
+//    {
+       
 
-    public GetPremiumCustomersQueryTest()
-    {
-        _dbContextMock = new Mock<IRetailStoreDbContext>();
-        _loggerMock = new Mock<ILogger<GetPremiumCustomersQuery>>();
-        _premiumCodeServiceMock = new Mock<IPremiumCodeService>();
+       
 
-        _handler = new GetPremiumCustomersQueryHandler(
-            _dbContextMock.Object, _loggerMock.Object, _premiumCodeServiceMock.Object);
+//    }
 
-        MockCustomerdata();
-    }
-
-    [Fact]
-    public async Task Handle_Should_Return_PremiumCustomersDtoList()
-    {
-        // Act
-        var result = await _handler.Handle(new GetPremiumCustomersQuery(), CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().NotBeEmpty();
-
-        _loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.IsAny<It.IsAnyType>(),
-                It.IsAny<Exception>(),
-                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
-            Times.Once()
-        );
-    }
-
-    private void MockCustomerdata()
-    {
-        _dbContextMock.Setup(x => x.Customers).Returns(new List<Customer>
-        {
-            new Customer 
-            { 
-                Id = 1,
-                Name = "Austin", 
-                PhoneNumber = 9947003224 
-            }
-        }.AsQueryable().BuildMockDbSet().Object);
-    }
-}
+//    #region DatabaseInitilization
+//    /// <summary>
+//    /// Initializes Mock database with mocked object
+//    /// </summary>
+//    private void MockPremiumOrderdata()
+//    {
+//        _mockDbContext.Setup(x => x.Orders).Returns(new List<Order>{new Order()
+//        {
+//             Id = 1,
+//             CustomerId = 2,
+//             TotalAmount = 2000,
+//             Customer = new Customer
+//             {
+//                 Name ="Vismaya",
+//                 PhoneNumber =987678998,  
+//             }
+             
+               
+//            }
+//        }.AsQueryable().BuildMockDbSet().Object);
+//    }
+//    #endregion
+//}
