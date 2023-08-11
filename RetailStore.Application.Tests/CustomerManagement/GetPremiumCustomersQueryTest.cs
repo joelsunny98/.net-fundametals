@@ -1,16 +1,8 @@
-﻿//using Xunit;
-//using Moq;
-//using System.Threading;
-//using Microsoft.EntityFrameworkCore;
-//using RetailStore.Requests.CustomerManagement;
-//using RetailStore.Contracts;
-//using RetailStore.Helpers;
-//using Microsoft.Extensions.Logging;
-//using System.Collections.Generic;
-//using System.Linq;
-//using RetailStore.Model;
+﻿//using Microsoft.Extensions.Logging;
 //using MockQueryable.Moq;
-//using RetailStore.Constants;
+//using Moq;
+//using RetailStore.Contracts;
+//using RetailStore.Model;
 
 //namespace RetailStore.Requests.CustomerManagement;
 
@@ -48,7 +40,7 @@
 //             Customer = new Customer
 //             {
 //                 Name ="Vismaya",
-//                 PhoneNumber =987678998,  
+//                 PhoneNumber =987678998,
 //             }
 
 

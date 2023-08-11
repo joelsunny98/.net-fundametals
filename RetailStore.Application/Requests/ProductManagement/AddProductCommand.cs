@@ -21,7 +21,6 @@ public class AddProductCommand : ProductDto, IRequest<int>
 public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
 {
     private readonly IRetailStoreDbContext _dbContext;
-    private readonly ILogger _logger;
 
     /// <summary>
     /// Inject Dependency classes
@@ -30,6 +29,7 @@ public class AddProductCommandHandler : IRequestHandler<AddProductCommand, int>
     /// <param name="logger"></param>
     public AddProductCommandHandler(IRetailStoreDbContext dbContext)
     {
+        _dbContext = dbContext;
     }
 
     /// <summary>
