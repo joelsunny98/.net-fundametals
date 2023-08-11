@@ -27,7 +27,7 @@ public class GetPremiumCustomersQueryTest
         var handler = new GetPremiumCustomersQueryHandler(_context.Object, _service.Object);
 
         _service.Setup(service => service.GeneratePremiumCode())
-                .Returns("MockedPremiumCode");
+                .Returns("MGH89K");
 
         // Act
         var result = await handler.Handle(new GetPremiumCustomersQuery(), CancellationToken.None);
