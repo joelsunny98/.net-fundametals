@@ -27,6 +27,19 @@ public class GetCustomerByIdQueryTest
         Assert.Equal(1234567890, result.PhoneNumber);
     }
 
+    [Fact]
+    public async Task GetCustomerByIdQuery_ShouldThrow_KeyNotFoundException_WhenCustomerNotFound()
+    {
+        // Arrange
+        var handler = new GetCustomerByIdQueryHandler(_mockDbContext.Object, _logger.Object);
+        var nonExistentCustomerId = 999;
+
+        // Act & Assert
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        {
+            await handler.Handle(new GetCustomerByIdQuery { CustomerId = nonExistentCustomerId }, CancellationToken.None);
+        });
+    }
 
 
     #region DatabaseInitilization

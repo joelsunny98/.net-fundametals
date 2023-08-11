@@ -18,7 +18,7 @@ public static class AmountHelper
     {
         var totalAmount = price * quantity;
 
-        decimal discountValue = 0;
+        decimal discountValue = default(decimal);
 
         if (totalAmount >= Constant.TenPercentDiscountMinValue && totalAmount < Constant.TenPercentDiscountMaxValue)
         {
